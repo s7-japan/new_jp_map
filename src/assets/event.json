@@ -1,0 +1,152 @@
+{
+    "title": {
+        "course": "レーシングコース",
+        "stage": "GPスクエアオフィシャルステージ"
+    },
+    "timeSlots": [
+        {
+            "hour": "08",
+            "events": [
+                {
+                    "id": 1,
+                    "name": "メインゲートオープン/8:00-20:00",
+                    "duration": 720,
+                    "color": "yellow",
+                    "column": 1,
+                    "spanColumns": 2
+                }
+            ]
+        },
+        {
+            "hour": "09",
+            "events": [
+                {
+                    "id": 2,
+                    "name": "ヨコタサップ/Chronicle",
+                    "startMinute": 30,
+                    "duration": 60,
+                    "color": "teal",
+                    "column": 2
+                },
+                {
+                    "id": 3,
+                    "name": "Go Yuki ! DAZN Stage",
+                    "startMinute": 30,
+                    "duration": 60,
+                    "color": "teal",
+                    "column": 2
+                }
+            ]
+        },
+        {
+            "hour": "10",
+            "events": [
+                {
+                    "id": 4,
+                    "name": "HRC Reborn 40th ANNIVERSARY",
+                    "startMinute": 15,
+                    "duration": 105,
+                    "color": "purple",
+                    "column": 1
+                },
+                {
+                    "id": 5,
+                    "name": "F1 Drives Stage",
+                    "startMinute": 30,
+                    "duration": 60,
+                    "color": "teal",
+                    "column": 2
+                }
+            ]
+        },
+        {
+            "hour": "11",
+            "events": [
+                {
+                    "id": 6,
+                    "name": "Playback 2023",
+                    "startMinute": 40,
+                    "duration": 50,
+                    "color": "teal",
+                    "column": 2
+                },
+                {
+                    "id": 7,
+                    "name": "F1 Legends Talk 浅木良浩/田辺豊治",
+                    "startMinute": 10,
+                    "duration": 45,
+                    "color": "teal",
+                    "column": 2
+                }
+            ]
+        },
+        {
+            "hour": "12",
+            "events": [
+                {
+                    "id": 8,
+                    "name": "【午】フリー走行",
+                    "startMinute": 0,
+                    "duration": 60,
+                    "color": "gray",
+                    "column": 1
+                },
+                {
+                    "id": 9,
+                    "name": "P3 LIVE",
+                    "startMinute": 55,
+                    "duration": 65,
+                    "color": "teal",
+                    "column": 2
+                }
+            ]
+        },
+        {
+            "hour": "13",
+            "events": [
+                {
+                    "id": 10,
+                    "name": "【予選】予定",
+                    "startMinute": 0,
+                    "duration": 60,
+                    "color": "gray",
+                    "column": 1
+                }
+            ]
+        },
+        {
+            "hour": "14",
+            "events": [
+                {
+                    "id": 11,
+                    "name": "Session Preview powered by FUJI TV NEXT",
+                    "startMinute": 15,
+                    "duration": 45,
+                    "color": "pink",
+                    "column": 2
+                },
+                {
+                    "id": 12,
+                    "name": "日本グランプリ Chronicle/ Playback 2023",
+                    "startMinute": 45,
+                    "duration": 75,
+                    "color": "teal",
+                    "column": 2
+                }
+            ]
+        },
+        {
+            "hour": "15",
+            "events": [
+                {
+                    "id": 13,
+                    "name": "【予】予定",
+                    "startMinute": 0,
+                    "duration": 60,
+                    "color": "gray",
+                    "column": 1
+                }
+            ]
+        }
+    ]
+}
