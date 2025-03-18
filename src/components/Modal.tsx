@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from "react";
 import { useState, useRef, useCallback, useEffect } from "react";
 import {
@@ -16,7 +15,6 @@ import {
 import { toPng } from "html-to-image";
 import { Share2, Download } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
-import html2canvas from "html2canvas";
 import backgroundImage from "../images/7.svg"; // Import SVG directly
 import snsBgImage from "../images/SNS-bg.png"; // Replace with actual path to your SNS-bg image
 import Image from "next/image";
@@ -91,6 +89,7 @@ const Modal: React.FC<ModalProps> = ({
         width: scoreElement.offsetWidth,
         height: scoreElement.offsetHeight,
       });
+      console.log("Generated score card:", imageUrl);
       setScoreImageUrl(imageUrl);
 
       // Restore the original state
