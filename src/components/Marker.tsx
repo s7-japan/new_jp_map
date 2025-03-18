@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { scale_to_padding } from "@/lib/utils";
+import Image from "next/image";
 interface MarkerData {
   Coordinates: {
     lat: number;
@@ -127,7 +129,7 @@ const Marker = React.memo(
             setIsDialogOpen(true);
           }}
         >
-          <img
+          <Image
             src={
               ICONS[item.category as keyof typeof ICONS] ||
               ICONS["アトラクション"]
