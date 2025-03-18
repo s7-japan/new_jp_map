@@ -63,10 +63,7 @@ export default function EventCalendar() {
     const minutesFromDayStart = (startHour - 8) * 60 + startMinute;
     const topPosition = minutesFromDayStart * MINUTE_HEIGHT;
 
-    // Calculate width based on number of overlapping events
     const width = totalInGroup > 1 ? `${100 / totalInGroup}%` : "100%";
-
-    // Calculate horizontal position
     const left = totalInGroup > 1 ? `${(index / totalInGroup) * 100}%` : "0";
     const height = duration * MINUTE_HEIGHT;
     return {
@@ -79,7 +76,6 @@ export default function EventCalendar() {
     };
   };
 
-  // Render a single event block
   const renderEvent = (
     event: EventItem,
     totalInGroup: number,

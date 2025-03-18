@@ -166,5 +166,29 @@
     "event": "test2",
     "Date": "06/04/2025",
     "Event No": "22"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "9:00",
+    "end time": "10:00",
+    "event": "test3",
+    "Date": "05/04/2025",
+    "Event No": "99"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "9:00",
+    "end time": "10:00",
+    "event": "test2",
+    "Date": "07/04/2025",
+    "Event No": "121"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "9:00",
+    "end time": "10:00",
+    "event": "test3",
+    "Date": "07/04/2025",
+    "Event No": "122"
   }
 ]
