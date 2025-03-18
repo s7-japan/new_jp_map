@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -122,8 +123,9 @@ const Map = () => {
           backgroundColor: "transparent",
           zIndex: 0,
         }}
-        whenCreated={(mapInstance) => {
-          mapRef.current = mapInstance;
+        // @ts-expect-error: mapRef is not null
+        whenReady={(e: any) => {
+          mapRef.current = e.target;
         }}
       >
         <ImageOverlay url={F1Map.src} bounds={pixelBounds} />
@@ -140,10 +142,6 @@ const Map = () => {
 
           const rotatedX = y;
           const rotatedY = MAP_DIMENSIONS.width - x;
-
-          console.log(
-            `${item.title}: Lat=${lat}, Lng=${lng}, RotatedX=${rotatedX}, RotatedY=${rotatedY}`
-          );
 
           if (
             rotatedX < 0 ||

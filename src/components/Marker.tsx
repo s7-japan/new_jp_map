@@ -125,7 +125,6 @@ const Marker = React.memo(
           }}
           onClick={(e) => {
             e.stopPropagation(); // Prevent event from bubbling to map
-            console.log("Marker clicked:", item.title);
             setIsDialogOpen(true);
           }}
         >

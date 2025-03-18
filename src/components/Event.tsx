@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { EventItem, CalendarData } from "../types";
-import { eventData } from "@/temp-data";
+
 import DatePicker from "./DatePicker";
 import {
   parseTime,
@@ -13,34 +13,37 @@ import {
   isFullWidthEvent,
 } from "../lib/utils";
 
-type EventCalendarProps = {
-  data?: CalendarData;
-};
-
-export default function EventCalendar({
-  data = eventData,
-}: EventCalendarProps) {
+export default function EventCalendar() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [filteredEvents, setFilteredEvents] = useState<EventItem[]>([]);
 
   const HOUR_HEIGHT = 120;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
+  const [eventData, setEventData] = useState<CalendarData>([]);
 
   useEffect(() => {
+    fetch("/data.json")
+      .then((response) => response.json())
+      .then((json) => setEventData(json));
+  }, []);
+  useEffect(() => {
     const dates = Array.from(
-      new Set(data.filter((event) => event.Date).map((event) => event.Date))
+      new Set(
+        eventData?.filter((event) => event.Date).map((event) => event.Date)
+      )
     ).sort();
 
     if (dates.length > 0) {
-      setSelectedDate(dates[0] || "");
+      // @ts-expect-error: dates is not empty
+      setSelectedDate(dates[0]);
     }
-  }, [data]);
+  }, [eventData]);
 
   useEffect(() => {
     if (selectedDate) {
-      setFilteredEvents(filterEventsByDate(data, selectedDate));
+      setFilteredEvents(filterEventsByDate(eventData, selectedDate));
     }
-  }, [selectedDate, data]);
+  }, [selectedDate, eventData]);
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
@@ -92,7 +95,11 @@ export default function EventCalendar({
 
   return (
     <div className="w-full max-w-4xl  mb-200">
-      <DatePicker data={data} onDateChange={handleDateChange} />
+      <DatePicker
+        // @ts-expect-error: eventData is not empty
+        eventData={eventData}
+        onDateChange={handleDateChange}
+      />
 
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 mt-20 ">
         <div className="flex sticky top-0  bg-white">
