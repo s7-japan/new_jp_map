@@ -13,6 +13,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
+import { toPng } from "html-to-image";
 import { Share2, Download } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
 import html2canvas from "html2canvas";
@@ -85,23 +86,11 @@ const Modal: React.FC<ModalProps> = ({
       const originalTransform = scoreElement.style.transform;
       scoreElement.style.opacity = "1"; // Make it fully opaque for capture
       scoreElement.style.transform = "none"; // Remove any transforms that might affect capture
-
-      // Optimized html2canvas options
-      const options = {
-        scale: window.devicePixelRatio * 1.5,
-        backgroundColor: "#ffffff",
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        imageTimeout: 0,
-        removeContainer: true,
-        // Add this to prevent scrolling issues
-        windowWidth: scoreElement.offsetWidth,
-        windowHeight: scoreElement.offsetHeight,
-      };
-
-      const canvas = await html2canvas(scoreElement, options);
-      const imageUrl = canvas.toDataURL("image/png", 0.9);
+      const imageUrl = await toPng(scoreElement, {
+        quality: 1, // Maximum quality
+        width: scoreElement.offsetWidth,
+        height: scoreElement.offsetHeight,
+      });
       setScoreImageUrl(imageUrl);
 
       // Restore the original state
