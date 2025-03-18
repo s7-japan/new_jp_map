@@ -16,7 +16,6 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
       data?.filter((event) => event.Date).map((event) => event.Date) || []
     )
   ).sort();
-
   const [selectedDate, setSelectedDate] = useState(uniqueDates[0] || "");
 
   const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -32,12 +31,12 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
   };
 
   return (
-    <div className="mb-4 z-[100]">
+    <div className="mb-4 mx-auto my-2">
       <select
         id="date-select"
         value={selectedDate}
         onChange={handleDateChange}
-        className="w-full p-2 border border-gray-300 rounded-md bg-white"
+        className="p-2 border border-gray-300 rounded-md bg-white w-[90%] "
       >
         {uniqueDates.map((date) => (
           <option key={date} value={date}>

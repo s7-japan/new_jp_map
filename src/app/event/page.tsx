@@ -5,14 +5,14 @@ import Event from "@/components/Event";
 import BackToMap from "@/components/BackToMap";
 import Footer from "@/components/Footer";
 import EventMapHeader from "@/components/EventMapHeader";
-import Header from "@/components/Header";
 const EventPage = () => {
   return (
-    <div className="bg-white w-full h-[100dvh]">
-      <Header />
-      <EventMapHeader />
-      <Event />
-      <BackToMap />
+    <div className="bg-white w-full h-[100dvh] ">
+      <div>
+        <EventMapHeader />
+        <Event />
+        <BackToMap />
+      </div>
       <Footer />
     </div>
   );
