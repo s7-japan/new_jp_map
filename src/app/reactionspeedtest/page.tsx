@@ -1,3 +1,5 @@
+"use client";
+import BottomNav from "@/components/BottomNav";
 import React from "react";
 
 const Page = () => {
@@ -9,6 +11,7 @@ const Page = () => {
         title="Redlight One Map"
         allowFullScreen
       />
+      <BottomNav />
     </div>
   );
 };
