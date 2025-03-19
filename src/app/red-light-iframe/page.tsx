@@ -8,7 +8,7 @@ const IframeRedLight = () => {
     if (window === null) return;
     setWidth(window.innerWidth);
     setHeight(window.innerHeight);
-  }, [window]);
+  }, []);
   return (
     <div className="w-[100dvw] h-[100dvh]">
       <iframe
