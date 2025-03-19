@@ -76,7 +76,7 @@ const BottomNav: React.FC = () => {
               marginTop: "4px",
             },
           }}
-          onClick={() => router.push("/fingurecircuit")}
+          onClick={() => router.push("/fingercircuit")}
         />
         <BottomNavigationAction
           label="MENU"

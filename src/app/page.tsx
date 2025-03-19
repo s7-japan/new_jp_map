@@ -1,23 +1,29 @@
-"use client";
 import React from "react";
-import Header from "../components/Header";
-import Direction from "../components/Direction";
-import dynamic from "next/dynamic";
-import BottomNav from "@/components/BottomNav";
-const Map = dynamic(() => import("../components/Map"), {
-  ssr: false,
-});
-import EventCalendar from "../components/EventCalendar";
-const MapPage = () => {
+
+const Page = () => {
   return (
-    <div className="bg-white w-full h-full">
-      <Header />
-      <Direction />
-      <Map />
-      <EventCalendar />
-      <BottomNav />
+    <div
+      style={{
+        height: "100vh", // Full viewport height
+        width: "100vw", // Full viewport width
+        margin: 0, // Remove default margins
+        padding: "20px", // Keep padding for spacing
+        display: "flex", // Use flexbox
+        flexDirection: "column", // Stack items vertically
+        justifyContent: "center", // Center vertically
+        alignItems: "center", // Center horizontally
+        textAlign: "center", // Center text within the elements
+      }}
+    >
+      <h1>404 Error</h1>
+      <p>
+        Please visit this page:{" "}
+        <a href="/minimap" style={{ color: "#e00400" }}>
+          /minimap
+        </a>
+      </p>
     </div>
   );
 };
 
-export default MapPage;
+export default Page;
