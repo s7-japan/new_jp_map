@@ -1,177 +1,166 @@
-"use client";
+// user-location.tsx
 import { useEffect, useState } from "react";
-import {
-  getNetworkStatus,
-  monitorNetworkChanges,
-  isWithinBounds,
-} from "../functions";
-import { scale_to_padding } from "@/lib/utils";
+import { Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+
 interface UserLocationProps {
   mapWidth: number;
   mapHeight: number;
-  onLocationUpdate?: (lat: number, lng: number) => void;
-  isVisible?: boolean;
-  scale?: number;
-  offset?: {
-    top?: number;
-    right?: number;
-    bottom?: number;
-    left?: number;
-  };
+  isVisible: boolean;
 }
 
-const MAP_BOUNDS = {
-  north: 34.854529,
-  south: 34.839992,
-  east: 136.544621,
-  west: 136.521328,
-};
+export const UserLocation: React.FC<UserLocationProps> = ({ isVisible }) => {
+  const map = useMap();
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-const convertToPixelPosition = (
-  lat: number,
-  lng: number,
-  mapWidth: number,
-  mapHeight: number
-) => {
-  const { north, south, east, west } = MAP_BOUNDS;
-  const x = ((lng - west) / (east - west)) * mapWidth;
-  const y = ((north - lat) / (north - south)) * mapHeight;
-  return { x, y };
-};
-
-export function UserLocation({
-  mapWidth,
-  mapHeight,
-  onLocationUpdate,
-  isVisible = true,
-  scale = 1,
-  offset = { top: 0, right: 0, bottom: 0, left: 0 },
-}: UserLocationProps) {
-  const [position, setPosition] = useState<GeolocationPosition | null>(null);
-  const [isOutOfBounds, setIsOutOfBounds] = useState(false);
-  const [networkStatus, setNetworkStatus] = useState<{
-    type: string;
-    speed?: number;
-  }>({ type: "unknown" });
-
-  // Base size for the marker
-  const baseSize = 30;
-  const size = baseSize;
-
-  // Normalize offset object with defaults
-  const normalizedOffset = {
-    top: offset.top ?? 0,
-    right: offset.right ?? 0,
-    bottom: offset.bottom ?? 0,
-    left: offset.left ?? 0,
-  };
+  // Custom user location icon with smaller dimensions
+  const userIcon = L.divIcon({
+    className: "user-location-icon",
+    html: `
+      <div class="box">
+        <div class="circle">
+          <div class="inner"></div>
+          <div class="highlight"></div>
+        </div>
+        <div class="square"></div>
+      </div>
+      <div class="shadow"></div>
+      <style>
+        .box {
+          width: 40px;
+          height: 40px;
+          background: none;
+          animation: updown 1s ease 0.2s infinite;
+          position: relative;
+        }
+        .circle {
+          position: relative;
+          background-color: #ef2929;
+          width: 40px;
+          height: 40px;
+          margin: auto;
+          padding: 0;
+          top: 13px;
+          border-radius: 50%;
+        }
+        .inner {
+          position: relative;
+          background-color: white;
+          width: 13px;
+          height: 13px;
+          margin: auto;
+          padding: 0;
+          top: 13px;
+          border-radius: 50%;
+          z-index: 3;
+        }
+        .highlight {
+          position: relative;
+          width: 39px;
+          height: 40px;
+          margin: auto;
+          padding: 0;
+          z-index: 3;
+          top: -14px;
+          left: 0.4px;
+          border-radius: 50%;
+          border-top: #ff7676 2px solid;
+          transform: rotate(30deg);
+        }
+        .square {
+          position: relative;
+          background-color: #ef2929;
+          width: 20px;
+          height: 20px;
+          margin: auto;
+          padding: 0;
+          bottom: 2px;
+          transform: rotate(-45deg);
+          z-index: 2;
+          border-bottom-left-radius: 3px;
+        }
+       
+        @keyframes updown {
+          0%   { transform: translateY(0px); }
+          50%  { transform: translateY(3px); }
+          100% { transform: translateY(0px); }
+        }
+       
+      </style>
+    `,
+    iconSize: [40, 52], // Width: 40px, Height: 40px circle + shadow at 46px + buffer
+    iconAnchor: [20, 52], // Anchor at bottom center (tip of the pin)
+    popupAnchor: [0, -52], // Popup above the icon
+  });
 
   useEffect(() => {
-    getNetworkStatus().then(setNetworkStatus);
-    return monitorNetworkChanges(setNetworkStatus);
-  }, []);
+    if (!isVisible) return;
 
-  useEffect(() => {
     if (!navigator.geolocation) {
-      console.error("Geolocation is not supported by this browser.");
+      setError("Geolocation is not supported by your browser");
       return;
     }
 
-    const options = {
-      enableHighAccuracy: true,
-      timeout: networkStatus.type === "wifi" ? 5000 : 10000,
-      maximumAge: networkStatus.type === "wifi" ? 0 : 5000,
-    };
-
-    const watchId = navigator.geolocation.watchPosition(
+    // Get initial position
+    navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setPosition(pos);
-        const withinBounds = isWithinBounds(
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
-        setIsOutOfBounds(!withinBounds);
-        onLocationUpdate?.(pos.coords.latitude, pos.coords.longitude);
+        const { latitude, longitude } = pos.coords;
+        setPosition([latitude, longitude]);
       },
-      (error) => {
-        console.error("Error getting location:", error);
+      (err) => {
+        setError(err.message);
+        console.error("Geolocation error:", err);
       },
-      options
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
     );
 
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, [onLocationUpdate, networkStatus.type]);
+    // Watch position for updates
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setPosition([latitude, longitude]);
+      },
+      (err) => {
+        setError(err.message);
+        console.error("Geolocation watch error:", err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
 
-  if (!position || isOutOfBounds || !isVisible) return null;
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [isVisible, map]);
 
-  const pixelPosition = convertToPixelPosition(
-    position.coords.latitude,
-    position.coords.longitude,
-    mapWidth,
-    mapHeight
-  );
+  // Center map on user location when position updates
+  useEffect(() => {
+    if (position && isVisible) {
+      map.setView(position, map.getZoom());
+    }
+  }, [position, map, isVisible]);
 
-  // Calculate final position with offsets
-  const finalLeft =
-    pixelPosition.x - size / 2 + normalizedOffset.left - normalizedOffset.right;
-  const finalTop =
-    pixelPosition.y - size + normalizedOffset.top - normalizedOffset.bottom;
+  if (!isVisible || error || !position) {
+    return null;
+  }
 
   return (
-    <div
-      className="absolute"
-      style={{
-        position: "absolute",
-        left: `${
-          finalLeft +
-          scale_to_padding[scale.toString() as keyof typeof scale_to_padding]
-            .left
-        }px`,
-        top: `${
-          finalTop +
-          scale_to_padding[scale.toString() as keyof typeof scale_to_padding]
-            .top
-        }px`,
-        transform: "translate(-50%, -50%)",
-        borderRadius: "50%",
-        padding: 0,
-        zIndex: 1000, // Add zIndex to ensure clickability
-      }}
-    >
-      <div className="relative">
-        <svg
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="12"
-            cy="12"
-            r="6"
-            fill="#e50111"
-            fillOpacity="0.8"
-            stroke="#FFFFFF"
-            strokeWidth="2"
-          />
-        </svg>
-
-        <div
-          className="absolute top-0 left-0 w-full h-full animate-ping"
-          style={{ transform: `scale(${scale})` }}
-        >
-          <svg
-            width={size}
-            height={size}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="12" cy="12" r="8" fill="#e50111" fillOpacity="0.3" />
-          </svg>
+    <Marker position={position} icon={userIcon}>
+      <Popup>
+        <div>
+          <h3>Your Location</h3>
+          <p>Lat: {position[0].toFixed(6)}</p>
+          <p>Lng: {position[1].toFixed(6)}</p>
         </div>
-      </div>
-    </div>
+      </Popup>
+    </Marker>
   );
-}
+};
