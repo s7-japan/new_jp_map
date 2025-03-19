@@ -3,8 +3,8 @@
 import React from "react";
 import Event from "@/components/Event";
 import BackToMap from "@/components/BackToMap";
-import Footer from "@/components/Footer";
 import EventMapHeader from "@/components/EventMapHeader";
+import BottomNav from "@/components/BottomNav";
 const EventPage = () => {
   return (
     <div className="bg-white w-full h-[100dvh] ">
@@ -13,7 +13,7 @@ const EventPage = () => {
         <Event />
         <BackToMap />
       </div>
-      <Footer />
+      <BottomNav />
     </div>
   );
 };

@@ -7,9 +7,10 @@ import CircuitIcon from "../images/circuit-icon.svg";
 import MenuIcon from "../images/menu-icon.svg";
 import DriverIcon from "../images/driver-icon.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 const BottomNav: React.FC = () => {
   const [value, setValue] = React.useState(0);
-
+  const router = useRouter();
   return (
     <Paper
       sx={{
@@ -45,6 +46,7 @@ const BottomNav: React.FC = () => {
               marginTop: "4px",
             },
           }}
+          onClick={() => router.push("/")}
         />
         <BottomNavigationAction
           label="DRIVER"
@@ -58,6 +60,7 @@ const BottomNav: React.FC = () => {
               marginTop: "4px",
             },
           }}
+          onClick={() => router.push("/red-light")}
         />
         <BottomNavigationAction
           label="CIRCUIT"
@@ -73,6 +76,7 @@ const BottomNav: React.FC = () => {
               marginTop: "4px",
             },
           }}
+          onClick={() => router.push("/fingure_circuit")}
         />
         <BottomNavigationAction
           label="MENU"
