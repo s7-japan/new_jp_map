@@ -1,9 +1,12 @@
 "use client";
 import React from "react";
-import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Direction from "../components/Direction";
-import Map from "../components/Map";
+import dynamic from "next/dynamic";
+import BottomNav from "@/components/BottomNav";
+const Map = dynamic(() => import("../components/Map"), {
+  ssr: false,
+});
 import EventCalendar from "../components/EventCalendar";
 const MapPage = () => {
   return (
@@ -12,7 +15,7 @@ const MapPage = () => {
       <Direction />
       <Map />
       <EventCalendar />
-      <Footer />
+      <BottomNav />
     </div>
   );
 };

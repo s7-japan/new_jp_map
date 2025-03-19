@@ -11,12 +11,11 @@ type DatePickerProps = {
 };
 
 export default function DatePicker({ data, onDateChange }: DatePickerProps) {
-  // Extract unique dates from the data
   const uniqueDates = Array.from(
-    new Set(data.filter((event) => event.Date).map((event) => event.Date))
+    new Set(
+      data?.filter((event) => event.Date).map((event) => event.Date) || []
+    )
   ).sort();
-
-  // Set default selected date to the first date in the list
   const [selectedDate, setSelectedDate] = useState(uniqueDates[0] || "");
 
   const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,7 +24,6 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
     onDateChange(newDate);
   };
 
-  // Format date for display (MM/DD/YYYY to YYYY年MM月DD日)
   const formatDateForDisplay = (dateStr: string) => {
     if (!dateStr) return "";
     const [month, day, year] = dateStr.split("/");
@@ -33,12 +31,12 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 mx-auto my-2">
       <select
         id="date-select"
         value={selectedDate}
         onChange={handleDateChange}
-        className="w-full p-2 border border-gray-300 rounded-md bg-white"
+        className="p-2 border border-gray-300 rounded-md bg-white w-[90%] "
       >
         {uniqueDates.map((date) => (
           <option key={date} value={date}>

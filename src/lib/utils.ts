@@ -75,8 +75,19 @@ export const getEventColor = (
 export const filterEventsByDate = (
   events: EventItem[],
   selectedDate: string
-): EventItem[] => {
-  return events.filter((event) => event.Date === selectedDate || !event.Date);
+): { [key: string]: EventItem[] } => {
+  const filteredEvents = events.filter(
+    (event) => event.Date === selectedDate || !event.Date
+  );
+
+  return filteredEvents.reduce((acc, event) => {
+    const key = `${event["start time"]}-${event.Type}`;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(event);
+    return acc;
+  }, {} as { [key: string]: EventItem[] });
 };
 
 // Generate array of hours from 8 to 21
