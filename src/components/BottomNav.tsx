@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMenuStore } from "../store/menuStore";
 
 import HomeIcon from "../images/home-icon.svg";
 import CircuitIcon from "../images/circuit-icon.svg";
@@ -11,10 +14,23 @@ import DriverIcon from "../images/driver-icon.svg";
 const BottomNav: React.FC = () => {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
+  const { toggleMenu } = useMenuStore();
 
-  const handleNavigation = (newValue: number, path: string) => {
+  const handleNavigation = (
+    newValue: number,
+    path: string,
+    event:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.TouchEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
     setValue(newValue);
-    router.push(path);
+    if (newValue === 3) {
+      toggleMenu();
+    } else {
+      router.push(path);
+    }
   };
 
   return (
@@ -24,10 +40,10 @@ const BottomNav: React.FC = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        zIndex: 3000, // Increased z-index
+        zIndex: 3000,
         width: "100%",
         borderRadius: 0,
-        touchAction: "manipulation", // Improves touch responsiveness
+        touchAction: "manipulation",
       }}
       elevation={0}
     >
@@ -40,15 +56,15 @@ const BottomNav: React.FC = () => {
           color: "white",
           height: "56px",
           "& .Mui-selected": {
-            color: "white !important", // Ensure selected state is visible
+            color: "white !important",
           },
         }}
       >
         <BottomNavigationAction
           label="HOME"
           icon={<Image src={HomeIcon} alt="Home" width={20} height={20} />}
-          onClick={() => handleNavigation(0, "/")}
-          onTouchStart={() => handleNavigation(0, "/")} // Add touch support
+          onClick={(e) => handleNavigation(0, "/", e)}
+          onTouchStart={(e) => handleNavigation(0, "/", e)}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -60,15 +76,15 @@ const BottomNav: React.FC = () => {
               marginTop: "2px",
             },
             "&:active": {
-              opacity: 0.7, // Visual feedback for tap
+              opacity: 0.7,
             },
           }}
         />
         <BottomNavigationAction
           label="DRIVER"
           icon={<Image src={DriverIcon} alt="Driver" width={20} height={20} />}
-          onClick={() => handleNavigation(1, "/reactionspeedtest")}
-          onTouchStart={() => handleNavigation(1, "/reactionspeedtest")}
+          onClick={(e) => handleNavigation(1, "/reactionspeedtest", e)}
+          onTouchStart={(e) => handleNavigation(1, "/reactionspeedtest", e)}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -89,8 +105,8 @@ const BottomNav: React.FC = () => {
           icon={
             <Image src={CircuitIcon} alt="Circuit" width={30} height={30} />
           }
-          onClick={() => handleNavigation(2, "/fingercircuit")}
-          onTouchStart={() => handleNavigation(2, "/fingercircuit")}
+          onClick={(e) => handleNavigation(2, "/fingercircuit", e)}
+          onTouchStart={(e) => handleNavigation(2, "/fingercircuit", e)}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -109,8 +125,8 @@ const BottomNav: React.FC = () => {
         <BottomNavigationAction
           label="MENU"
           icon={<Image src={MenuIcon} alt="Menu" width={20} height={20} />}
-          onClick={() => handleNavigation(3, "#")} // Add your menu route
-          onTouchStart={() => handleNavigation(3, "#")}
+          onClick={(e) => handleNavigation(3, "#", e)}
+          onTouchStart={(e) => handleNavigation(3, "#", e)}
           sx={{
             color: "white",
             minWidth: "60px",
