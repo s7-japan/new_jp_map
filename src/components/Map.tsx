@@ -11,7 +11,6 @@ import { Button } from "./ui/button";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Import all icons
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -31,7 +30,6 @@ import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 
-// Define ICONS mapping
 const ICONS = {
   アトラクション: MapIconAttraction,
   チケット: TicketCounter,
@@ -57,7 +55,6 @@ const ICONS = {
   オフィシャルグッズ販売: MapIconAttraction,
 };
 
-// Define MapItem interface
 interface MapItem {
   category: string;
   article_type: "モーダル" | "ピン" | "エリア紹介";
@@ -84,18 +81,14 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
 });
 
-// Function to parse content_text into sections
 const parseContentText = (text: string) => {
   if (!text) return null;
-
   const sections: { header: string; items: string[] }[] = [];
   const lines = text
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line);
-
   let currentSection: { header: string; items: string[] } | null = null;
-
   lines.forEach((line) => {
     if (line.startsWith("【") && line.endsWith("】")) {
       if (currentSection) sections.push(currentSection);
@@ -103,13 +96,10 @@ const parseContentText = (text: string) => {
     } else if (currentSection) {
       currentSection.items.push(line);
     } else {
-      if (!currentSection) {
-        currentSection = { header: "", items: [] };
-      }
+      if (!currentSection) currentSection = { header: "", items: [] };
       currentSection.items.push(line);
     }
   });
-
   if (currentSection) sections.push(currentSection);
   return sections.length > 0 ? sections : null;
 };
@@ -120,7 +110,6 @@ const LoadJSONAndProcess = (): MapItem[] => {
   return data;
 };
 
-// Custom Zoom Control Component
 const ZoomControl = () => {
   const map = useMap();
 
@@ -138,35 +127,114 @@ const ZoomControl = () => {
 
   return (
     <div className="flex flex-col gap-2 absolute bottom-[150px] right-10 z-[1000]">
-      <Button
-        onClick={zoomIn}
-        aria-label="Zoom in"
-        variant="default"
-        className="bg-white text-black active:bg-black active:text-white"
-      >
-        <Plus size={30} />
+      <Button onClick={zoomIn} aria-label="Zoom in">
+        <Plus size={15} />
       </Button>
-      <Button
-        onClick={zoomOut}
-        aria-label="Zoom out"
-        variant="default"
-        className="bg-white text-black"
-      >
-        <Minus size={30} />
+      <Button onClick={zoomOut} aria-label="Zoom out">
+        <Minus size={15} />
       </Button>
+    </div>
+  );
+};
+
+const CurrentLocationButton = ({
+  userPosition,
+}: {
+  userPosition: [number, number] | null;
+}) => {
+  const map = useMap();
+
+  const centerOnUser = () => {
+    console.log("CurrentLocationButton clicked");
+    if (!userPosition) {
+      alert("Location not yet available. Please wait or enable tracking.");
+      return;
+    }
+    map.setView(userPosition, 16);
+    console.log("Centered map on position:", userPosition);
+  };
+
+  return (
+    <div
+      onClick={centerOnUser}
+      className="absolute bottom-[250px] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
+      title="Center on my current location"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
     </div>
   );
 };
 
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
-  const [showUserLocation, setShowUserLocation] = useState(true);
-  const [zoomLevel, setZoomLevel] = useState(15); // Track current zoom level
+  const [showUserLocation, setShowUserLocation] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(15);
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(
+    null
+  );
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   useEffect(() => {
     setIsClient(true);
     console.log("Client initialized, total markers:", processedData.length);
+
+    if (!navigator.geolocation) {
+      console.warn("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    // Start continuous tracking
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const newPosition: [number, number] = [latitude, longitude];
+        setUserPosition(newPosition);
+        setShowUserLocation(true);
+        console.log("User position updated:", newPosition);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMessage = "Unable to track your location: ";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += "Permission denied.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            errorMessage += "The request timed out.";
+            break;
+          default:
+            errorMessage += "An unknown error occurred.";
+        }
+        console.warn(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+
+    // Cleanup on unmount
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      console.log("Stopped tracking user location");
+    };
   }, []);
 
   const getMarkerIcon = (category: string) => {
@@ -179,7 +247,6 @@ const Map = () => {
     });
   };
 
-  // Component to handle zoom events
   const MapEvents = () => {
     const map = useMapEvents({
       zoomend: () => {
@@ -191,13 +258,11 @@ const Map = () => {
 
   if (!isClient) return <div>Loading map...</div>;
 
-  // Define zoom level thresholds
-  const ZOOM_OUT_THRESHOLD = 12; // Below this, show nothing
-  const ZOOM_MEDIUM_THRESHOLD = 15; // Between this and ZOOM_OUT_THRESHOLD, show important markers
+  const ZOOM_OUT_THRESHOLD = 12;
+  const ZOOM_MEDIUM_THRESHOLD = 15;
 
-  // Function to determine if a marker is "important"
   const isImportantMarker = (item: MapItem) => {
-    const importantCategories = ["救護所", "ゲート", "チケット"]; // First Aid, Gates, Tickets
+    const importantCategories = ["救護所", "ゲート", "チケット"];
     return importantCategories.includes(item.category);
   };
 
@@ -206,14 +271,10 @@ const Map = () => {
       <MapContainer
         center={[34.8468125, 136.5383125]}
         zoom={15}
-        minZoom={10}
+        minZoom={13}
         maxZoom={18}
         scrollWheelZoom={true}
-        style={{
-          height: "100%",
-          width: "100%",
-          zIndex: 0,
-        }}
+        style={{ height: "100%", width: "100%", zIndex: 0 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -232,17 +293,12 @@ const Map = () => {
             return null;
           }
 
-          // Zoom level logic
-          if (zoomLevel <= ZOOM_OUT_THRESHOLD) {
-            return null; // Hide all markers at zoom out
-          } else if (zoomLevel <= ZOOM_MEDIUM_THRESHOLD) {
-            if (!isImportantMarker(item)) {
-              return null; // Show only important markers at medium zoom
-            }
-          }
-          // Show all markers at zoom in (above ZOOM_MEDIUM_THRESHOLD)
-
-          console.log(`${item.title}: Lat=${lat}, Lng=${lng}`);
+          if (zoomLevel <= ZOOM_OUT_THRESHOLD) return null;
+          else if (
+            zoomLevel <= ZOOM_MEDIUM_THRESHOLD &&
+            !isImportantMarker(item)
+          )
+            return null;
 
           const contentSections = parseContentText(item.content_text);
 
@@ -284,18 +340,12 @@ const Map = () => {
           mapWidth={1770}
           mapHeight={2400}
           isVisible={showUserLocation}
+          position={userPosition}
         />
         <ZoomControl />
-        <MapEvents /> {/* Add zoom event listener */}
+        <CurrentLocationButton userPosition={userPosition} />
+        <MapEvents />
       </MapContainer>
-
-      {/* Toggle button for user location */}
-      <Button
-        onClick={() => setShowUserLocation(!showUserLocation)}
-        className="absolute top-4 right-4 z-[1000] bg-white text-black"
-      >
-        {showUserLocation ? "Hide My Location" : "Show My Location"}
-      </Button>
 
       <style jsx global>{`
         .leaflet-container {
