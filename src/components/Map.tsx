@@ -106,7 +106,6 @@ const parseContentText = (text: string) => {
 
 const LoadJSONAndProcess = (): MapItem[] => {
   const data = jpData as MapItem[];
-  console.log("Loaded JSON data:", data.length, "items");
   return data;
 };
 
@@ -116,17 +115,15 @@ const ZoomControl = () => {
   const zoomIn = () => {
     const currentZoom = map.getZoom();
     map.setZoom(currentZoom + 1);
-    console.log("Zoomed in to:", currentZoom + 1);
   };
 
   const zoomOut = () => {
     const currentZoom = map.getZoom();
     map.setZoom(currentZoom - 1);
-    console.log("Zoomed out to:", currentZoom - 1);
   };
 
   return (
-    <div className="flex flex-col gap-2 absolute bottom-[150px] right-10 z-[1000]">
+    <div className="flex flex-col gap-2 absolute bottom-[200px] right-10 z-[1000]">
       <Button onClick={zoomIn} aria-label="Zoom in">
         <Plus size={15} />
       </Button>
@@ -145,19 +142,17 @@ const CurrentLocationButton = ({
   const map = useMap();
 
   const centerOnUser = () => {
-    console.log("CurrentLocationButton clicked");
     if (!userPosition) {
       alert("Location not yet available. Please wait or enable tracking.");
       return;
     }
     map.setView(userPosition, 16);
-    console.log("Centered map on position:", userPosition);
   };
 
   return (
     <div
       onClick={centerOnUser}
-      className="absolute bottom-[250px] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
+      className="absolute bottom-[300px] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
       title="Center on my current location"
     >
       <svg
@@ -189,7 +184,6 @@ const Map = () => {
 
   useEffect(() => {
     setIsClient(true);
-    console.log("Client initialized, total markers:", processedData.length);
 
     if (!navigator.geolocation) {
       console.warn("Geolocation is not supported by this browser.");
@@ -203,7 +197,6 @@ const Map = () => {
         const newPosition: [number, number] = [latitude, longitude];
         setUserPosition(newPosition);
         setShowUserLocation(true);
-        console.log("User position updated:", newPosition);
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -233,7 +226,6 @@ const Map = () => {
     // Cleanup on unmount
     return () => {
       navigator.geolocation.clearWatch(watchId);
-      console.log("Stopped tracking user location");
     };
   }, []);
 
