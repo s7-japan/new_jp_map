@@ -43,7 +43,6 @@ export default function EventCalendar() {
     if (selectedDate) {
       const eventsForDate = filterEventsByDate(eventData, selectedDate);
       setFilteredEvents(Array.from(Object.values(eventsForDate)));
-      console.log(eventData);
     }
   }, [selectedDate, eventData]);
 
@@ -98,8 +97,9 @@ export default function EventCalendar() {
         <div className="absolute top-0 right-2 font-extrabold">
           {event["Event No"]}
         </div>
-        <div className="text-[10px] text-center">
-          <div>{event["start time"] + "-" + event["end time"]}</div>
+        <div className="text-[12px] text-center">
+          <strong>{event["start time"]}</strong>
+          <br />
           {event.event}
         </div>
       </div>
@@ -111,14 +111,16 @@ export default function EventCalendar() {
 
   return (
     <div className="w-full max-w-4xl  mb-200">
-      <DatePicker data={eventData} onDateChange={handleDateChange} />
+      <div>
+        <DatePicker data={eventData} onDateChange={handleDateChange} />
+      </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
         <div className="flex sticky top-0  bg-white">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div className="flex-1 bg-[#1C1ACB] text-white p-2 text-center font-bold text-[12px]">
+          <div className="flex-1 bg-[#1C1ACB] text-white p-2 text-center font-bold text-[12px] ml-2">
             レーシングコース
           </div>
-          <div className="flex-1 bg-[#FE699F] text-white p-2 text-center font-bold whitespace-pre-line text-[12px]">
+          <div className="flex-1 bg-[#FE699F] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2">
             GPスクエア オフィシャルステージ
           </div>
         </div>
@@ -143,14 +145,13 @@ export default function EventCalendar() {
             ))}
 
             {/* Overlay events */}
-            <div className="absolute top-0 left-10 right-0 h-full">
+            <div className="absolute top-0 left-10 right-0 h-full mx-2 bg-gray-50">
               <div className="flex h-full">
                 {/* Racing Course events */}
                 <div className="flex-1 relative">
                   {filteredEvents
                     .filter((event) => event[0].Type === "レーシングコース")
                     .map((overlapping_event) => {
-                      console.log(overlapping_event);
                       return (
                         <div
                           key={crypto.randomUUID()}
@@ -207,6 +208,9 @@ export default function EventCalendar() {
                       style={{
                         ...eventStyle,
                         zIndex: 20,
+                        marginLeft: 8,
+                        marginRight: 8,
+                        width: "95%",
                       }}
                     >
                       <div className="text-sm flex justify-center items-center">

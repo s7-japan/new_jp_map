@@ -96,8 +96,6 @@ export const UserLocation: React.FC<UserLocationProps> = ({
     return null;
   }
 
-  console.log("Rendering UserLocation with position:", position);
-
   return (
     <Marker position={position} icon={userIcon}>
       <Popup>

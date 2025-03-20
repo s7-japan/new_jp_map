@@ -36,7 +36,7 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
         id="date-select"
         value={selectedDate}
         onChange={handleDateChange}
-        className="p-2 border border-gray-300 rounded-md bg-white w-[90%] "
+        className="p-2 border border-gray-300 rounded-md bg-white w-[60%] "
       >
         {uniqueDates.map((date) => (
           <option key={date} value={date}>
