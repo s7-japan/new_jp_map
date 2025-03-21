@@ -103,6 +103,7 @@ export default function EventCalendar() {
           ...eventStyle,
           backgroundColor: showGradient ? `${event.color}` || bg : "#f8fafc",
           color: showGradient ? text || "#ffffff" : "#000000",
+          fontFamily: "Hiragino Kaku Gothic Std",
         }}
         onClick={() => {
           console.log("clicked");
@@ -124,7 +125,7 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl  mb-200">
+    <div className="w-full max-w-4xl  mb-200 ">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
         <div>
@@ -139,18 +140,18 @@ export default function EventCalendar() {
         </div>
       </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
-        <div className="flex sticky top-0  bg-white">
+        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div className="flex-1 bg-[#1C1ACB] text-white p-2 text-center font-bold text-[12px] ml-2">
+          <div className="flex-1 bg-[#1C1ACB] text-white p-2 text-center font-bold text-[12px] ml-2 ">
             レーシングコース
           </div>
-          <div className="flex-1 bg-[#FE699F] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2">
+          <div className="flex-1 bg-[#FE699F] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]">
             GPスクエア オフィシャルステージ
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[70vh] relative">
-          <div className="relative">
+        <div className="overflow-y-auto max-h-[70vh] relative ">
+          <div className="relative w-[90dvw] mx-auto">
             {/* Hour markers */}
             {timeSlots.map((hour) => (
               <div
@@ -159,7 +160,7 @@ export default function EventCalendar() {
                 style={{ height: `${HOUR_HEIGHT}px` }}
               >
                 <div className="w-10 bg-[#15151E] text-white flex items-start justify-center font-bold shrink-0 pt-2 text-[13px]">
-                  {hour.toString().padStart(2, "0")}:00
+                  {hour.toString().padStart(2, "0")}
                 </div>
 
                 {/* Grid columns for Racing Course and GP Square */}
