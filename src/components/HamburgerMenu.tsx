@@ -1,42 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { slide as Menu } from "react-burger-menu";
 import { useMenuStore } from "../store/menuStore";
 
 const HamburgerMenu = () => {
   const { isOpen, setIsOpen } = useMenuStore();
-  const menuRef = useRef<HTMLDivElement>(null);
-  // Add state to control animation
-  const [animationComplete, setAnimationComplete] = useState(true);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setIsOpen]);
-
-  // Set animation state when menu opens/closes
-  useEffect(() => {
-    if (isOpen) {
-      setAnimationComplete(false);
-      document.body.style.overflow = "hidden"; // Prevent scrolling when menu is open
-    } else {
-      const timer = setTimeout(() => {
-        setAnimationComplete(true);
-      }, 400); // Match this with your transition duration
-      document.body.style.overflow = ""; // Re-enable scrolling
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  // Navigation items with links
+  // Navigation, terms, and social items
   const navItems = [
     {
       name: "チケット",
@@ -64,7 +35,6 @@ const HamburgerMenu = () => {
     },
   ];
 
-  // Terms items with links
   const termsItems = [
     {
       name: "利用規約",
@@ -80,20 +50,10 @@ const HamburgerMenu = () => {
     },
   ];
 
-  // Social media items with links
   const socialItems = [
-    {
-      platform: "insta",
-      link: "https://www.instagram.com/f1japanesegp/",
-    },
-    {
-      platform: "fb",
-      link: "https://www.facebook.com/suzukacircuit/",
-    },
-    {
-      platform: "x",
-      link: "https://twitter.com/suzuka_event",
-    },
+    { platform: "insta", link: "https://www.instagram.com/f1japanesegp/" },
+    { platform: "fb", link: "https://www.facebook.com/suzukacircuit/" },
+    { platform: "x", link: "https://twitter.com/suzuka_event" },
     {
       platform: "youtube",
       link: "https://www.youtube.com/channel/UCbVkZ41otxc8rCAu7_gsO6Q",
@@ -104,94 +64,136 @@ const HamburgerMenu = () => {
     },
   ];
 
+  // Custom styles with all numeric values as strings
+  const styles = {
+    bmMenuWrap: {
+      position: "fixed",
+      height: "80%",
+      width: "80%",
+      transition: "transform 0.3s ease-in-out",
+      zIndex: "100000",
+      right: "0", // Changed from 0 to "0"
+      bottom: "0", // Changed from 0 to "0"
+      top: "auto",
+    },
+    bmMenu: {
+      background: "#E00400",
+      padding: "1.5rem",
+      paddingTop: "2rem",
+      paddingBottom: "2rem",
+      borderRadius: "1.5rem 0 0 0",
+      height: "100%",
+      boxSizing: "border-box",
+      overflow: "hidden",
+    },
+    bmOverlay: {
+      background: "rgba(0, 0, 0, 0.3)",
+      backdropFilter: "blur(4px)",
+      top: "0", // Already a string, but ensuring consistency
+      left: "0",
+      right: "0",
+      bottom: "0",
+      transition: "opacity 0.3s ease-in-out",
+      zIndex: "99999",
+    },
+    bmItemList: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      padding: "0", // Changed from 0 to "0"
+      margin: "0", // Changed from 0 to "0"
+    },
+    bmItem: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      padding: "0", // Changed from 0 to "0"
+      margin: "0", // Changed from 0 to "0"
+    },
+  };
+
+  // Handle closing with shorter delay
+  const handleClose = () => {
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 300);
+  };
+
   return (
-    <>
-      {(!animationComplete || isOpen) && (
-        <>
-          {/* Backdrop with fade animation */}
-          <div
-            className={`fixed inset-0 z-[99999] transition-opacity duration-400 ease-in-out ${
-              isOpen ? "opacity-100" : "opacity-0"
-            } bg-black/30 backdrop-blur-sm`}
-            onClick={() => setIsOpen(false)}
-          />
+    <Menu
+      right
+      isOpen={isOpen}
+      onStateChange={(state) => setIsOpen(state.isOpen)}
+      onClose={handleClose}
+      customBurgerIcon={false}
+      styles={styles}
+      disableAutoFocus
+      disableOverlayClick={false}
+    >
+      <div className="flex flex-col h-full text-white">
+        {/* Navigation Links */}
+        <div className="text-base sm:text-lg flex flex-col gap-8 font-medium tracking-wide mt-2">
+          {navItems.map((item, index) => (
+            <a
+              key={index}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex justify-between items-center hover:text-gray-200"
+            >
+              <div>{item.name}</div>
+              <Image
+                src="/images/arrowIcon.svg"
+                width={20}
+                height={14}
+                alt="arrow icon"
+              />
+            </a>
+          ))}
+        </div>
 
-          {/* Menu with consistent slide animation for both opening and closing */}
-          <div
-            ref={menuRef}
-            className="fixed top-20 right-0 bottom-10 w-[80%] z-[100000] h-screen transition-all duration-400 ease-in-out transform"
-            style={{
-              transform: isOpen ? "translateX(0)" : "translateX(100%)",
-              transition: "transform 400ms ease-in-out",
-            }}
-          >
-            <div className="bg-[#E00400] rounded-tl-3xl rounded-bl-3xl h-[80%] text-white px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 flex flex-col justify-between gap-8 sm:gap-10 md:gap-14 overflow-y-auto">
-              {/* Navigation Links with consistent staggered animation */}
-              <div className="text-base sm:text-lg md:text-xl flex flex-col gap-4 sm:gap-6 md:gap-7 font-medium tracking-widest">
-                {navItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex justify-between items-center hover:text-gray-200"
-                    style={{
-                      transform: isOpen ? "translateX(0)" : "translateX(40px)",
-                      opacity: isOpen ? 1 : 0,
-                      transition: `transform 400ms ease-in-out, opacity 400ms ease-in-out`,
-                      transitionDelay: isOpen ? `${index * 50}ms` : "0ms",
-                    }}
-                  >
-                    <div>{item.name}</div>
-                    <Image
-                      src="/images/arrowIcon.svg"
-                      width={24}
-                      height={16}
-                      alt="arrow icon"
-                    />
-                  </a>
-                ))}
-              </div>
+        {/* Spacer */}
+        <div className="flex-grow" />
 
-              {/* Terms Links */}
-              <div className="text-sm sm:text-base md:text-lg flex flex-col gap-1 sm:gap-2 font-medium tracking-widest">
-                {termsItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-gray-200"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
+        {/* Terms Links */}
+        <div className="text-sm sm:text-base flex flex-col gap-4 font-medium tracking-wide mt-8">
+          {termsItems.map((item, index) => (
+            <a
+              key={index}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-200"
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
 
-              {/* Social Media Links */}
-              <div className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5">
-                {socialItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-80"
-                  >
-                    <Image
-                      src={`/images/${item.platform}.svg`}
-                      alt={item.platform}
-                      width={20}
-                      height={20}
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </>
+        {/* Spacer */}
+        <div className="flex-grow" />
+
+        {/* Social Media Links */}
+        <div className="flex items-center justify-between gap-2 mt-5 mb-2">
+          {socialItems.map((item, index) => (
+            <a
+              key={index}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 p-1"
+            >
+              <Image
+                src={`/images/${item.platform}.svg`}
+                alt={item.platform}
+                width={20}
+                height={20}
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+    </Menu>
   );
 };
 
