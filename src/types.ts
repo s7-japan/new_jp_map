@@ -5,6 +5,7 @@ export type EventItem = {
   event: string;
   Date?: string;
   "Event No": string;
+  color: string;
 };
 
 export type CalendarData = EventItem[];

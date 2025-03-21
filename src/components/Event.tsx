@@ -12,11 +12,13 @@ import {
   generateTimeSlots,
   isFullWidthEvent,
 } from "../lib/utils";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
 
 export default function EventCalendar() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [filteredEvents, setFilteredEvents] = useState<EventItem[][]>([]);
-
+  const [showGradient, setGradient] = useState(true);
   const HOUR_HEIGHT = 120;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
   const [eventData, setEventData] = useState<CalendarData>([]);
@@ -75,11 +77,17 @@ export default function EventCalendar() {
     };
   };
 
-  const renderEvent = (
-    event: EventItem,
-    totalInGroup: number,
-    index: number
-  ) => {
+  const RenderEvent = ({
+    event,
+    totalInGroup,
+    index,
+    showGradient,
+  }: {
+    event: EventItem;
+    totalInGroup: number;
+    index: number;
+    showGradient: boolean;
+  }) => {
     const { bg, text } = getEventColor(event.Type, event.event);
     const eventStyle = calculateEventStyle(
       event["start time"],
@@ -90,11 +98,17 @@ export default function EventCalendar() {
 
     return (
       <div
-        key={`${event.Type}-${event["start time"]}-${event.event}`}
-        className={`${bg} ${text} p-1 relative border-b-4 text-[10px] overflow-hidden`}
-        style={eventStyle}
+        className={`p-1 relative border-b-4 text-[10px] overflow-hidden `}
+        style={{
+          ...eventStyle,
+          backgroundColor: showGradient ? `${event.color}` || bg : "#f8fafc",
+          color: showGradient ? text || "#ffffff" : "#000000",
+        }}
+        onClick={() => {
+          console.log("clicked");
+        }}
       >
-        <div className="absolute top-0 right-2 font-extrabold">
+        <div className="absolute top-0 left-1 font-extrabold">
           {event["Event No"]}
         </div>
         <div className="text-[12px] text-center">
@@ -111,8 +125,18 @@ export default function EventCalendar() {
 
   return (
     <div className="w-full max-w-4xl  mb-200">
-      <div>
+      <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
+        <div>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="airplane-mode"
+              onCheckedChange={() => setGradient(!showGradient)}
+              checked={showGradient}
+            />
+            <Label htmlFor="airplane-mode">Toggle Color</Label>
+          </div>
+        </div>
       </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
         <div className="flex sticky top-0  bg-white">
@@ -157,13 +181,15 @@ export default function EventCalendar() {
                           key={crypto.randomUUID()}
                           className="flex flex-row flex-1/2"
                         >
-                          {overlapping_event.map((event) =>
-                            renderEvent(
-                              event,
-                              overlapping_event.length,
-                              overlapping_event.indexOf(event)
-                            )
-                          )}
+                          {overlapping_event.map((event, index) => (
+                            <RenderEvent
+                              event={event}
+                              key={`${event.Type}-${event["start time"]}-${event.event}`}
+                              index={index}
+                              totalInGroup={overlapping_event.length}
+                              showGradient={showGradient}
+                            />
+                          ))}
                         </div>
                       );
                     })}
@@ -177,13 +203,15 @@ export default function EventCalendar() {
                     )
                     .map((overlapping_event) => (
                       <div key={crypto.randomUUID()} className="flex flex-row">
-                        {overlapping_event.map((event) =>
-                          renderEvent(
-                            event,
-                            overlapping_event.length,
-                            overlapping_event.indexOf(event)
-                          )
-                        )}
+                        {overlapping_event.map((event, index) => (
+                          <RenderEvent
+                            event={event}
+                            key={`${event.Type}-${event["start time"]}-${event.event}`}
+                            index={index}
+                            totalInGroup={overlapping_event.length}
+                            showGradient={showGradient}
+                          />
+                        ))}
                       </div>
                     ))}
                 </div>
@@ -204,7 +232,9 @@ export default function EventCalendar() {
                   return (
                     <div
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
-                      className={`bg-[#FAF75F]  p-1 w-full `}
+                      className={`${
+                        showGradient ? "bg-[#FAF75F]" : "bg-[#f8fafc]"
+                      } p-1 w-full `}
                       style={{
                         ...eventStyle,
                         zIndex: 20,
