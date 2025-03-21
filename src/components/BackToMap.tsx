@@ -4,7 +4,12 @@ const BackToMap = () => {
   return (
     <div className="fixed bottom-[80px] text-[20px]  text-center  w-[100dvw] z-[100]">
       <div className="bg-white py-2 w-[80dvw] rounded-full shadow-2xl mx-auto">
-        <button onClick={() => navigate.push("/")}>マップに戻る</button>
+        <button onClick={() => navigate.push("/")}>
+          <strong className="font-normal">
+            CI<span className="text-[#ff0000]">R</span>CUIT JOURN
+            <span className="text-[#ff0000]">E</span>Y
+          </strong>
+        </button>
       </div>
     </div>
   );
