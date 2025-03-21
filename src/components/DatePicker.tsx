@@ -31,7 +31,7 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
   };
 
   return (
-    <div className="mb-4 mx-auto my-2">
+    <div className="mb-4 mx-auto my-2 flex-grow">
       <select
         id="date-select"
         value={selectedDate}

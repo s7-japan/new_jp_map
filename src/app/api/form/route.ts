@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       event: row["event"] || "",
       Date: formatDate(row["Date"]),
       "Event No": row["Event No"] || "",
+      color: row["color"],
     }));
 
     const filePath = path.join(process.cwd(), "public", "data.json");
