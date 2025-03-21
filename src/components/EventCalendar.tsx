@@ -3,7 +3,7 @@ const EventCalendar = () => {
   const router = useRouter();
   return (
     <div className="fixed bottom-[100px] text-[20px]  text-center  w-[100dvw]">
-      <div className="bg-white py-2 w-[80dvw] rounded-full shadow-2xl mx-auto ">
+      <div>
         <button
           className="bg-white py-2 w-[80dvw] rounded-full shadow-2xl mx-auto"
           onClick={() => router.push("/calender")}
