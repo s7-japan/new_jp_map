@@ -199,8 +199,8 @@ export default function EventCalendar() {
                       (event) =>
                         event[0].Type === "GPスクエア オフィシャルステージ"
                     )
-                    .map((overlapping_event) => (
-                      <div key={crypto.randomUUID()} className="flex flex-row">
+                    .map((overlapping_event, index) => (
+                      <div key={index} className="flex flex-row">
                         {overlapping_event.map((event, index) => (
                           <RenderEvent
                             event={event}
