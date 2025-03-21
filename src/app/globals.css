@@ -130,6 +130,10 @@
   font-style: normal; /* Optional: specify style */
 }
 
+.MyCustomFont {
+  font-family: "MyCustomFont";
+}
+
 body {
   margin: 0;
   padding: 0;
