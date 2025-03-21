@@ -176,12 +176,9 @@ export default function EventCalendar() {
                 <div className="flex-1 relative">
                   {filteredEvents
                     .filter((event) => event[0].Type === "レーシングコース")
-                    .map((overlapping_event) => {
+                    .map((overlapping_event, index) => {
                       return (
-                        <div
-                          key={crypto.randomUUID()}
-                          className="flex flex-row flex-1/2"
-                        >
+                        <div key={index} className="flex flex-row flex-1/2">
                           {overlapping_event.map((event, index) => (
                             <RenderEvent
                               event={event}
