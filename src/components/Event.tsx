@@ -244,6 +244,9 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center">
+                        <div className="font-bold">
+                          {event[0]["start time"]}
+                        </div>
                         <div>{event[0].event}</div>
                       </div>
                     </div>
