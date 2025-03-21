@@ -123,7 +123,7 @@ const ZoomControl = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 absolute bottom-[200px] right-10 z-[1000]">
+    <div className="flex flex-col gap-2 absolute bottom-[13rem] right-10 z-[1000]">
       <Button onClick={zoomIn} aria-label="Zoom in">
         <Plus size={15} />
       </Button>
@@ -152,7 +152,7 @@ const CurrentLocationButton = ({
   return (
     <div
       onClick={centerOnUser}
-      className="absolute bottom-[300px] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
+      className="absolute bottom-[18rem] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
       title="Center on my current location"
     >
       <svg
