@@ -111,15 +111,20 @@ const LoadJSONAndProcess = (): MapItem[] => {
 
 const ZoomControl = () => {
   const map = useMap();
+  const ZOOM_LEVELS = [13, 15, 19]; // Out, Middle, Max (changed to 19 to avoid gray background)
 
   const zoomIn = () => {
     const currentZoom = map.getZoom();
-    map.setZoom(currentZoom + 1);
+    const currentIndex = ZOOM_LEVELS.indexOf(currentZoom);
+    const nextIndex = Math.min(currentIndex + 1, ZOOM_LEVELS.length - 1);
+    map.setZoom(ZOOM_LEVELS[nextIndex]);
   };
 
   const zoomOut = () => {
     const currentZoom = map.getZoom();
-    map.setZoom(currentZoom - 1);
+    const currentIndex = ZOOM_LEVELS.indexOf(currentZoom);
+    const prevIndex = Math.max(currentIndex - 1, 0);
+    map.setZoom(ZOOM_LEVELS[prevIndex]);
   };
 
   return (
@@ -173,7 +178,7 @@ const CurrentLocationButton = ({
   );
 };
 
-const Map = () => {
+const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [showUserLocation, setShowUserLocation] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
@@ -190,7 +195,6 @@ const Map = () => {
       return;
     }
 
-    // Start continuous tracking
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -223,7 +227,6 @@ const Map = () => {
       }
     );
 
-    // Cleanup on unmount
     return () => {
       navigator.geolocation.clearWatch(watchId);
     };
@@ -250,95 +253,108 @@ const Map = () => {
 
   if (!isClient) return <div>Loading map...</div>;
 
-  const ZOOM_OUT_THRESHOLD = 12;
-  const ZOOM_MEDIUM_THRESHOLD = 15;
+  const ZOOM_OUT_THRESHOLD = 13; // No icons
+  const ZOOM_MIDDLE_THRESHOLD = 16; // Facility and Area icons only
 
-  const isImportantMarker = (item: MapItem) => {
-    const importantCategories = ["救護所", "ゲート", "チケット"];
-    return importantCategories.includes(item.category);
+  const isFacilityOrAreaMarker = (item: MapItem) => {
+    const facilityAndAreaCategories = [
+      "救護所", // First Aid Station
+      "ゲート", // Gate
+      "チケット", // Ticket Counter
+      "インフォメーション", // Information
+      "座席エリア", // Seating Area
+      "駐車場", // Parking
+    ];
+    return facilityAndAreaCategories.includes(item.category);
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      <MapContainer
-        center={[34.8468125, 136.5383125]}
-        zoom={15}
-        minZoom={13}
-        maxZoom={18}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%", zIndex: 0 }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {processedData.map((item: MapItem, index: number) => {
-          const [lat, lng] = item.coordinates
-            .replace(/[()]/g, "")
-            .split(",")
-            .map(Number);
+    <>
+      <div className="relative w-full h-screen overflow-hidden">
+        <MapContainer
+          center={[34.8468125, 136.5383125]}
+          zoom={15}
+          minZoom={13}
+          maxZoom={19} // Set to 19 to match OSM tile limit
+          scrollWheelZoom={true}
+          style={{ height: "100%", width: "100%", zIndex: 0 }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            maxZoom={19} // Ensure tiles stop at 19
+          />
+          {processedData.map((item: MapItem, index: number) => {
+            const [lat, lng] = item.coordinates
+              .replace(/[()]/g, "")
+              .split(",")
+              .map(Number);
 
-          if (isNaN(lat) || isNaN(lng)) {
-            console.warn(
-              `${item.title} has invalid coordinates: ${item.coordinates}`
+            if (isNaN(lat) || isNaN(lng)) {
+              console.warn(
+                `${item.title} has invalid coordinates: ${item.coordinates}`
+              );
+              return null;
+            }
+
+            // Three-stage zoom logic for display
+            if (zoomLevel <= ZOOM_OUT_THRESHOLD) {
+              return null; // Zoom Out: No icons
+            } else if (
+              zoomLevel <= ZOOM_MIDDLE_THRESHOLD &&
+              !isFacilityOrAreaMarker(item)
+            ) {
+              return null; // Middle: Only Facility and Area icons
+            }
+            // Zoom In (zoomLevel > ZOOM_MIDDLE_THRESHOLD): Show all icons
+
+            const contentSections = parseContentText(item.content_text);
+
+            return (
+              <Marker
+                key={`${item.title}-${index}`}
+                position={[lat, lng]}
+                icon={getMarkerIcon(item.category)}
+              >
+                <Popup>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>
+                      <strong>Category:</strong> {item.category}
+                    </p>
+                    <p>
+                      <strong>Type:</strong> {item.article_type}
+                    </p>
+                    {contentSections && contentSections.length > 0 && (
+                      <div className="content-sections">
+                        {contentSections.map((section, idx) => (
+                          <div key={idx} className="content-section">
+                            {section.header && <h4>[{section.header}]</h4>}
+                            <ul>
+                              {section.items.map((item, i) => (
+                                <li key={i}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
             );
-            return null;
-          }
-
-          if (zoomLevel <= ZOOM_OUT_THRESHOLD) return null;
-          else if (
-            zoomLevel <= ZOOM_MEDIUM_THRESHOLD &&
-            !isImportantMarker(item)
-          )
-            return null;
-
-          const contentSections = parseContentText(item.content_text);
-
-          return (
-            <Marker
-              key={`${item.title}-${index}`}
-              position={[lat, lng]}
-              icon={getMarkerIcon(item.category)}
-            >
-              <Popup>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>
-                    <strong>Category:</strong> {item.category}
-                  </p>
-                  <p>
-                    <strong>Type:</strong> {item.article_type}
-                  </p>
-                  {contentSections && contentSections.length > 0 && (
-                    <div className="content-sections">
-                      {contentSections.map((section, idx) => (
-                        <div key={idx} className="content-section">
-                          {section.header && <h4>[{section.header}]</h4>}
-                          <ul>
-                            {section.items.map((item, i) => (
-                              <li key={i}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
-        <UserLocation
-          mapWidth={1770}
-          mapHeight={2400}
-          isVisible={showUserLocation}
-          position={userPosition}
-        />
-        <ZoomControl />
-        <CurrentLocationButton userPosition={userPosition} />
-        <MapEvents />
-      </MapContainer>
-
+          })}
+          <UserLocation
+            mapWidth={1770}
+            mapHeight={2400}
+            isVisible={showUserLocation}
+            position={userPosition}
+          />
+          <ZoomControl />
+          <CurrentLocationButton userPosition={userPosition} />
+          <MapEvents />
+        </MapContainer>
+      </div>
       <style jsx global>{`
         .leaflet-container {
           z-index: 0 !important;
@@ -393,7 +409,7 @@ const Map = () => {
           margin-right: 5px;
         }
       `}</style>
-    </div>
+    </>
   );
 };
 
