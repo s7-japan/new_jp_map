@@ -72,8 +72,8 @@ const HamburgerMenu = () => {
       width: "80%",
       transition: "transform 0.3s ease-in-out",
       zIndex: "100000",
-      right: "0", // Changed from 0 to "0"
-      bottom: "0", // Changed from 0 to "0"
+      right: "0",
+      bottom: "0",
       top: "auto",
     },
     bmMenu: {
@@ -89,7 +89,7 @@ const HamburgerMenu = () => {
     bmOverlay: {
       background: "rgba(0, 0, 0, 0.3)",
       backdropFilter: "blur(4px)",
-      top: "0", // Already a string, but ensuring consistency
+      top: "0",
       left: "0",
       right: "0",
       bottom: "0",
@@ -100,23 +100,16 @@ const HamburgerMenu = () => {
       display: "flex",
       flexDirection: "column",
       height: "100%",
-      padding: "0", // Changed from 0 to "0"
-      margin: "0", // Changed from 0 to "0"
+      padding: "0",
+      margin: "0",
     },
     bmItem: {
       display: "flex",
       flexDirection: "column",
       height: "100%",
-      padding: "0", // Changed from 0 to "0"
-      margin: "0", // Changed from 0 to "0"
+      padding: "0",
+      margin: "0",
     },
-  };
-
-  // Handle closing with shorter delay
-  const handleClose = () => {
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 300);
   };
 
   return (
@@ -124,7 +117,6 @@ const HamburgerMenu = () => {
       right
       isOpen={isOpen}
       onStateChange={(state) => setIsOpen(state.isOpen)}
-      onClose={handleClose}
       customBurgerIcon={false}
       styles={styles}
       disableAutoFocus
