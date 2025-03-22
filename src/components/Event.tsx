@@ -80,7 +80,6 @@ export default function EventCalendar() {
     event,
     totalInGroup,
     index,
-    showGradient,
   }: {
     event: EventItem;
     totalInGroup: number;
@@ -96,16 +95,21 @@ export default function EventCalendar() {
     );
     const start_minute = event["start time"].slice(-2);
     const end_minute = event["end time"].slice(-2);
+    const bgColor =
+      BackgroundColorForEvent[
+        event.event_id as keyof typeof BackgroundColorForEvent
+      ];
+    const rgbaStart = `${bgColor}FF`; // Fully opaque (Hex format supports alpha as FF)
+    const rgbaEnd = `${bgColor}00`;
     return (
       <div
-        className={`p-1 relative border-b-4 text-[10px] overflow-hidden `}
+        className={`p-1 relative  text-[10px] overflow-hidden `}
         style={{
           ...eventStyle,
-          backgroundColor: showGradient
-            ? BackgroundColorForEvent[
-                event.event_id as keyof typeof BackgroundColorForEvent
-              ] || bg
-            : "#f8fafc",
+          background:
+            event.gradient === "yes"
+              ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
+              : bgColor,
           color: "#000000",
           fontFamily: "Hiragino Kaku Gothic Std",
         }}
@@ -170,7 +174,7 @@ export default function EventCalendar() {
             <div className="absolute top-0 left-10 right-0 h-full mx-2 bg-gray-50">
               <div className="flex h-full">
                 {/* Racing Course events */}
-                <div className="flex-1 relative">
+                <div className="flex-1 relative gap-2">
                   {filteredEvents
                     .filter((event) => event[0].Type === "レーシングコース")
                     .map((overlapping_event, index) => {
