@@ -207,8 +207,3 @@ body {
     text-shadow: 0 0 3px #ff6699;
   }
 }
-
-/* Modal overlay styling */
-.modal-backdrop {
-  background-color: transparent !important;
-}
