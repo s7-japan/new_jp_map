@@ -10,7 +10,7 @@ import { Plus, Minus } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
-import { MapPopup } from "./MapPopup"; // Import the new component
+import MarkerInfo from "./MarkerInfo";
 
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
@@ -165,6 +165,7 @@ const Map: React.FC = () => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+  const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   useEffect(() => {
@@ -219,6 +220,14 @@ const Map: React.FC = () => {
     });
   };
 
+  const handleMarkerClick = (item: MapItem) => {
+    setSelectedMarker(item);
+  };
+
+  const handleBack = () => {
+    setSelectedMarker(null);
+  };
+
   const MapEvents = () => {
     const map = useMapEvents({
       zoomend: () => {
@@ -233,8 +242,13 @@ const Map: React.FC = () => {
   if (!isClient) return <div>Loading map...</div>;
 
   return (
-    <>
-      <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-screen">
+      {/* Map Container */}
+      <div
+        className={`w-full h-full transition-opacity duration-300 ${
+          selectedMarker ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+      >
         <MapContainer
           center={[34.8468125, 136.5383125]}
           zoom={15}
@@ -249,7 +263,6 @@ const Map: React.FC = () => {
             maxZoom={19}
           />
           {processedData.map((item: MapItem, index: number) => {
-            // Validate Locations
             if (!item.Locations || typeof item.Locations !== "string") {
               console.warn(
                 `${item.Title} has missing or invalid coordinates: ${item.Locations}`
@@ -268,15 +281,12 @@ const Map: React.FC = () => {
               return null;
             }
 
-            // Custom zoom level filtering
             if (zoomLevel < 15) {
-              // No markers below zoom 15 (13-14)
               console.log(
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
             } else if (zoomLevel >= 15 && zoomLevel < 19) {
-              // Only Medium markers from zoom 15 to 18
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
@@ -284,16 +294,16 @@ const Map: React.FC = () => {
                 return null;
               }
             }
-            // At zoom 19, show all markers (no filtering needed)
 
             return (
               <Marker
                 key={`${item.Title}-${index}`}
                 position={[lat, lng]}
                 icon={getMarkerIcon(item["Icon Category"])}
-              >
-                <MapPopup item={item} />
-              </Marker>
+                eventHandlers={{
+                  click: () => handleMarkerClick(item),
+                }}
+              />
             );
           })}
           <UserLocation
@@ -307,6 +317,14 @@ const Map: React.FC = () => {
           <MapEvents />
         </MapContainer>
       </div>
+
+      {/* Marker Info Overlay */}
+      {selectedMarker && (
+        <div className="absolute inset-0 z-[2000] overflow-auto">
+          <MarkerInfo item={selectedMarker} onBack={handleBack} />
+        </div>
+      )}
+
       <style jsx global>{`
         .leaflet-container {
           z-index: 0 !important;
@@ -316,52 +334,8 @@ const Map: React.FC = () => {
         .leaflet-bottom {
           z-index: 0 !important;
         }
-        .leaflet-popup-content-wrapper {
-          padding: 15px;
-          border-radius: 8px;
-          min-width: 300px;
-          max-width: 400px;
-          font-family: Arial, sans-serif;
-        }
-        .leaflet-popup-content h3 {
-          margin: 0 0 10px;
-          font-size: 18px;
-          font-weight: bold;
-          color: #333;
-        }
-        .leaflet-popup-content p {
-          margin: 5px 0;
-          font-size: 14px;
-          color: #333;
-        }
-        .leaflet-popup-content .content-sections {
-          margin-top: 10px;
-        }
-        .leaflet-popup-content .content-section {
-          margin-bottom: 10px;
-        }
-        .leaflet-popup-content h4 {
-          margin: 10px 0 5px;
-          font-size: 14px;
-          font-weight: bold;
-          color: #333;
-        }
-        .leaflet-popup-content ul {
-          margin: 0;
-          padding-left: 0;
-          font-size: 14px;
-          color: #333;
-        }
-        .leaflet-popup-content li {
-          margin-bottom: 5px;
-          list-style: none;
-        }
-        .leaflet-popup-content li:before {
-          content: "・";
-          margin-right: 5px;
-        }
       `}</style>
-    </>
+    </div>
   );
 };
 
