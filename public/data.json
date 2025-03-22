@@ -6,7 +6,8 @@
     "event": "メインゲートオープン",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -15,7 +16,8 @@
     "event": "ピットウォーク",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -24,7 +26,8 @@
     "event": "ストレートウォーク",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -33,7 +36,8 @@
     "event": "2023 F1日本GP予選・決勝プレイバック",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event_f1"
+    "event_id": "event_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -42,7 +46,8 @@
     "event": "DJステージ",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event_other"
+    "event_id": "event_other",
+    "gradient": "no"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -51,7 +56,8 @@
     "event": "ゲストトーク",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -60,7 +66,8 @@
     "event": "レジェンドトーク",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -69,7 +76,8 @@
     "event": "F1 パドックトーク",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -78,7 +86,8 @@
     "event": "DJステージ",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event_f1"
+    "event_id": "event_f1",
+    "gradient": "yes"
   },
   {
     "Type": "メインゲートクローズ",
@@ -87,7 +96,8 @@
     "event": "メインゲートクローズ",
     "Date": "04/04/2025",
     "Event No": "",
-    "event_id": "event_other"
+    "event_id": "event_other",
+    "gradient": "no"
   },
   {
     "Type": "メインゲートオープン",
@@ -96,7 +106,8 @@
     "event": "メインゲートオープン",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -105,7 +116,8 @@
     "event": "フェラーリ練習走行",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -114,7 +126,8 @@
     "event": "F1日本GP練習走行1回目",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -123,7 +136,8 @@
     "event": "ポルシェ練習走行",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_f1"
+    "event_id": "event_f1",
+    "gradient": "yes"
   },
   {
     "Type": "レーシングコース",
@@ -132,7 +146,8 @@
     "event": "F1日本GP練習走行2回目",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_other"
+    "event_id": "event_other",
+    "gradient": "no"
   },
   {
     "Type": "レーシングコース",
@@ -141,7 +156,8 @@
     "event": "フェラーリ予選",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -150,7 +166,8 @@
     "event": "DJステージ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -159,7 +176,8 @@
     "event": "オープニングステージ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -168,7 +186,8 @@
     "event": "WEDNESDAY F1 TIMEDAZN Stage ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_f1"
+    "event_id": "event_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -177,7 +196,8 @@
     "event": "F1ドライバーステージ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_other"
+    "event_id": "event_other",
+    "gradient": "no"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -186,7 +206,8 @@
     "event": "レジェンドトーク",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -195,7 +216,8 @@
     "event": "レジェンドトーク",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -204,7 +226,8 @@
     "event": "Session Review powered by Fuji TV NEXT",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -213,7 +236,8 @@
     "event": "F1 パドックトーク",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_f1"
+    "event_id": "event_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -222,7 +246,8 @@
     "event": "DJステージ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event_other"
+    "event_id": "event_other",
+    "gradient": "no"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -231,7 +256,8 @@
     "event": "レジェンドトーク",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_support"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -240,7 +266,8 @@
     "event": "レジェンドトーク",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "race_f1"
+    "event_id": "race_f1",
+    "gradient": "yes"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -249,6 +276,7 @@
     "event": "F1ドライバーステージ",
     "Date": "05/04/2025",
     "Event No": "",
-    "event_id": "event"
+    "event_id": "event",
+    "gradient": "yes"
   }
 ]
