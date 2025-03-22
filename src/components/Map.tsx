@@ -8,10 +8,11 @@ import "leaflet/dist/leaflet.css";
 import jpData from "../assets/data.json";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "./ui/button";
-import { UserLocation } from "./user-location";
-import { useMap, useMapEvents } from "react-leaflet";
 import MarkerInfo from "./MarkerInfo";
+import { UserLocation } from "./user-location"; // Import UserLocation component
+import { useMap, useMapEvents } from "react-leaflet"; // Direct imports for useMap and useMapEvents
 
+// Icons imports
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -71,6 +72,7 @@ interface MapItem {
   Remarks: string;
 }
 
+// Dynamic imports for react-leaflet components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -84,14 +86,33 @@ const Marker = dynamic(
   { ssr: false }
 );
 
+// Toast Component for showing messages
+const Toast: React.FC<{ message: string; onClose: () => void }> = ({
+  message,
+  onClose,
+}) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 5000); // Toast will disappear after 5 seconds
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-[2000] bg-red-500 text-white px-4 py-2 rounded shadow-lg">
+      {message}
+    </div>
+  );
+};
+
 const LoadJSONAndProcess = (): MapItem[] => {
   const data = jpData as MapItem[];
   return data;
 };
 
 const ZoomControl = () => {
-  const map = useMap();
-  const ZOOM_LEVELS = [13, 15, 19];
+  const map = useMap(); // Use useMap instead of useMapEvents for ZoomControl
+  const ZOOM_LEVELS = [13, 15, 17]; // Updated zoom levels to match maxZoom 17
 
   const zoomIn = () => {
     const currentZoom = map.getZoom();
@@ -131,7 +152,7 @@ const CurrentLocationButton = ({
       alert("Location not yet available. Please wait or enable tracking.");
       return;
     }
-    map.setView(userPosition, 16);
+    map.setView(userPosition, 16); // Center map on user location with zoom level 16
   };
 
   return (
@@ -160,17 +181,27 @@ const CurrentLocationButton = ({
 
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
-  const [showUserLocation, setShowUserLocation] = useState(false);
+  const [showUserLocation, setShowUserLocation] = useState(false); // State for showing user location
   const [zoomLevel, setZoomLevel] = useState(15);
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
-  );
+  ); // State for user position
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
+  const [showToast, setShowToast] = useState(false); // State for showing toast message
   const processedData: MapItem[] = LoadJSONAndProcess();
+
+  // Define Suzuka Circuit bounding box
+  const BOUNDING_BOX = {
+    minLat: 34.83, // South
+    maxLat: 34.86, // North
+    minLng: 136.52, // West
+    maxLng: 136.56, // East
+  };
 
   useEffect(() => {
     setIsClient(true);
 
+    // Geolocation logic to track user position
     if (!navigator.geolocation) {
       console.warn("Geolocation is not supported by this browser.");
       return;
@@ -181,6 +212,19 @@ const Map: React.FC = () => {
         const { latitude, longitude } = position.coords;
         setUserPosition([latitude, longitude]);
         setShowUserLocation(true);
+
+        // Check if user is within the Suzuka Circuit bounding box
+        const isWithinBounds =
+          latitude >= BOUNDING_BOX.minLat &&
+          latitude <= BOUNDING_BOX.maxLat &&
+          longitude >= BOUNDING_BOX.minLng &&
+          longitude <= BOUNDING_BOX.maxLng;
+
+        if (!isWithinBounds) {
+          setShowToast(true); // Show toast if user is outside the region
+        } else {
+          setShowToast(false); // Hide toast if user is within the region
+        }
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -225,6 +269,7 @@ const Map: React.FC = () => {
       setSelectedMarker(item);
     }
   };
+
   const handleBack = () => {
     setSelectedMarker(null);
   };
@@ -244,25 +289,37 @@ const Map: React.FC = () => {
 
   return (
     <div className="relative w-full h-screen">
-      {/* Map Container */}
       <div
         className={`w-full h-full transition-opacity duration-300 ${
           selectedMarker ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
+        style={{
+          backgroundColor: "white", // Set white background for the parent div
+        }}
       >
         <MapContainer
-          center={[34.8468125, 136.5383125]}
+          center={[34.8468125, 136.5383125]} // Center of Suzuka Circuit
           zoom={15}
           minZoom={13}
-          maxZoom={19}
+          maxZoom={17} // Updated maxZoom to 17
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%", zIndex: 0 }}
+          fadeAnimation={false} // Disable fade animation
+          renderer={L.canvas()} // Use canvas renderer for better performance
         >
+          {/* Custom Suzuka Circuit Tiles from Local Directory */}
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            maxZoom={19}
+            url="/suzuka-tiles/{z}/{x}/{y}.png" // Path to tiles in public directory
+            attribution="Suzuka Circuit Map"
+            maxZoom={17} // Updated maxZoom to 17
+            tileSize={256}
+            noWrap={true} // Prevent tile wrapping
+            updateWhenIdle={false} // Update tiles during panning/zooming
+            keepBuffer={4} // Increase buffer to preload more tiles
+            errorTileUrl="" // Prevent default error tiles (white boxes)
           />
+
+          {/* Markers from data.json */}
           {processedData.map((item: MapItem, index: number) => {
             if (!item.Locations || typeof item.Locations !== "string") {
               console.warn(
@@ -282,12 +339,13 @@ const Map: React.FC = () => {
               return null;
             }
 
+            // Updated filtration logic for maxZoom 17
             if (zoomLevel < 15) {
               console.log(
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
-            } else if (zoomLevel >= 15 && zoomLevel < 19) {
+            } else if (zoomLevel >= 15 && zoomLevel <= 17) {
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
@@ -299,7 +357,7 @@ const Map: React.FC = () => {
             return (
               <Marker
                 key={`${item.Title}-${index}`}
-                position={[lat, lng]}
+                position={[lat, lng]} // Use real-world coordinates
                 icon={getMarkerIcon(item["Icon Category"])}
                 eventHandlers={{
                   click: () => handleMarkerClick(item),
@@ -307,12 +365,15 @@ const Map: React.FC = () => {
               />
             );
           })}
+
+          {/* Add UserLocation component */}
           <UserLocation
-            mapWidth={1770}
-            mapHeight={2400}
+            mapWidth={1770} // From first code
+            mapHeight={2400} // From first code
             isVisible={showUserLocation}
             position={userPosition}
           />
+
           <ZoomControl />
           <CurrentLocationButton userPosition={userPosition} />
           <MapEvents />
@@ -326,14 +387,30 @@ const Map: React.FC = () => {
         </div>
       )}
 
+      {/* Show Toast if user is outside the region */}
+      {showToast && (
+        <Toast
+          message="You are outside the location"
+          onClose={() => setShowToast(false)}
+        />
+      )}
+
       <style jsx global>{`
         .leaflet-container {
           z-index: 0 !important;
+          background: white !important; /* Set white background for Leaflet container */
         }
         .leaflet-pane,
         .leaflet-top,
         .leaflet-bottom {
           z-index: 0 !important;
+        }
+        .leaflet-tile-pane {
+          background: white !important; /* Set white background for tile pane */
+        }
+        .leaflet-tile {
+          transition: none !important; /* Disable tile transition */
+          background: white !important; /* Set white background for tiles */
         }
       `}</style>
     </div>
