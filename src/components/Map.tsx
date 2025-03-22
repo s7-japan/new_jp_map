@@ -5,11 +5,12 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import jpData from "../assets/jp_data.json";
+import jpData from "../assets/data.json";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
+import { MapPopup } from "./MapPopup"; // Import the new component
 
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
@@ -31,38 +32,43 @@ import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 
 const ICONS = {
-  アトラクション: MapIconAttraction,
-  チケット: TicketCounter,
-  ゲート: MapGate,
-  タクシー: TaxiArea,
-  車: MapIconCar,
-  バス: WestCourseShuttle,
-  イベント: MapEvent,
-  インフォメーション: MapIconAttraction,
-  座席エリア: SeatGuide,
-  救護所: FirstAidStation,
-  喫煙所: MapIconSmoking,
-  レストラン: MapIconAttraction,
-  自動現金引出機: ATMIcon,
-  駐輪場: BicyclePark,
-  授乳室: NursingHome,
-  多機能トイレ: RestRoom,
-  コインロッカー: CoinLockers,
-  給水所: WaterStation,
-  化粧室: ToiletIcon,
-  西コースシャトル停留所: WestCourseShuttle,
-  駐車場: MapIconCar,
-  オフィシャルグッズ販売: MapIconAttraction,
+  Ticket: TicketCounter,
+  Attraction: MapIconAttraction,
+  Gate: MapGate,
+  Taxi: TaxiArea,
+  Car: MapIconCar,
+  Bus: WestCourseShuttle,
+  Event: MapEvent,
+  Information: MapIconAttraction,
+  "Seating Area": SeatGuide,
+  "First Aid": FirstAidStation,
+  Smoking: MapIconSmoking,
+  Restaurant: MapIconAttraction,
+  ATM: ATMIcon,
+  "Bicycle Parking": BicyclePark,
+  "Nursing Room": NursingHome,
+  "Multi-purpose Toilet": RestRoom,
+  "Coin Lockers": CoinLockers,
+  "Water Station": WaterStation,
+  Toilet: ToiletIcon,
+  "West Course Shuttle": WestCourseShuttle,
+  Parking: MapIconCar,
+  "Official Goods": MapIconAttraction,
 };
 
 interface MapItem {
-  category: string;
-  article_type: "モーダル" | "ピン" | "エリア紹介";
-  title: string;
-  sub_title: string;
-  content_text: string;
-  coordinates: string;
-  pixel_coordinates?: string;
+  "Icon Category": string;
+  "Article Format": string;
+  "Zoom Level": "Low" | "Medium" | "High";
+  Title: string;
+  "Sub Title": string;
+  "Article Content": string;
+  "Line Button Text (If Area Introduction format)": string;
+  "Line Button URL": string;
+  "Top Image": string;
+  Locations: string;
+  "Is Location Check Done?": string;
+  Remarks: string;
 }
 
 const MapContainer = dynamic(
@@ -77,32 +83,6 @@ const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false }
 );
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
-
-const parseContentText = (text: string) => {
-  if (!text) return null;
-  const sections: { header: string; items: string[] }[] = [];
-  const lines = text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line);
-  let currentSection: { header: string; items: string[] } | null = null;
-  lines.forEach((line) => {
-    if (line.startsWith("【") && line.endsWith("】")) {
-      if (currentSection) sections.push(currentSection);
-      currentSection = { header: line.slice(1, -1), items: [] };
-    } else if (currentSection) {
-      currentSection.items.push(line);
-    } else {
-      if (!currentSection) currentSection = { header: "", items: [] };
-      currentSection.items.push(line);
-    }
-  });
-  if (currentSection) sections.push(currentSection);
-  return sections.length > 0 ? sections : null;
-};
 
 const LoadJSONAndProcess = (): MapItem[] => {
   const data = jpData as MapItem[];
@@ -111,7 +91,7 @@ const LoadJSONAndProcess = (): MapItem[] => {
 
 const ZoomControl = () => {
   const map = useMap();
-  const ZOOM_LEVELS = [13, 15, 19]; // Out, Middle, Max (changed to 19 to avoid gray background)
+  const ZOOM_LEVELS = [13, 15, 19];
 
   const zoomIn = () => {
     const currentZoom = map.getZoom();
@@ -198,8 +178,7 @@ const Map: React.FC = () => {
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const newPosition: [number, number] = [latitude, longitude];
-        setUserPosition(newPosition);
+        setUserPosition([latitude, longitude]);
         setShowUserLocation(true);
       },
       (error) => {
@@ -227,9 +206,7 @@ const Map: React.FC = () => {
       }
     );
 
-    return () => {
-      navigator.geolocation.clearWatch(watchId);
-    };
+    return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
   const getMarkerIcon = (category: string) => {
@@ -245,28 +222,15 @@ const Map: React.FC = () => {
   const MapEvents = () => {
     const map = useMapEvents({
       zoomend: () => {
-        setZoomLevel(map.getZoom());
+        const newZoom = map.getZoom();
+        setZoomLevel(newZoom);
+        console.log(`Zoom level changed to: ${newZoom}`);
       },
     });
     return null;
   };
 
   if (!isClient) return <div>Loading map...</div>;
-
-  const ZOOM_OUT_THRESHOLD = 13; // No icons
-  const ZOOM_MIDDLE_THRESHOLD = 16; // Facility and Area icons only
-
-  const isFacilityOrAreaMarker = (item: MapItem) => {
-    const facilityAndAreaCategories = [
-      "救護所", // First Aid Station
-      "ゲート", // Gate
-      "チケット", // Ticket Counter
-      "インフォメーション", // Information
-      "座席エリア", // Seating Area
-      "駐車場", // Parking
-    ];
-    return facilityAndAreaCategories.includes(item.category);
-  };
 
   return (
     <>
@@ -275,72 +239,60 @@ const Map: React.FC = () => {
           center={[34.8468125, 136.5383125]}
           zoom={15}
           minZoom={13}
-          maxZoom={19} // Set to 19 to match OSM tile limit
+          maxZoom={19}
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%", zIndex: 0 }}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            maxZoom={19} // Ensure tiles stop at 19
+            maxZoom={19}
           />
           {processedData.map((item: MapItem, index: number) => {
-            const [lat, lng] = item.coordinates
-              .replace(/[()]/g, "")
+            // Validate Locations
+            if (!item.Locations || typeof item.Locations !== "string") {
+              console.warn(
+                `${item.Title} has missing or invalid coordinates: ${item.Locations}`
+              );
+              return null;
+            }
+
+            const [lat, lng] = item.Locations.replace(/[()]/g, "")
               .split(",")
               .map(Number);
 
             if (isNaN(lat) || isNaN(lng)) {
               console.warn(
-                `${item.title} has invalid coordinates: ${item.coordinates}`
+                `${item.Title} has invalid coordinate format: ${item.Locations}`
               );
               return null;
             }
 
-            // Three-stage zoom logic for display
-            if (zoomLevel <= ZOOM_OUT_THRESHOLD) {
-              return null; // Zoom Out: No icons
-            } else if (
-              zoomLevel <= ZOOM_MIDDLE_THRESHOLD &&
-              !isFacilityOrAreaMarker(item)
-            ) {
-              return null; // Middle: Only Facility and Area icons
+            // Custom zoom level filtering
+            if (zoomLevel < 15) {
+              // No markers below zoom 15 (13-14)
+              console.log(
+                `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
+              );
+              return null;
+            } else if (zoomLevel >= 15 && zoomLevel < 19) {
+              // Only Medium markers from zoom 15 to 18
+              if (item["Zoom Level"] !== "Medium") {
+                console.log(
+                  `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
+                );
+                return null;
+              }
             }
-            // Zoom In (zoomLevel > ZOOM_MIDDLE_THRESHOLD): Show all icons
-
-            const contentSections = parseContentText(item.content_text);
+            // At zoom 19, show all markers (no filtering needed)
 
             return (
               <Marker
-                key={`${item.title}-${index}`}
+                key={`${item.Title}-${index}`}
                 position={[lat, lng]}
-                icon={getMarkerIcon(item.category)}
+                icon={getMarkerIcon(item["Icon Category"])}
               >
-                <Popup>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>
-                      <strong>Category:</strong> {item.category}
-                    </p>
-                    <p>
-                      <strong>Type:</strong> {item.article_type}
-                    </p>
-                    {contentSections && contentSections.length > 0 && (
-                      <div className="content-sections">
-                        {contentSections.map((section, idx) => (
-                          <div key={idx} className="content-section">
-                            {section.header && <h4>[{section.header}]</h4>}
-                            <ul>
-                              {section.items.map((item, i) => (
-                                <li key={i}>{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </Popup>
+                <MapPopup item={item} />
               </Marker>
             );
           })}
