@@ -40,16 +40,10 @@ const ICONS = {
 };
 
 export const BackgroundColorForEvent = {
-  メインゲート: "#B3B3B3",
-  サポートレース: "#FF817F",
-  F1レース: "#E00400",
-  イベント: "#C5B9D0",
-  F1イベント: "#F56C9E",
-  その他イベント: "#F6B1CA",
-  青: "#1716BB",
-  ピンク: "#F56C9E",
-  赤: "#E00400",
-  黒: "#15151E",
-  白: "#05df72",
+  race_support: "#FF817F",
+  race_f1: "#E00400",
+  event: "#C5B9D0",
+  event_f1: "#F56C9E",
+  event_other: "#F6B1CA",
 };
 export default ICONS;

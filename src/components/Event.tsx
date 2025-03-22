@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect } from "react";
 import type { EventItem, CalendarData } from "../types";
-
+import { BackgroundColorForEvent } from "@/constants";
 import DatePicker from "./DatePicker";
 import {
   parseTime,
@@ -12,13 +13,11 @@ import {
   generateTimeSlots,
   isFullWidthEvent,
 } from "../lib/utils";
-import { Switch } from "./ui/switch";
-import { Label } from "./ui/label";
 
 export default function EventCalendar() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [filteredEvents, setFilteredEvents] = useState<EventItem[][]>([]);
-  const [showGradient, setGradient] = useState(true);
+  const [showGradient, _setGradient] = useState(true);
   const HOUR_HEIGHT = 120;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
   const [eventData, setEventData] = useState<CalendarData>([]);
@@ -95,14 +94,19 @@ export default function EventCalendar() {
       totalInGroup,
       index
     );
-
+    const start_minute = event["start time"].slice(-2);
+    const end_minute = event["end time"].slice(-2);
     return (
       <div
         className={`p-1 relative border-b-4 text-[10px] overflow-hidden `}
         style={{
           ...eventStyle,
-          backgroundColor: showGradient ? `${event.color}` || bg : "#f8fafc",
-          color: showGradient ? text || "#ffffff" : "#000000",
+          backgroundColor: showGradient
+            ? BackgroundColorForEvent[
+                event.event_id as keyof typeof BackgroundColorForEvent
+              ] || bg
+            : "#f8fafc",
+          color: "#000000",
           fontFamily: "Hiragino Kaku Gothic Std",
         }}
         onClick={() => {
@@ -110,11 +114,14 @@ export default function EventCalendar() {
         }}
       >
         <div className="absolute top-0 left-1 font-extrabold">
-          {event["Event No"]}
+          {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="text-[12px] text-center">
-          <strong>{event["start time"]}</strong>
-          <br />
+        <div className="absolute bottom-0 left-1 font-extrabold">
+          {end_minute !== "00" && end_minute !== "30"
+            ? event["end time"].slice(-2)
+            : ""}
+        </div>
+        <div className="text-[12px] text-center font-extrabold">
           {event.event}
         </div>
       </div>
@@ -128,24 +135,14 @@ export default function EventCalendar() {
     <div className="w-full max-w-4xl  mb-200 ">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
-        <div>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="airplane-mode"
-              onCheckedChange={() => setGradient(!showGradient)}
-              checked={showGradient}
-            />
-            <Label htmlFor="airplane-mode">Toggle Color</Label>
-          </div>
-        </div>
       </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
-        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto">
+        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div className="flex-1 bg-[#1C1ACB] text-white p-2 text-center font-bold text-[12px] ml-2 ">
+          <div className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2 ">
             レーシングコース
           </div>
-          <div className="flex-1 bg-[#FE699F] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]">
+          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]">
             GPスクエア オフィシャルステージ
           </div>
         </div>
@@ -226,13 +223,14 @@ export default function EventCalendar() {
                     1,
                     0
                   );
-
+                  const start_minute = event[0]["start time"].slice(-2);
+                  const end_minute = event[0]["end time"].slice(-2);
                   return (
                     <div
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
                       className={`${
-                        showGradient ? "bg-[#FAF75F]" : "bg-[#f8fafc]"
-                      } p-1 w-full `}
+                        showGradient ? "bg-[#B3B3B3]" : "bg-[#f8fafc]"
+                      } p-1 w-full font-extrabold`}
                       style={{
                         ...eventStyle,
                         zIndex: 20,
@@ -242,8 +240,15 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center">
-                        <div className="font-bold">
-                          {event[0]["start time"]}
+                        <div className="absolute top-0 left-1 font-extrabold">
+                          {start_minute !== "00" && start_minute !== "30"
+                            ? start_minute
+                            : ""}
+                        </div>
+                        <div className="absolute bottom-0 left-1 font-extrabold">
+                          {end_minute !== "00" && end_minute !== "30"
+                            ? end_minute
+                            : ""}
                         </div>
                         <div>{event[0].event}</div>
                       </div>
