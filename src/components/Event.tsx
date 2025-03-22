@@ -121,7 +121,9 @@ export default function EventCalendar() {
             ? event["end time"].slice(-2)
             : ""}
         </div>
-        <div className="text-[12px] text-center">{event.event}</div>
+        <div className="text-[12px] text-center font-extrabold">
+          {event.event}
+        </div>
       </div>
     );
   };
@@ -135,7 +137,7 @@ export default function EventCalendar() {
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
-        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto">
+        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
           <div className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2 ">
             レーシングコース
@@ -228,7 +230,7 @@ export default function EventCalendar() {
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
                       className={`${
                         showGradient ? "bg-[#B3B3B3]" : "bg-[#f8fafc]"
-                      } p-1 w-full `}
+                      } p-1 w-full font-extrabold`}
                       style={{
                         ...eventStyle,
                         zIndex: 20,
