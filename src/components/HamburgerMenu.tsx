@@ -1,39 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMenuStore } from "../store/menuStore";
 
-const HamburgerMenu = () => {
-  const { isOpen, setIsOpen } = useMenuStore();
-  const menuRef = useRef<HTMLDivElement>(null);
-  // Add state to control animation
-  const [animationComplete, setAnimationComplete] = useState(true);
+interface HamburgerMenuProps {
+  menuButtonRef: React.RefObject<HTMLButtonElement>;
+}
 
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ menuButtonRef }) => {
+  const { isOpen, setIsOpen } = useMenuStore();
+  const menuRef = useRef<HTMLDivElement>(null); // Outer menu container
+  const innerMenuRef = useRef<HTMLDivElement>(null); // Inner red container
+
+  // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      const target = event.target as Node;
+
+      // Check if click is outside the entire menu OR outside the red container but inside the outer menu
+      if (
+        (menuRef.current && !menuRef.current.contains(target)) || // Click outside the whole menu
+        (menuRef.current &&
+          menuRef.current.contains(target) && // Click inside outer menu
+          innerMenuRef.current &&
+          !innerMenuRef.current.contains(target)) // But outside the red container
+      ) {
+        if (
+          menuButtonRef.current &&
+          !menuButtonRef.current.contains(target) // Ensure it's not the menu button
+        ) {
+          console.log("Click outside red container or menu, closing menu");
+          setIsOpen(false);
+        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setIsOpen]);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [setIsOpen, menuButtonRef]);
 
-  // Set animation state when menu opens/closes
+  // Handle body overflow and debug state
   useEffect(() => {
-    if (isOpen) {
-      setAnimationComplete(false);
-      document.body.style.overflow = "hidden"; // Prevent scrolling when menu is open
-    } else {
-      const timer = setTimeout(() => {
-        setAnimationComplete(true);
-      }, 400); // Match this with your transition duration
-      document.body.style.overflow = ""; // Re-enable scrolling
-      return () => clearTimeout(timer);
-    }
+    console.log("isOpen changed to:", isOpen);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   // Navigation items with links
@@ -106,91 +118,97 @@ const HamburgerMenu = () => {
 
   return (
     <>
-      {(!animationComplete || isOpen) && (
-        <>
-          {/* Backdrop with fade animation */}
-          <div
-            className={`fixed inset-0 z-[99999] transition-opacity duration-400 ease-in-out ${
-              isOpen ? "opacity-100" : "opacity-0"
-            } bg-black/30 backdrop-blur-sm`}
-            onClick={() => setIsOpen(false)}
-          />
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-[99999] bg-black/30 backdrop-blur-sm transition-opacity duration-400 ease-in-out ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
 
-          {/* Menu with consistent slide animation for both opening and closing */}
-          <div
-            ref={menuRef}
-            className="fixed top-20 right-0 bottom-10 w-[80%] z-[100000] h-screen transition-all duration-400 ease-in-out transform"
-            style={{
-              transform: isOpen ? "translateX(0)" : "translateX(100%)",
-              transition: "transform 400ms ease-in-out",
-            }}
-          >
-            <div className="bg-[#E00400] rounded-tl-3xl rounded-bl-3xl h-[80%] text-white px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 flex flex-col justify-between gap-8 sm:gap-10 md:gap-14 overflow-y-auto">
-              {/* Navigation Links with consistent staggered animation */}
-              <div className="text-base sm:text-lg md:text-xl flex flex-col gap-4 sm:gap-6 md:gap-7 font-medium tracking-widest">
-                {navItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex justify-between items-center hover:text-gray-200"
-                    style={{
-                      transform: isOpen ? "translateX(0)" : "translateX(40px)",
-                      opacity: isOpen ? 1 : 0,
-                      transition: `transform 400ms ease-in-out, opacity 400ms ease-in-out`,
-                      transitionDelay: isOpen ? `${index * 50}ms` : "0ms",
-                    }}
-                  >
-                    <div>{item.name}</div>
-                    <Image
-                      src="/images/arrowIcon.svg"
-                      width={24}
-                      height={16}
-                      alt="arrow icon"
-                    />
-                  </a>
-                ))}
-              </div>
-
-              {/* Terms Links */}
-              <div className="text-sm sm:text-base md:text-lg flex flex-col gap-1 sm:gap-2 font-medium tracking-widest">
-                {termsItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-gray-200"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-
-              {/* Social Media Links */}
-              <div className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5">
-                {socialItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-80"
-                  >
-                    <Image
-                      src={`/images/${item.platform}.svg`}
-                      alt={item.platform}
-                      width={20}
-                      height={20}
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
+      {/* Menu */}
+      <div
+        ref={menuRef}
+        className={`fixed top-20 right-0 bottom-10 w-[80%] z-[100000] h-screen transition-transform duration-400 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div
+          ref={innerMenuRef} // Ref for the red container
+          className="bg-[#E00400] rounded-tl-3xl rounded-bl-3xl h-[80%] text-white px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 flex flex-col justify-between gap-8 sm:gap-10 md:gap-14 overflow-y-auto"
+        >
+          {/* Navigation Links */}
+          <div className="text-base sm:text-lg md:text-xl flex flex-col gap-4 sm:gap-6 md:gap-7 font-medium tracking-widest">
+            {navItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex justify-between items-center hover:text-gray-200 transition-all duration-300"
+                style={{
+                  transitionDelay: `${index * 50}ms`,
+                  transform: isOpen ? "translateX(0)" : "translateX(40px)",
+                  opacity: isOpen ? 1 : 0,
+                }}
+              >
+                <div>{item.name}</div>
+                <Image
+                  src="/images/arrowIcon.svg"
+                  width={24}
+                  height={16}
+                  alt="arrow icon"
+                />
+              </a>
+            ))}
           </div>
-        </>
-      )}
+
+          {/* Terms Links */}
+          <div className="text-sm sm:text-base md:text-lg flex flex-col gap-1 sm:gap-2 font-medium tracking-widest">
+            {termsItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gray-200 transition-all duration-300"
+                style={{
+                  transitionDelay: `${300 + index * 50}ms`,
+                  transform: isOpen ? "translateX(0)" : "translateX(40px)",
+                  opacity: isOpen ? 1 : 0,
+                }}
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Social Media Links */}
+          <div className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5">
+            {socialItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-all duration-300"
+                style={{
+                  transitionDelay: `${450 + index * 50}ms`,
+                  transform: isOpen ? "translateY(0)" : "translateY(20px)",
+                  opacity: isOpen ? 1 : 0,
+                }}
+              >
+                <Image
+                  src={`/images/${item.platform}.svg`}
+                  alt={item.platform}
+                  width={20}
+                  height={20}
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
