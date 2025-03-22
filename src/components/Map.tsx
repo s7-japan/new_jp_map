@@ -221,7 +221,9 @@ const Map: React.FC = () => {
   };
 
   const handleMarkerClick = (item: MapItem) => {
-    setSelectedMarker(item);
+    if (item["Article Format"] !== "Pin") {
+      setSelectedMarker(item);
+    }
   };
 
   const handleBack = () => {
