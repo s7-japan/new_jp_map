@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { forwardRef } from "react";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -11,23 +11,15 @@ import CircuitIcon from "../images/circuit-icon.svg";
 import MenuIcon from "../images/menu-icon.svg";
 import DriverIcon from "../images/driver-icon.svg";
 
-const BottomNav: React.FC = () => {
+const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const { toggleMenu } = useMenuStore();
 
-  const handleNavigation = (
-    newValue: number,
-    path: string,
-    event:
-      | React.MouseEvent<HTMLButtonElement>
-      | React.TouchEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const handleNavigation = (newValue: number, path: string) => {
     setValue(newValue);
     if (newValue === 3) {
-      toggleMenu();
+      toggleMenu(); // Directly toggle the menu
     } else {
       router.push(path);
     }
@@ -63,8 +55,7 @@ const BottomNav: React.FC = () => {
         <BottomNavigationAction
           label="HOME"
           icon={<Image src={HomeIcon} alt="Home" width={20} height={20} />}
-          onClick={(e) => handleNavigation(0, "/", e)}
-          onTouchStart={(e) => handleNavigation(0, "/", e)}
+          onClick={() => handleNavigation(0, "/")}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -83,8 +74,7 @@ const BottomNav: React.FC = () => {
         <BottomNavigationAction
           label="DRIVER"
           icon={<Image src={DriverIcon} alt="Driver" width={20} height={20} />}
-          onClick={(e) => handleNavigation(1, "/reactionspeedtest", e)}
-          onTouchStart={(e) => handleNavigation(1, "/reactionspeedtest", e)}
+          onClick={() => handleNavigation(1, "/reactionspeedtest")}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -105,8 +95,7 @@ const BottomNav: React.FC = () => {
           icon={
             <Image src={CircuitIcon} alt="Circuit" width={30} height={30} />
           }
-          onClick={(e) => handleNavigation(2, "/fingercircuit", e)}
-          onTouchStart={(e) => handleNavigation(2, "/fingercircuit", e)}
+          onClick={() => handleNavigation(2, "/fingercircuit")}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -123,10 +112,10 @@ const BottomNav: React.FC = () => {
           }}
         />
         <BottomNavigationAction
+          ref={ref} // Ref for the MENU button
           label="MENU"
           icon={<Image src={MenuIcon} alt="Menu" width={20} height={20} />}
-          onClick={(e) => handleNavigation(3, "#", e)}
-          onTouchStart={(e) => handleNavigation(3, "#", e)}
+          onClick={() => handleNavigation(3, "#")}
           sx={{
             color: "white",
             minWidth: "60px",
@@ -145,6 +134,8 @@ const BottomNav: React.FC = () => {
       </BottomNavigation>
     </Paper>
   );
-};
+});
+
+BottomNav.displayName = "BottomNav";
 
 export default BottomNav;

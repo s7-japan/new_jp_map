@@ -3,7 +3,6 @@ import React, { useEffect, Suspense } from "react";
 import Header from "@/components/Header";
 import Direction from "@/components/Direction";
 import dynamic from "next/dynamic";
-import BottomNav from "@/components/BottomNav";
 const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
 });
@@ -17,8 +16,7 @@ const RedirectHandler = () => {
   const redirectPath = searchParams.get("redirect");
 
   useEffect(() => {
-    if (redirectPath)
-      router.push(`/${redirectPath}`)
+    if (redirectPath) router.push(`/${redirectPath}`);
   }, [redirectPath, router]);
 
   return null;
@@ -31,7 +29,6 @@ const MapPage = () => {
       <Direction />
       <Map />
       <EventCalendar />
-      <BottomNav />
       <Suspense fallback={null}>
         <RedirectHandler />
       </Suspense>
