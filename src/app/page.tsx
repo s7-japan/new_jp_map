@@ -10,10 +10,8 @@ import EventCalendar from "@/components/EventCalendar"
 
 const RedirectHandler = () => {
   useEffect(() => {
-    if(window){
-      alert(window.location.href)
-    }
-  }, [window])
+    alert(window.location.href)
+  }, [])
 
   return null
 }
