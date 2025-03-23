@@ -9,8 +9,8 @@ import jpData from "../assets/data.json";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "./ui/button";
 import MarkerInfo from "./MarkerInfo";
-import { UserLocation } from "./user-location"; // Import UserLocation component
-import { useMap, useMapEvents } from "react-leaflet"; // Direct imports for useMap and useMapEvents
+import { UserLocation } from "./user-location";
+import { useMap, useMapEvents } from "react-leaflet";
 
 // Icons imports
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
@@ -111,8 +111,8 @@ const LoadJSONAndProcess = (): MapItem[] => {
 };
 
 const ZoomControl = () => {
-  const map = useMap(); // Use useMap instead of useMapEvents for ZoomControl
-  const ZOOM_LEVELS = [13, 15, 17]; // Updated zoom levels to match maxZoom 17
+  const map = useMap();
+  const ZOOM_LEVELS = [13, 15, 20];
 
   const zoomIn = () => {
     const currentZoom = map.getZoom();
@@ -152,7 +152,7 @@ const CurrentLocationButton = ({
       alert("Location not yet available. Please wait or enable tracking.");
       return;
     }
-    map.setView(userPosition, 16); // Center map on user location with zoom level 16
+    map.setView(userPosition, 16);
   };
 
   return (
@@ -181,13 +181,13 @@ const CurrentLocationButton = ({
 
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
-  const [showUserLocation, setShowUserLocation] = useState(false); // State for showing user location
+  const [showUserLocation, setShowUserLocation] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
-  ); // State for user position
+  );
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
-  const [showToast, setShowToast] = useState(false); // State for showing toast message
+  const [showToast, setShowToast] = useState(false);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   // Define Suzuka Circuit bounding box
@@ -201,7 +201,6 @@ const Map: React.FC = () => {
   useEffect(() => {
     setIsClient(true);
 
-    // Geolocation logic to track user position
     if (!navigator.geolocation) {
       console.warn("Geolocation is not supported by this browser.");
       return;
@@ -213,7 +212,6 @@ const Map: React.FC = () => {
         setUserPosition([latitude, longitude]);
         setShowUserLocation(true);
 
-        // Check if user is within the Suzuka Circuit bounding box
         const isWithinBounds =
           latitude >= BOUNDING_BOX.minLat &&
           latitude <= BOUNDING_BOX.maxLat &&
@@ -221,9 +219,9 @@ const Map: React.FC = () => {
           longitude <= BOUNDING_BOX.maxLng;
 
         if (!isWithinBounds) {
-          setShowToast(true); // Show toast if user is outside the region
+          setShowToast(true);
         } else {
-          setShowToast(false); // Hide toast if user is within the region
+          setShowToast(false);
         }
       },
       (error) => {
@@ -294,29 +292,32 @@ const Map: React.FC = () => {
           selectedMarker ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
         style={{
-          backgroundColor: "white", // Set white background for the parent div
+          backgroundImage: "url('/bg-image.png')", // Set background image
+          backgroundSize: "cover", // Ensure the image covers the entire div
+          backgroundPosition: "center", // Center the background image
+          backgroundRepeat: "no-repeat", // Prevent the image from repeating
         }}
       >
         <MapContainer
           center={[34.8468125, 136.5383125]} // Center of Suzuka Circuit
           zoom={15}
           minZoom={13}
-          maxZoom={17} // Updated maxZoom to 17
+          maxZoom={20}
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%", zIndex: 0 }}
-          fadeAnimation={false} // Disable fade animation
-          renderer={L.canvas()} // Use canvas renderer for better performance
+          fadeAnimation={false}
+          renderer={L.canvas()}
         >
-          {/* Custom Suzuka Circuit Tiles from Local Directory */}
+          {/* Custom Suzuka Circuit Tiles */}
           <TileLayer
-            url="/suzuka-tiles/{z}/{x}/{y}.png" // Path to tiles in public directory
+            url="/suzuka-tiles/{z}/{x}/{y}.png"
             attribution="Suzuka Circuit Map"
-            maxZoom={17} // Updated maxZoom to 17
+            maxZoom={20}
             tileSize={256}
-            noWrap={true} // Prevent tile wrapping
-            updateWhenIdle={false} // Update tiles during panning/zooming
-            keepBuffer={4} // Increase buffer to preload more tiles
-            errorTileUrl="" // Prevent default error tiles (white boxes)
+            noWrap={true}
+            updateWhenIdle={false}
+            keepBuffer={4}
+            errorTileUrl=""
           />
 
           {/* Markers from data.json */}
@@ -339,13 +340,12 @@ const Map: React.FC = () => {
               return null;
             }
 
-            // Updated filtration logic for maxZoom 17
             if (zoomLevel < 15) {
               console.log(
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
-            } else if (zoomLevel >= 15 && zoomLevel <= 17) {
+            } else if (zoomLevel >= 15 && zoomLevel <= 20) {
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
@@ -357,7 +357,7 @@ const Map: React.FC = () => {
             return (
               <Marker
                 key={`${item.Title}-${index}`}
-                position={[lat, lng]} // Use real-world coordinates
+                position={[lat, lng]}
                 icon={getMarkerIcon(item["Icon Category"])}
                 eventHandlers={{
                   click: () => handleMarkerClick(item),
@@ -366,10 +366,9 @@ const Map: React.FC = () => {
             );
           })}
 
-          {/* Add UserLocation component */}
           <UserLocation
-            mapWidth={1770} // From first code
-            mapHeight={2400} // From first code
+            mapWidth={1770}
+            mapHeight={2400}
             isVisible={showUserLocation}
             position={userPosition}
           />
@@ -380,14 +379,12 @@ const Map: React.FC = () => {
         </MapContainer>
       </div>
 
-      {/* Marker Info Overlay */}
       {selectedMarker && (
         <div className="absolute inset-0 z-[2000] overflow-auto">
           <MarkerInfo item={selectedMarker} onBack={handleBack} />
         </div>
       )}
 
-      {/* Show Toast if user is outside the region */}
       {showToast && (
         <Toast
           message="You are outside the location"
@@ -398,7 +395,7 @@ const Map: React.FC = () => {
       <style jsx global>{`
         .leaflet-container {
           z-index: 0 !important;
-          background: white !important; /* Set white background for Leaflet container */
+          background: transparent !important; /* Make Leaflet container transparent */
         }
         .leaflet-pane,
         .leaflet-top,
@@ -406,11 +403,11 @@ const Map: React.FC = () => {
           z-index: 0 !important;
         }
         .leaflet-tile-pane {
-          background: white !important; /* Set white background for tile pane */
+          background: transparent !important; /* Make tile pane transparent */
         }
         .leaflet-tile {
-          transition: none !important; /* Disable tile transition */
-          background: white !important; /* Set white background for tiles */
+          transition: none !important;
+          background: transparent !important; /* Make tiles transparent where there's no image */
         }
       `}</style>
     </div>
