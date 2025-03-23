@@ -6,13 +6,13 @@ import dynamic from "next/dynamic";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import jpData from "../assets/data.json";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, X } from "lucide-react";
 import { Button } from "./ui/button";
 import MarkerInfo from "./MarkerInfo";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Icons imports
+// Icons imports (unchanged)
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -72,7 +72,7 @@ interface MapItem {
   Remarks: string;
 }
 
-// Dynamic imports for react-leaflet components
+// Dynamic imports for react-leaflet components (unchanged)
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -86,7 +86,7 @@ const Marker = dynamic(
   { ssr: false }
 );
 
-// Toast Component for showing messages
+// Toast Component (unchanged)
 const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   message,
   onClose,
@@ -94,13 +94,20 @@ const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 5000); // Toast will disappear after 5 seconds
+    }, 5000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-[2000] bg-red-500 text-white px-4 py-2 rounded shadow-lg">
-      {message}
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[2000] bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center justify-between max-w-sm w-full">
+      <span>{message}</span>
+      <button
+        onClick={onClose}
+        className="ml-4 text-white hover:text-gray-200 focus:outline-none"
+        aria-label="Close notification"
+      >
+        <X size={20} />
+      </button>
     </div>
   );
 };
@@ -142,8 +149,10 @@ const ZoomControl = () => {
 
 const CurrentLocationButton = ({
   userPosition,
+  onOutOfRange,
 }: {
   userPosition: [number, number] | null;
+  onOutOfRange: () => void;
 }) => {
   const map = useMap();
 
@@ -152,7 +161,16 @@ const CurrentLocationButton = ({
       alert("Location not yet available. Please wait or enable tracking.");
       return;
     }
-    map.setView(userPosition, 16);
+
+    const [lat, lng] = userPosition;
+    const isWithinBounds =
+      lat >= 34.83 && lat <= 34.86 && lng >= 136.52 && lng <= 136.56;
+
+    if (isWithinBounds) {
+      map.setView(userPosition, 20); // Changed from 16 to 20
+    } else {
+      onOutOfRange();
+    }
   };
 
   return (
@@ -181,7 +199,6 @@ const CurrentLocationButton = ({
 
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
-  const [showUserLocation, setShowUserLocation] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
@@ -190,12 +207,11 @@ const Map: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
-  // Define Suzuka Circuit bounding box
   const BOUNDING_BOX = {
-    minLat: 34.83, // South
-    maxLat: 34.86, // North
-    minLng: 136.52, // West
-    maxLng: 136.56, // East
+    minLat: 34.83,
+    maxLat: 34.86,
+    minLng: 136.52,
+    maxLng: 136.56,
   };
 
   useEffect(() => {
@@ -210,19 +226,6 @@ const Map: React.FC = () => {
       (position) => {
         const { latitude, longitude } = position.coords;
         setUserPosition([latitude, longitude]);
-        setShowUserLocation(true);
-
-        const isWithinBounds =
-          latitude >= BOUNDING_BOX.minLat &&
-          latitude <= BOUNDING_BOX.maxLat &&
-          longitude >= BOUNDING_BOX.minLng &&
-          longitude <= BOUNDING_BOX.maxLng;
-
-        if (!isWithinBounds) {
-          setShowToast(true);
-        } else {
-          setShowToast(false);
-        }
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -283,6 +286,13 @@ const Map: React.FC = () => {
     return null;
   };
 
+  const isUserInBounds = userPosition
+    ? userPosition[0] >= BOUNDING_BOX.minLat &&
+      userPosition[0] <= BOUNDING_BOX.maxLat &&
+      userPosition[1] >= BOUNDING_BOX.minLng &&
+      userPosition[1] <= BOUNDING_BOX.maxLng
+    : false;
+
   if (!isClient) return <div>Loading map...</div>;
 
   return (
@@ -292,14 +302,14 @@ const Map: React.FC = () => {
           selectedMarker ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
         style={{
-          backgroundImage: "url('/bg-image.png')", // Set background image
-          backgroundSize: "cover", // Ensure the image covers the entire div
-          backgroundPosition: "center", // Center the background image
-          backgroundRepeat: "no-repeat", // Prevent the image from repeating
+          backgroundImage: "url('/bg-image.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <MapContainer
-          center={[34.8468125, 136.5383125]} // Center of Suzuka Circuit
+          center={[34.8468125, 136.5383125]}
           zoom={15}
           minZoom={13}
           maxZoom={20}
@@ -308,7 +318,6 @@ const Map: React.FC = () => {
           fadeAnimation={false}
           renderer={L.canvas()}
         >
-          {/* Custom Suzuka Circuit Tiles */}
           <TileLayer
             url="/suzuka-tiles/{z}/{x}/{y}.png"
             attribution="Suzuka Circuit Map"
@@ -320,7 +329,6 @@ const Map: React.FC = () => {
             errorTileUrl=""
           />
 
-          {/* Markers from data.json */}
           {processedData.map((item: MapItem, index: number) => {
             if (!item.Locations || typeof item.Locations !== "string") {
               console.warn(
@@ -366,15 +374,20 @@ const Map: React.FC = () => {
             );
           })}
 
-          <UserLocation
-            mapWidth={1770}
-            mapHeight={2400}
-            isVisible={showUserLocation}
-            position={userPosition}
-          />
+          {isUserInBounds && userPosition && (
+            <UserLocation
+              mapWidth={1770}
+              mapHeight={2400}
+              isVisible={true}
+              position={userPosition}
+            />
+          )}
 
           <ZoomControl />
-          <CurrentLocationButton userPosition={userPosition} />
+          <CurrentLocationButton
+            userPosition={userPosition}
+            onOutOfRange={() => setShowToast(true)}
+          />
           <MapEvents />
         </MapContainer>
       </div>
@@ -387,7 +400,7 @@ const Map: React.FC = () => {
 
       {showToast && (
         <Toast
-          message="You are outside the location"
+          message="You are outside the map range"
           onClose={() => setShowToast(false)}
         />
       )}
@@ -395,7 +408,7 @@ const Map: React.FC = () => {
       <style jsx global>{`
         .leaflet-container {
           z-index: 0 !important;
-          background: transparent !important; /* Make Leaflet container transparent */
+          background: transparent !important;
         }
         .leaflet-pane,
         .leaflet-top,
@@ -403,11 +416,11 @@ const Map: React.FC = () => {
           z-index: 0 !important;
         }
         .leaflet-tile-pane {
-          background: transparent !important; /* Make tile pane transparent */
+          background: transparent !important;
         }
         .leaflet-tile {
           transition: none !important;
-          background: transparent !important; /* Make tiles transparent where there's no image */
+          background: transparent !important;
         }
       `}</style>
     </div>
