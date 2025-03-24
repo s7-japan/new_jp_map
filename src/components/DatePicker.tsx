@@ -26,9 +26,9 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
 
   const formatDateForDisplay = (dateStr: string) => {
     if (!dateStr) return "";
-    const [month, day, year] = dateStr.split("/");
+    const [day, month, year] = dateStr.split("/");
     // Take last 2 digits of the year
-    return `${year.slice(-2)}-${month}-${day}`;
+    return `${year}-${month}-${day}`;
   };
 
   return (

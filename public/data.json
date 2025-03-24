@@ -1,8 +1,8 @@
 [
   {
     "Type": "メインゲートオープン",
-    "start time": "8:30",
-    "end time": "9:00",
+    "start time": "8:15",
+    "end time": "8:45",
     "event": "メインゲートオープン",
     "Date": "04/04/2025",
     "Event No": "",
@@ -11,8 +11,8 @@
   },
   {
     "Type": "レーシングコース",
-    "start time": "9:00",
-    "end time": "11:30",
+    "start time": "9:15",
+    "end time": "11:45",
     "event": "ピットウォーク",
     "Date": "04/04/2025",
     "Event No": "",
@@ -31,7 +31,7 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "10:30",
+    "start time": "10:45",
     "end time": "13:30",
     "event": "2023 F1日本GP予選・決勝プレイバック",
     "Date": "04/04/2025",
