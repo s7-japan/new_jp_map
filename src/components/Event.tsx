@@ -120,12 +120,12 @@ export default function EventCalendar() {
         <div className="absolute top-0 left-1 font-extrabold text-[14px]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute bottom-0 left-1 font-extrabold ext-[14px]">
+        <div className="absolute bottom-0 right-0 font-extrabold ext-[14px]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
         </div>
-        <div className="mt-3 text-[12px] text-center font-extrabold">
+        <div className="mt-3 text-[12px] text-center font-extrabold h-full flex justify-center items-center">
           {event.event}
         </div>
       </div>
@@ -243,18 +243,20 @@ export default function EventCalendar() {
                         width: "95%",
                       }}
                     >
-                      <div className="text-sm flex justify-center items-center">
+                      <div className="text-sm flex justify-center items-center h-full">
                         <div className="absolute top-0 left-1 font-extrabold">
                           {start_minute !== "00" && start_minute !== "30"
                             ? start_minute
                             : ""}
                         </div>
-                        <div className="absolute bottom-0 left-1 font-extrabold">
+                        <div className="absolute bottom-0   right-0 font-extrabold">
                           {end_minute !== "00" && end_minute !== "30"
                             ? end_minute
                             : ""}
                         </div>
-                        <div>{event[0].event}</div>
+                        <div className="flex justify-center items-center h-full text-center font-extrabold">
+                          {event[0].event}
+                        </div>
                       </div>
                     </div>
                   );
