@@ -89,7 +89,6 @@ const Modal: React.FC<ModalProps> = ({
         width: scoreElement.offsetWidth,
         height: scoreElement.offsetHeight,
       });
-      console.log("Generated score card:", imageUrl);
       setScoreImageUrl(imageUrl);
 
       // Restore the original state
@@ -154,7 +153,6 @@ const Modal: React.FC<ModalProps> = ({
         // If Web Share API isn't available or fails, fall back to download
         downloadImage();
         // Also show the text that would have been shared
-        console.log("Share text (copied to clipboard):", shareText);
         try {
           await navigator.clipboard.writeText(shareText);
         } catch (error) {

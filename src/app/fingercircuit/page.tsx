@@ -1,5 +1,4 @@
 "use client";
-import BottomNav from "@/components/BottomNav";
 import React from "react";
 
 const Page = () => {
@@ -18,7 +17,6 @@ const Page = () => {
         title="Finger Circuit Game"
         allowFullScreen
       />
-      <BottomNav />
     </div>
   );
 };

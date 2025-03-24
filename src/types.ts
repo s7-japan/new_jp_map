@@ -4,7 +4,8 @@ export type EventItem = {
   "end time": string;
   event: string;
   Date?: string;
-  "Event No": string;
+  event_id: string;
+  gradient: string;
 };
 
 export type CalendarData = EventItem[];
