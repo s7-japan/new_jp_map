@@ -8,6 +8,8 @@ const Map = dynamic(() => import("@/components/Map"), {
 });
 import EventCalendar from "@/components/EventCalendar";
 import { useRouter, useSearchParams } from "next/navigation";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Create a separate component that uses useSearchParams
 const RedirectHandler = () => {
@@ -16,9 +18,9 @@ const RedirectHandler = () => {
   const redirectPath = searchParams.get("liff.state");
 
   useEffect(() => {
-    if(redirectPath){
+    if (redirectPath) {
       // console.log(redirectPath)
-      router.push(`${redirectPath}`)
+      router.push(`${redirectPath}`);
     }
   }, [redirectPath]);
 
