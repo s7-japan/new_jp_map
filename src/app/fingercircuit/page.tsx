@@ -16,6 +16,7 @@ const Page = () => {
         style={{ border: "none", height: "100%", width: "100%" }}
         title="Finger Circuit Game"
         allowFullScreen
+        allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
       />
     </div>
   );

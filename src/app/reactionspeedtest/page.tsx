@@ -28,6 +28,7 @@ const Page = () => {
         }}
         title="Redlight One Map"
         allowFullScreen
+        allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
       />
     </div>
   );

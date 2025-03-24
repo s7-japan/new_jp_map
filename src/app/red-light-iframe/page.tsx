@@ -15,6 +15,7 @@ const IframeRedLight = () => {
         src="https://redlight-one.vercel.app/"
         width={width}
         height={height}
+        allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
       ></iframe>
     </div>
   );
