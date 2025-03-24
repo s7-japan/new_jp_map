@@ -46,7 +46,7 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
         sx={{
           backgroundColor: "#ff0000",
           color: "white",
-          height: "56px",
+          height: "60px",
           "& .Mui-selected": {
             color: "white !important",
           },
