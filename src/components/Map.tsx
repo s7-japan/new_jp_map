@@ -198,7 +198,6 @@ const CurrentLocationButton = ({
     </div>
   );
 };
-
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
@@ -207,6 +206,9 @@ const Map: React.FC = () => {
   );
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
   const [showToast, setShowToast] = useState(false);
+  const [geoError, setGeoError] = useState<string | null>(null); // Track geolocation errors
+  const [isGeoErrorDismissed, setIsGeoErrorDismissed] = useState(false); // Track if user dismissed the error
+  const [pendingGeoError, setPendingGeoError] = useState<string | null>(null); // Temporary error state for debouncing
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   const BOUNDING_BOX = {
@@ -224,38 +226,75 @@ const Map: React.FC = () => {
       return;
     }
 
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserPosition([latitude, longitude]);
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        let errorMessage = "Unable to track your location: ";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage += "Permission denied.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage += "Location information is unavailable.";
-            break;
-          case error.TIMEOUT:
-            errorMessage += "The request timed out.";
-            break;
-          default:
-            errorMessage += "An unknown error occurred.";
-        }
-        console.warn(errorMessage);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
+    let watchId: number;
+    let errorTimeout: NodeJS.Timeout | null = null;
 
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
+    const startWatchingPosition = () => {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserPosition([latitude, longitude]);
+          setGeoError(null); // Clear any previous errors
+          setPendingGeoError(null); // Clear pending error
+          setIsGeoErrorDismissed(false); // Reset dismissal state when location is successfully obtained
+          if (errorTimeout) clearTimeout(errorTimeout); // Cancel any pending error
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          let errorMessage = "Unable to track your location: ";
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage += "Permission denied.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage += "Location information is unavailable.";
+              break;
+            case error.TIMEOUT:
+              errorMessage += "The request timed out.";
+              break;
+            default:
+              errorMessage += "An unknown error occurred.";
+          }
+
+          // Set pending error and debounce it
+          setPendingGeoError(errorMessage);
+          setUserPosition(null); // Clear position on error
+
+          // Only set geoError after a delay to filter out transient errors
+          if (errorTimeout) clearTimeout(errorTimeout);
+          errorTimeout = setTimeout(() => {
+            if (!isGeoErrorDismissed && pendingGeoError === errorMessage) {
+              setGeoError(errorMessage);
+            }
+          }, 1000); // 1-second debounce
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    };
+
+    // Start watching position initially
+    startWatchingPosition();
+
+    // Periodically check if geolocation is available again after an error
+    const intervalId = setInterval(() => {
+      if (geoError && navigator.geolocation && !isGeoErrorDismissed) {
+        console.log("Attempting to restart geolocation tracking...");
+        navigator.geolocation.clearWatch(watchId);
+        startWatchingPosition();
+      }
+    }, 5000); // Check every 5 seconds
+
+    // Cleanup
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      clearInterval(intervalId);
+      if (errorTimeout) clearTimeout(errorTimeout);
+    };
+  }, [geoError, isGeoErrorDismissed]); // Re-run effect if geoError or isGeoErrorDismissed changes
 
   const getMarkerIcon = (category: string) => {
     const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
@@ -355,7 +394,7 @@ const Map: React.FC = () => {
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
-            } else if (zoomLevel >= 15 && zoomLevel <= 20) {
+            } else if (zoomLevel >= 15 && zoomLevel < 20) {
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
@@ -404,6 +443,16 @@ const Map: React.FC = () => {
         <Toast
           message="You are outside the map range"
           onClose={() => setShowToast(false)}
+        />
+      )}
+
+      {geoError && !isGeoErrorDismissed && (
+        <Toast
+          message={geoError}
+          onClose={() => {
+            setGeoError(null);
+            setIsGeoErrorDismissed(true); // Mark as dismissed
+          }}
         />
       )}
 
