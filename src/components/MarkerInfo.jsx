@@ -179,7 +179,7 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           )}
 
-          <div className="text-black mt-5">{item.Title}</div>
+          {/* <div className="text-black mt-5">{item.Title}</div> */}
           {item["Sub Title"] !== "-" && (
             <div className="text-lg text-black mt-5">{item["Sub Title"]}</div>
           )}
