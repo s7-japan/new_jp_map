@@ -55,7 +55,9 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
         <BottomNavigationAction
           label="HOME"
           icon={<Image src={HomeIcon} alt="Home" width={20} height={20} />}
-          onClick={() => handleNavigation(0, "/")}
+          onClick={() =>
+            handleNavigation(0, "https://miniapp.line.me/2006998715-gnzj57yj")
+          }
           sx={{
             color: "white",
             minWidth: "60px",
@@ -74,7 +76,12 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
         <BottomNavigationAction
           label="DRIVER"
           icon={<Image src={DriverIcon} alt="Driver" width={20} height={20} />}
-          onClick={() => handleNavigation(1, "/reactionspeedtest")}
+          onClick={() =>
+            handleNavigation(
+              1,
+              "https://miniapp.line.me/2006998715-gnzj57yj/driver"
+            )
+          }
           sx={{
             color: "white",
             minWidth: "60px",
@@ -95,7 +102,12 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
           icon={
             <Image src={CircuitIcon} alt="Circuit" width={30} height={30} />
           }
-          onClick={() => handleNavigation(2, "/fingercircuit")}
+          onClick={() =>
+            handleNavigation(
+              2,
+              "https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney"
+            )
+          }
           sx={{
             color: "white",
             minWidth: "60px",

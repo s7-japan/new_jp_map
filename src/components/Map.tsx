@@ -24,7 +24,7 @@ import ToiletIcon from "../assets/map-icons/mapicon_multipurposetoilet.png";
 import NursingHome from "../assets/map-icons/mapicon_nursingroom.png";
 import RestRoom from "../assets/map-icons/mapicon_restroom.png";
 import Restaurants from "../assets/map-icons/mapicon_restaurant.png";
-import SeatGuide from "../assets/map-icons/mapicon_smokingarea.png";
+import SeatGuide from "../assets/map-icons/mapicon_seatguide.png";
 import TaxiArea from "../assets/map-icons/mapicon_taxi.png";
 import TicketCounter from "../assets/map-icons/mapicon_ticket.png";
 import WaterStation from "../assets/map-icons/mapicon_waterstation.png";
@@ -33,7 +33,6 @@ import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 import Official_Goods_Shop from "../assets/map-icons/mapicon_officialgoodsshop.png";
-
 const ICONS = {
   Ticket: TicketCounter,
   Attraction: MapIconAttraction,
@@ -43,7 +42,7 @@ const ICONS = {
   Bus: WestCourseShuttle,
   Event: MapEvent,
   Information: MapIconAttraction,
-  "Seat Guide": SeatGuide, // Fixed by adding quotes
+  "Seat Guide": SeatGuide,
   "Aid Station": FirstAidStation,
   "Smoking Area": MapIconSmoking,
   Restaurants: Restaurants,
@@ -54,12 +53,12 @@ const ICONS = {
   Restroom: RestRoom,
   "Coin Locker": CoinLockers,
   "Water Station": WaterStation,
+  // Toilet: ToiletIcon,
   "West Course Shuttle Stop": WestCourseShuttle,
   Parking: MapIconCar,
   "Official Goods Shop": Official_Goods_Shop,
 };
 
-// Rest of your interface and dynamic imports remain unchanged
 interface MapItem {
   "Icon Category": string;
   "Article Format": string;
@@ -75,6 +74,7 @@ interface MapItem {
   Remarks: string;
 }
 
+// Dynamic imports for react-leaflet components (unchanged)
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -169,7 +169,7 @@ const CurrentLocationButton = ({
       lat >= 34.83 && lat <= 34.86 && lng >= 136.52 && lng <= 136.56;
 
     if (isWithinBounds) {
-      map.setView(userPosition, 20);
+      map.setView(userPosition, 20); // Changed from 16 to 20
     } else {
       onOutOfRange();
     }
@@ -207,9 +207,6 @@ const Map: React.FC = () => {
   );
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
   const [showToast, setShowToast] = useState(false);
-  const [geoError, setGeoError] = useState<string | null>(null);
-  const [isGeoErrorDismissed, setIsGeoErrorDismissed] = useState(false);
-  const [pendingGeoError, setPendingGeoError] = useState<string | null>(null);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   const BOUNDING_BOX = {
@@ -227,70 +224,38 @@ const Map: React.FC = () => {
       return;
     }
 
-    let watchId: number;
-    let errorTimeout: NodeJS.Timeout | null = null;
-
-    const startWatchingPosition = () => {
-      watchId = navigator.geolocation.watchPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserPosition([latitude, longitude]);
-          setGeoError(null);
-          setPendingGeoError(null);
-          setIsGeoErrorDismissed(false);
-          if (errorTimeout) clearTimeout(errorTimeout);
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          let errorMessage = "Unable to track your location: ";
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage += "Permission denied.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage += "Location information is unavailable.";
-              break;
-            case error.TIMEOUT:
-              errorMessage += "The request timed out.";
-              break;
-            default:
-              errorMessage += "An unknown error occurred.";
-          }
-
-          setPendingGeoError(errorMessage);
-          setUserPosition(null);
-
-          if (errorTimeout) clearTimeout(errorTimeout);
-          errorTimeout = setTimeout(() => {
-            if (!isGeoErrorDismissed && pendingGeoError === errorMessage) {
-              setGeoError(errorMessage);
-            }
-          }, 1000);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserPosition([latitude, longitude]);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMessage = "Unable to track your location: ";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += "Permission denied.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            errorMessage += "The request timed out.";
+            break;
+          default:
+            errorMessage += "An unknown error occurred.";
         }
-      );
-    };
-
-    startWatchingPosition();
-
-    const intervalId = setInterval(() => {
-      if (geoError && navigator.geolocation && !isGeoErrorDismissed) {
-        console.log("Attempting to restart geolocation tracking...");
-        navigator.geolocation.clearWatch(watchId);
-        startWatchingPosition();
+        console.warn(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
       }
-    }, 5000);
+    );
 
-    return () => {
-      navigator.geolocation.clearWatch(watchId);
-      clearInterval(intervalId);
-      if (errorTimeout) clearTimeout(errorTimeout);
-    };
-  }, [geoError, isGeoErrorDismissed]);
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   const getMarkerIcon = (category: string) => {
     const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
@@ -390,7 +355,7 @@ const Map: React.FC = () => {
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
-            } else if (zoomLevel >= 15 && zoomLevel < 20) {
+            } else if (zoomLevel >= 15 && zoomLevel <= 20) {
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
@@ -439,16 +404,6 @@ const Map: React.FC = () => {
         <Toast
           message="You are outside the map range"
           onClose={() => setShowToast(false)}
-        />
-      )}
-
-      {geoError && !isGeoErrorDismissed && (
-        <Toast
-          message={geoError}
-          onClose={() => {
-            setGeoError(null);
-            setIsGeoErrorDismissed(true);
-          }}
         />
       )}
 

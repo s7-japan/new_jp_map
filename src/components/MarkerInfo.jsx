@@ -90,11 +90,35 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
+  // Function to process the article content with proper line breaks
+  const renderArticleContent = (content) => {
+    if (!content || content === "-") return "No content available.";
+
+    // Split the content by \r\n
+    const paragraphs = content.split("\r\n");
+
+    return paragraphs.map((paragraph, index) => {
+      // If the paragraph is empty (result of consecutive \r\n), add extra spacing
+      if (paragraph.trim() === "" && index !== paragraphs.length - 1) {
+        return <div key={index} className="paragraph-break" />;
+      }
+      // Render non-empty paragraphs
+      if (paragraph.trim() !== "") {
+        return (
+          <p key={index} className="paragraph">
+            {paragraph}
+          </p>
+        );
+      }
+      return null;
+    });
+  };
+
   const totalTransform =
     -(currentIndex * 100) + (translateX / window.innerWidth) * 100;
 
   return (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full ">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full">
       {onBack && (
         <button
           onClick={onBack}
@@ -103,9 +127,8 @@ const MarkerInfo = ({ item, onBack }) => {
           <Image src="/images/Cross.svg" width={30} height={30} alt="Close" />
         </button>
       )}
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6  m-4 relative h-[80%]  MyCustomFont ">
-        <div className="px-3 py-6 overflow-auto relative w-full h-full style-2">
-          {/* Added pr-4 for right padding */}
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[80%] MyCustomFont">
+        <div className="px-3 overflow-auto relative w-full h-full style-2">
           {item["Top Image"] !== "-" &&
           Array.isArray(item["Top Image"]) &&
           item["Top Image"].length > 0 ? (
@@ -164,7 +187,9 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           ) : null}
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-[60%]">{item["Title"]}</div>
+            <div className="mt-5 w-[60%] text-xl font-bold">
+              {item["Title"]}
+            </div>
           )}
           {item["Article Format"] === "Area Introduction" && (
             <div
@@ -177,11 +202,13 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           )}
           {item["Sub Title"] !== "-" && (
-            <div className="text-lg text-black mt-5">{item["Sub Title"]}</div>
+            <div className="text-lg text-black mt-5 font-semibold">
+              {item["Sub Title"]}
+            </div>
           )}
-          <p className="text-black my-5">
-            {item["Article Content"] || "No content available."}
-          </p>
+          <div className="text-black my-5 font-normal">
+            {renderArticleContent(item["Article Content"])}
+          </div>
         </div>
       </div>
 
@@ -241,6 +268,14 @@ const MarkerInfo = ({ item, onBack }) => {
         .style-2::-webkit-scrollbar-thumb {
           border-radius: 10px;
           background-color: gray;
+        }
+
+        .paragraph {
+          margin-bottom: 1rem; /* Single line break spacing */
+        }
+
+        .paragraph-break {
+          margin-bottom: 2rem; /* Double line break spacing for paragraphs */
         }
       `}</style>
     </div>
