@@ -103,7 +103,7 @@ export default function EventCalendar() {
     const rgbaEnd = `${bgColor}00`;
     return (
       <div
-        className={`p-1 relative  text-[10px] overflow-hidden `}
+        className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
         style={{
           ...eventStyle,
           background:
@@ -117,10 +117,10 @@ export default function EventCalendar() {
           console.log("clicked");
         }}
       >
-        <div className="absolute top-0 left-1 font-extrabold text-[14px]">
+        <div className="absolute top-0 left-0 font-bold text-[12px]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute bottom-0 right-0 font-extrabold ext-[14px]">
+        <div className="absolute top-0 left-0 font-bold text-[12px]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
@@ -234,7 +234,7 @@ export default function EventCalendar() {
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
                       className={`${
                         showGradient ? "bg-[#B3B3B3]" : "bg-[#f8fafc]"
-                      } p-1 w-full font-extrabold`}
+                      } p-1 w-full font-extrabold mt-[15px]`}
                       style={{
                         ...eventStyle,
                         zIndex: 20,
@@ -244,12 +244,12 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full">
-                        <div className="absolute top-0 left-1 font-extrabold">
+                        <div className="absolute top-0 left-0 font-bold text-[12px]">
                           {start_minute !== "00" && start_minute !== "30"
                             ? start_minute
                             : ""}
                         </div>
-                        <div className="absolute bottom-0   right-0 font-extrabold">
+                        <div className="absolute bottom-0   left-0 font-bold text-[12px]">
                           {end_minute !== "00" && end_minute !== "30"
                             ? end_minute
                             : ""}
