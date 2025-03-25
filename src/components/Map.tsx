@@ -23,6 +23,7 @@ import MapGate from "../assets/map-icons/mapicon_gate.png";
 import ToiletIcon from "../assets/map-icons/mapicon_multipurposetoilet.png";
 import NursingHome from "../assets/map-icons/mapicon_nursingroom.png";
 import RestRoom from "../assets/map-icons/mapicon_restroom.png";
+import Restaurants from "../assets/map-icons/mapicon_restaurant.png";
 import SeatGuide from "../assets/map-icons/mapicon_smokingarea.png";
 import TaxiArea from "../assets/map-icons/mapicon_taxi.png";
 import TicketCounter from "../assets/map-icons/mapicon_ticket.png";
@@ -31,7 +32,7 @@ import WestCourseShuttle from "../assets/map-icons/mapicon_westcourceshuttlestop
 import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
-
+import Official_Goods_Shop from "../assets/map-icons/mapicon_officialgoodsshop.png";
 const ICONS = {
   Ticket: TicketCounter,
   Attraction: MapIconAttraction,
@@ -41,20 +42,21 @@ const ICONS = {
   Bus: WestCourseShuttle,
   Event: MapEvent,
   Information: MapIconAttraction,
-  "Seating Area": SeatGuide,
-  "First Aid": FirstAidStation,
-  Smoking: MapIconSmoking,
-  Restaurant: MapIconAttraction,
+  "Seat Guide": SeatGuide,
+  "Aid Station": FirstAidStation,
+  "Smoking Area": MapIconSmoking,
+  Restaurants: Restaurants,
   ATM: ATMIcon,
   "Bicycle Parking": BicyclePark,
   "Nursing Room": NursingHome,
-  "Multi-purpose Toilet": RestRoom,
-  "Coin Lockers": CoinLockers,
+  "Multi-purpose Toilet": ToiletIcon,
+  Restroom: RestRoom,
+  "Coin Locker": CoinLockers,
   "Water Station": WaterStation,
-  Toilet: ToiletIcon,
-  "West Course Shuttle": WestCourseShuttle,
+  // Toilet: ToiletIcon,
+  "West Course Shuttle Stop": WestCourseShuttle,
   Parking: MapIconCar,
-  "Official Goods": MapIconAttraction,
+  "Official Goods Shop": Official_Goods_Shop,
 };
 
 interface MapItem {
