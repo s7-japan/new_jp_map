@@ -355,7 +355,7 @@ const Map: React.FC = () => {
                 `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
               );
               return null;
-            } else if (zoomLevel >= 15 && zoomLevel <= 20) {
+            } else if (zoomLevel >= 15 && zoomLevel < 20) {
               if (item["Zoom Level"] !== "Medium") {
                 console.log(
                   `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
