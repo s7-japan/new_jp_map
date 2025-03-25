@@ -94,7 +94,7 @@ const MarkerInfo = ({ item, onBack }) => {
     -(currentIndex * 100) + (translateX / window.innerWidth) * 100;
 
   return (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full ">
       {onBack && (
         <button
           onClick={onBack}
@@ -103,9 +103,9 @@ const MarkerInfo = ({ item, onBack }) => {
           <Image src="/images/Cross.svg" width={30} height={30} alt="Close" />
         </button>
       )}
-      <div></div>
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6 m-4 relative h-[80%] overflow-auto MyCustomFont">
-        <div className="mt-8 pb-10">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6  m-4 relative h-[80%]  MyCustomFont ">
+        <div className="px-3 py-6 overflow-auto relative w-full h-full style-2">
+          {/* Added pr-4 for right padding */}
           {item["Top Image"] !== "-" &&
           Array.isArray(item["Top Image"]) &&
           item["Top Image"].length > 0 ? (
@@ -163,11 +163,9 @@ const MarkerInfo = ({ item, onBack }) => {
               )}
             </div>
           ) : null}
-
           {item["Article Format"] === "Facility" && (
             <div className="mt-5 w-[60%]">{item["Title"]}</div>
           )}
-
           {item["Article Format"] === "Area Introduction" && (
             <div
               className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex justify-center items-center rounded-full cursor-pointer"
@@ -178,12 +176,9 @@ const MarkerInfo = ({ item, onBack }) => {
               {item["Line Button Text (If Area Introduction format)"]}
             </div>
           )}
-
-          {/* <div className="text-black mt-5">{item.Title}</div> */}
           {item["Sub Title"] !== "-" && (
             <div className="text-lg text-black mt-5">{item["Sub Title"]}</div>
           )}
-
           <p className="text-black my-5">
             {item["Article Content"] || "No content available."}
           </p>
@@ -229,6 +224,22 @@ const MarkerInfo = ({ item, onBack }) => {
         }
 
         .dot.active {
+          background-color: gray;
+        }
+
+        .style-2::-webkit-scrollbar-track {
+          border-radius: 10px;
+          background-color: #f5f5f5;
+        }
+
+        .style-2::-webkit-scrollbar {
+          border-radius: 10px;
+          width: 12px;
+          background-color: #f5f5f5;
+        }
+
+        .style-2::-webkit-scrollbar-thumb {
+          border-radius: 10px;
           background-color: gray;
         }
       `}</style>

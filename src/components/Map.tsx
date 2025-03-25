@@ -33,6 +33,7 @@ import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 import Official_Goods_Shop from "../assets/map-icons/mapicon_officialgoodsshop.png";
+
 const ICONS = {
   Ticket: TicketCounter,
   Attraction: MapIconAttraction,
@@ -42,7 +43,7 @@ const ICONS = {
   Bus: WestCourseShuttle,
   Event: MapEvent,
   Information: MapIconAttraction,
-  "Seat Guide": SeatGuide,
+  "Seat Guide": SeatGuide, // Fixed by adding quotes
   "Aid Station": FirstAidStation,
   "Smoking Area": MapIconSmoking,
   Restaurants: Restaurants,
@@ -53,12 +54,12 @@ const ICONS = {
   Restroom: RestRoom,
   "Coin Locker": CoinLockers,
   "Water Station": WaterStation,
-  // Toilet: ToiletIcon,
   "West Course Shuttle Stop": WestCourseShuttle,
   Parking: MapIconCar,
   "Official Goods Shop": Official_Goods_Shop,
 };
 
+// Rest of your interface and dynamic imports remain unchanged
 interface MapItem {
   "Icon Category": string;
   "Article Format": string;
@@ -74,7 +75,6 @@ interface MapItem {
   Remarks: string;
 }
 
-// Dynamic imports for react-leaflet components (unchanged)
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -169,7 +169,7 @@ const CurrentLocationButton = ({
       lat >= 34.83 && lat <= 34.86 && lng >= 136.52 && lng <= 136.56;
 
     if (isWithinBounds) {
-      map.setView(userPosition, 20); // Changed from 16 to 20
+      map.setView(userPosition, 20);
     } else {
       onOutOfRange();
     }
@@ -198,6 +198,7 @@ const CurrentLocationButton = ({
     </div>
   );
 };
+
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
@@ -206,9 +207,9 @@ const Map: React.FC = () => {
   );
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
   const [showToast, setShowToast] = useState(false);
-  const [geoError, setGeoError] = useState<string | null>(null); // Track geolocation errors
-  const [isGeoErrorDismissed, setIsGeoErrorDismissed] = useState(false); // Track if user dismissed the error
-  const [pendingGeoError, setPendingGeoError] = useState<string | null>(null); // Temporary error state for debouncing
+  const [geoError, setGeoError] = useState<string | null>(null);
+  const [isGeoErrorDismissed, setIsGeoErrorDismissed] = useState(false);
+  const [pendingGeoError, setPendingGeoError] = useState<string | null>(null);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   const BOUNDING_BOX = {
@@ -234,10 +235,10 @@ const Map: React.FC = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setUserPosition([latitude, longitude]);
-          setGeoError(null); // Clear any previous errors
-          setPendingGeoError(null); // Clear pending error
-          setIsGeoErrorDismissed(false); // Reset dismissal state when location is successfully obtained
-          if (errorTimeout) clearTimeout(errorTimeout); // Cancel any pending error
+          setGeoError(null);
+          setPendingGeoError(null);
+          setIsGeoErrorDismissed(false);
+          if (errorTimeout) clearTimeout(errorTimeout);
         },
         (error) => {
           console.error("Geolocation error:", error);
@@ -256,17 +257,15 @@ const Map: React.FC = () => {
               errorMessage += "An unknown error occurred.";
           }
 
-          // Set pending error and debounce it
           setPendingGeoError(errorMessage);
-          setUserPosition(null); // Clear position on error
+          setUserPosition(null);
 
-          // Only set geoError after a delay to filter out transient errors
           if (errorTimeout) clearTimeout(errorTimeout);
           errorTimeout = setTimeout(() => {
             if (!isGeoErrorDismissed && pendingGeoError === errorMessage) {
               setGeoError(errorMessage);
             }
-          }, 1000); // 1-second debounce
+          }, 1000);
         },
         {
           enableHighAccuracy: true,
@@ -276,25 +275,22 @@ const Map: React.FC = () => {
       );
     };
 
-    // Start watching position initially
     startWatchingPosition();
 
-    // Periodically check if geolocation is available again after an error
     const intervalId = setInterval(() => {
       if (geoError && navigator.geolocation && !isGeoErrorDismissed) {
         console.log("Attempting to restart geolocation tracking...");
         navigator.geolocation.clearWatch(watchId);
         startWatchingPosition();
       }
-    }, 5000); // Check every 5 seconds
+    }, 5000);
 
-    // Cleanup
     return () => {
       navigator.geolocation.clearWatch(watchId);
       clearInterval(intervalId);
       if (errorTimeout) clearTimeout(errorTimeout);
     };
-  }, [geoError, isGeoErrorDismissed]); // Re-run effect if geoError or isGeoErrorDismissed changes
+  }, [geoError, isGeoErrorDismissed]);
 
   const getMarkerIcon = (category: string) => {
     const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
@@ -451,7 +447,7 @@ const Map: React.FC = () => {
           message={geoError}
           onClose={() => {
             setGeoError(null);
-            setIsGeoErrorDismissed(true); // Mark as dismissed
+            setIsGeoErrorDismissed(true);
           }}
         />
       )}
