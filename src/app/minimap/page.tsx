@@ -12,7 +12,6 @@ const MapPage = () => {
   return (
     <div className="bg-white w-full h-full">
       <Header />
-      <Direction />
       <Map />
       <EventCalendar />
       <BottomNav />
