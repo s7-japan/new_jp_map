@@ -5,13 +5,13 @@
     "Zoom Level": "Medium",
     "Title": "カートアタッカー",
     "Sub Title": "親子で挑戦・成長ができるステップアップカートアトラクション登場！",
-    "Article Content": "カートアタッカーは、親子や友達とともに初めてのカートに挑戦し、最速タイムを目指して、一緒に挑戦・成長できる\"レーシングカートアトラクション\"です。\r\n        \r\n定員：1名\r\n料金：¥1,000 / 名\r\n備考：WEB整理券制でご案内です。予約サイト「ウラカタ」にて人数分の整理券の取得をお願いします。",
+    "Article Content": "カートアタッカーは、親子や友達とともに初めてのカートに挑戦し、最速タイムを目指して、一緒に挑戦・成長できる\"レーシングカートアトラクション\"です。\r\n\r\n定員：1名\r\n料金：¥1,000 / 名\r\n備考：WEB整理券制でご案内です。予約サイト「ウラカタ」にて人数分の整理券の取得をお願いします。",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/カートアタッカー.png"],
     "Locations": "34.84681271132127, 136.53837099231723",
     "Is Location Check Done?": "済",
-    "Remarks": "https://dachd.box.com/s/ydcst3t0mjh7gbjhdky7mnrkd42b61pa"
+    "Remarks": ""
   },
   {
     "Icon Category": "Attraction",
@@ -165,7 +165,7 @@
     "Line Button Text (If Area Introduction format)": "",
     "Line Button URL": "",
     "Top Image": ["/F1_ArticleTopImages/Facility/メンキョセンター.png"],
-    "Locations": "(34.8486025, 136.5405331)",
+    "Locations": "34.84866951253219, 136.54038217713088",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -175,7 +175,7 @@
     "Zoom Level": "Medium",
     "Title": "メインゲート",
     "Sub Title": "入園券やパスポートのご購入はこちら",
-    "Article Content": "【取り扱い商品】\r\n・入園券\r\n・パークパスポート\r\n・パーク年間パスポート\r\n※アトラクションチケットをお買い求めの方はライセンスセンターにてご購入ください。\r\n\r\n4月3日（木）：8:30~17:30\r\n4月4日（金）：8:00~19:00\r\n4月5日（土）：8:00~21:15\r\n4月6日（日）：8:00~19:30",
+    "Article Content": "【取り扱い商品】\r\n・入園券\r\n・パークパスポート\r\n・パーク年間パスポート\r\n※アトラクションチケットをお買い求めの方はライセンスセンターにてご購入ください。",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/メインゲート.png"],
@@ -189,7 +189,7 @@
     "Zoom Level": "Medium",
     "Title": "プールサイドゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：CLOSED\r\n4月4日（金）：8:15~19:00\r\n4月5日（土）：8:15~21:15\r\n4月6日（日）：8:15~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -203,7 +203,7 @@
     "Zoom Level": "Medium",
     "Title": "1コーナーゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：8:45~17:30\r\n4月4日（金）：8:15~19:00\r\n4月5日（土）：8:15~21:15\r\n4月6日（日）：8:15~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -217,7 +217,7 @@
     "Zoom Level": "Medium",
     "Title": "シケインゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：CLOSED\r\n4月4日（金）：8:30~19:00\r\n4月5日（土）：8:30~21:15\r\n4月6日（日）：8:30~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -231,7 +231,7 @@
     "Zoom Level": "Medium",
     "Title": "逆バンクゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：CLOSED\r\n4月4日（金）：8:15~19:00\r\n4月5日（土）：8:15~21:15\r\n4月6日（日）：8:15~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -245,7 +245,7 @@
     "Zoom Level": "Medium",
     "Title": "西モータースポーツゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：CLOSED\r\n4月4日（金）：8:15~19:00\r\n4月5日（土）：8:15~21:15\r\n4月6日（日）：8:15~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -259,7 +259,7 @@
     "Zoom Level": "Medium",
     "Title": "スプーンゲート",
     "Sub Title": "-",
-    "Article Content": "4月3日（木）：CLOSED\r\n4月4日（金）：8:15~19:00\r\n4月5日（土）：8:15~21:15\r\n4月6日（日）：8:15~19:30",
+    "Article Content": "-",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
@@ -269,8 +269,8 @@
   },
   {
     "Icon Category": "Gate",
-    "Article Format": "Pin",
-    "Zoom Level": "Low",
+    "Article Format": "Facility",
+    "Zoom Level": "Medium",
     "Title": "パーキングゲート",
     "Sub Title": "-",
     "Article Content": "-",
@@ -285,13 +285,13 @@
     "Icon Category": "Taxi",
     "Article Format": "Facility",
     "Zoom Level": "Medium",
-    "Title": "タクシー乗降場所",
-    "Sub Title": "-",
+    "Title": "タクシー乗降場所(1)",
+    "Sub Title": "",
     "Article Content": "4/4（金）~4/6（日）各日15:00まで",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "",
-    "Locations": "(34.848687, 136.539500)",
+    "Locations": "(34.84866379830462, 136.53949527520973)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -299,8 +299,8 @@
     "Icon Category": "Taxi",
     "Article Format": "Facility",
     "Zoom Level": "Medium",
-    "Title": "タクシー乗降場所",
-    "Sub Title": "-",
+    "Title": "タクシー乗降場所(2)",
+    "Sub Title": "",
     "Article Content": "4/4（金）~4/6（日）各日15:00~",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
@@ -314,7 +314,7 @@
     "Article Format": "Facility",
     "Zoom Level": "Medium",
     "Title": "一般車両乗降場所",
-    "Sub Title": "-",
+    "Sub Title": "",
     "Article Content": "4/4（金）~4/6（日）15:00~19:00",
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
@@ -347,7 +347,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.848680, 136.539413)",
+    "Locations": "(34.84868115071297, 136.5395353051171)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -375,7 +375,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8472900, 136.5254501)",
+    "Locations": "(34.84754966779468, 136.52532471162053)",
     "Is Location Check Done?": "済",
     "Remarks": "同一名称につき注意（スプーンゲート付近）"
   },
@@ -389,7 +389,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/プッチパトロール.png"],
-    "Locations": "(34.8485854, 136.5400651)",
+    "Locations": "(34.84830344182385, 136.53975388714895)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -433,7 +433,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/テストフライト.png"],
-    "Locations": "(34.8482909, 136.5402555)",
+    "Locations": "34.84825599126383, 136.54021066223524",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -447,7 +447,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/プッチパワーショベル.png"],
-    "Locations": "(34.8486129, 136.5404993)",
+    "Locations": "(34.84775965938704, 136.54019345244842)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -491,7 +491,7 @@
     "Top Image": [
       "/F1_ArticleTopImages/Facility/メインインフォメーションセンター.png"
     ],
-    "Locations": "(34.8478898, 136.5401177)",
+    "Locations": "(34.847761008220026, 136.54035932880564)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -563,7 +563,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/時計台下チケット売場.png"],
-    "Locations": "(34.8470303, 136.5410598)",
+    "Locations": "(34.84690910015777, 136.54108652353227)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -751,7 +751,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/ルンルンポップ.png"],
-    "Locations": "(34.8485428, 136.5402582)",
+    "Locations": "(34.84895126951186, 136.54039979127805)",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -823,7 +823,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/アドベンチャークレープ.png"],
-    "Locations": "(34.8465050, 136.5416690)",
+    "Locations": "(34.84649271650128, 136.54164645604575)",
     "Is Location Check Done?": "済",
     "Remarks": "表示方法要相談"
   },
@@ -837,7 +837,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": ["/F1_ArticleTopImages/Facility/アドベン濃厚ソフト.png"],
-    "Locations": "(34.8464898, 136.5416476)",
+    "Locations": "(34.84649271650128, 136.54164645605575)",
     "Is Location Check Done?": "済",
     "Remarks": "表示方法要相談"
   },
@@ -935,7 +935,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8441807, 136.5276884)",
+    "Locations": "34.844322393409435, 136.52752280832433",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -1075,7 +1075,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8447280, 136.5313466)",
+    "Locations": "(34.84446746899157, 136.53124596712888)",
     "Is Location Check Done?": "済",
     "Remarks": "G席付近"
   },
@@ -1089,7 +1089,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8461170, 136.5308654)",
+    "Locations": "(34.84624250474705, 136.5309624917615)",
     "Is Location Check Done?": "済",
     "Remarks": "H席付近"
   },
@@ -1103,7 +1103,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8462774, 136.5289369)",
+    "Locations": "(34.84692382339224, 136.52942188353597)",
     "Is Location Check Done?": "済",
     "Remarks": "I席付近"
   },
@@ -1117,7 +1117,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8481042, 136.5247517)",
+    "Locations": "(34.84785292995679, 136.52523178178254)",
     "Is Location Check Done?": "済",
     "Remarks": "L席付近"
   },
@@ -1325,12 +1325,15 @@
     "Icon Category": "Seat Guide",
     "Article Format": "Area Introduction",
     "Zoom Level": "Medium",
-    "Title": "S席（ファミリーシート）S-BOX",
+    "Title": "S席（ファミリーシート） / S-BOX",
     "Sub Title": "-",
     "Article Content": "【ゴールへ300km/hで駆け抜ける！130R~最終コーナー】\r\n「S席ファミリーシート」はお子さま連れファミリー専用席として、パークやGPスクエアに近い最終コーナーに設置。さらに上段には、グループ専用観戦エリアのボックスシート「S-BOX」も。レースの始まりと終わりのドラマを楽しめる特等席！ご家族や友達とのグループ利用で、一緒に盛り上がりましょう！\r\n\r\n※S席は、お子さま連れファミリー専用席です。購入の際は子ども1名以上の購入またはご利用が必須となります。",
     "Line Button Text (If Area Introduction format)": "エリア別オープンチャットで盛り上がろう",
     "Line Button URL": "https://line.me/ti/g2/aZp832U4D0XhZe31gYmodDPGpI9Yrz1hcvJcMg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default",
-    "Top Image": "https://dachd.box.com/s/v4zttncxbsg0hs5qw4kww4645aktd2c4",
+    "Top Image": [
+      "/F1_ArticleTopImages/AreaIntroduction/S席（ファミリーシート）S-BOX/S_1枚目.png",
+      "/F1_ArticleTopImages/AreaIntroduction/S席（ファミリーシート）S-BOX/S_2枚目.png"
+    ],
     "Locations": "34.84590474792846, 136.53819232794694",
     "Is Location Check Done?": "済",
     "Remarks": ""
@@ -1532,7 +1535,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8395154, 136.5403554",
+    "Locations": "34.83924953122281, 136.5406212138008",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -1560,7 +1563,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8451652, 136.5409847)",
+    "Locations": "34.84506132840711, 136.54099508187105",
     "Is Location Check Done?": "済",
     "Remarks": "fanzone付近"
   },
@@ -1602,7 +1605,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8463919, 136.5290891)",
+    "Locations": "34.84657406402768, 136.52924073203872",
     "Is Location Check Done?": "済",
     "Remarks": "I席付近"
   },
@@ -1672,7 +1675,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8442308, 136.5264234)",
+    "Locations": "34.844388575232216, 136.52595118291538",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -1686,7 +1689,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.84336996316161, 136.52787692454018",
+    "Locations": "34.84310186380603, 136.52727869070873",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -1700,7 +1703,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8434986, 136.5280857)",
+    "Locations": "34.8438186207525, 136.52891343012362",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -1728,7 +1731,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8427716, 136.5360994",
+    "Locations": "34.84273831933614, 136.53626461853162",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -1742,7 +1745,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8413613, 136.5385560",
+    "Locations": "34.84177680634371, 136.53775878304492",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -1798,7 +1801,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8443846, 136.5400872)",
+    "Locations": "34.84423697534895, 136.54021691305843",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -1868,7 +1871,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8458480, 136.5340555)",
+    "Locations": "34.84511435039152, 136.53298553284733",
     "Is Location Check Done?": "済",
     "Remarks": "P席付近"
   },
@@ -1938,7 +1941,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8466899, 136.5422112)",
+    "Locations": "34.84653253932258, 136.54232892381032",
     "Is Location Check Done?": "済",
     "Remarks": "パラ・セイラー付近"
   },
@@ -1952,7 +1955,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8473800, 136.5400376)",
+    "Locations": "34.84731361797514, 136.53998091752405",
     "Is Location Check Done?": "済",
     "Remarks": "モビステージ付近"
   },
@@ -1966,7 +1969,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.848772, 136.539031",
+    "Locations": "34.84858131763783, 136.53910813339985",
     "Is Location Check Done?": "済",
     "Remarks": "メインゲート付近"
   },
@@ -2106,7 +2109,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8464425, 136.5356428)",
+    "Locations": "34.84647667300153, 136.53575273387767",
     "Is Location Check Done?": "済",
     "Remarks": "Q席付近"
   },
@@ -2190,7 +2193,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8450731, 136.5406987)",
+    "Locations": "34.84508286008312, 136.5407149231666",
     "Is Location Check Done?": "済",
     "Remarks": "Z席付近"
   },
@@ -2204,7 +2207,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8447341, 136.5323742)",
+    "Locations": "34.84466054799575, 136.53250674046777",
     "Is Location Check Done?": "済",
     "Remarks": "G席付近"
   },
@@ -2218,7 +2221,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8465699, 136.5426085)",
+    "Locations": "34.84659372203096, 136.5426871819226",
     "Is Location Check Done?": "済",
     "Remarks": "パラ・セイラー付近"
   },
@@ -2232,7 +2235,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8464775, 136.5412791)\r\n",
+    "Locations": "34.84664001826347, 136.54123778192263",
     "Is Location Check Done?": "済",
     "Remarks": "バットのパワークリスタル付近"
   },
@@ -2246,7 +2249,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8479008, 136.5401931)",
+    "Locations": "34.848089521270694, 136.54065439298506",
     "Is Location Check Done?": "済",
     "Remarks": "ルンルンバルーン付近"
   },
@@ -2302,7 +2305,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8444209, 136.5264502)",
+    "Locations": "34.84441215618051, 136.52642549749308",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -2330,7 +2333,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8439039, 136.5297124)",
+    "Locations": "34.84388122626415, 136.52970297313584",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -2344,7 +2347,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8431235, 136.5361021",
+    "Locations": "34.84284443520066, 136.53614732685955",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -2358,7 +2361,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8418063, 136.5372910",
+    "Locations": "34.841864764927614, 136.53727947532172",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -2372,7 +2375,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8411610, 136.5387102",
+    "Locations": "34.84117471067421, 136.53867279172042",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -2386,7 +2389,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8393316, 136.5404560",
+    "Locations": "34.83933842166397, 136.5404910940801",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -2400,7 +2403,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8384725, 136.5417451",
+    "Locations": "34.83848360319752, 136.54173711412824",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -2414,7 +2417,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8382664, 136.5420610",
+    "Locations": "34.838264222051876, 136.54207168316896",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -2428,7 +2431,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8409290, 136.5437323",
+    "Locations": "34.84067033320949, 136.54373758545987",
     "Is Location Check Done?": "済",
     "Remarks": "A席付近"
   },
@@ -2470,7 +2473,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8436403, 136.5408627)",
+    "Locations": "34.84367888329414, 136.54082879702332",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -2484,7 +2487,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8441669, 136.5402783)",
+    "Locations": "34.844251232469325, 136.54022885272167",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -2498,7 +2501,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8449701, 136.5394723)",
+    "Locations": "34.84503642877718, 136.53941826601698",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -2512,7 +2515,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8450835, 136.5407933)",
+    "Locations": "34.8451355837704, 136.54089879462472",
     "Is Location Check Done?": "済",
     "Remarks": "Fanzone付近"
   },
@@ -2568,7 +2571,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8465925, 136.5381285)",
+    "Locations": "34.846600199058585, 136.53811658822735",
     "Is Location Check Done?": "済",
     "Remarks": "S席付近"
   },
@@ -2596,7 +2599,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8467218, 136.5371338)",
+    "Locations": "34.84563887736766, 136.53120763795033",
     "Is Location Check Done?": "済",
     "Remarks": "G席付近"
   },
@@ -2610,7 +2613,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8467540, 136.5293201)",
+    "Locations": "34.846721840937775, 136.52932046774166",
     "Is Location Check Done?": "済",
     "Remarks": "I席付近"
   },
@@ -2680,7 +2683,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8472020, 136.5428657)",
+    "Locations": "34.84727473030396, 136.54284220648046",
     "Is Location Check Done?": "済",
     "Remarks": "菜園メイロ付近"
   },
@@ -2708,7 +2711,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8473106, 136.5405878)",
+    "Locations": "34.84739391794077, 136.54064711752403",
     "Is Location Check Done?": "済",
     "Remarks": "ドリームR付近"
   },
@@ -2722,7 +2725,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8481691, 136.5399162)",
+    "Locations": "34.848216261904774, 136.53993107707305",
     "Is Location Check Done?": "済",
     "Remarks": "テストフライト付近"
   },
@@ -2736,7 +2739,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8486586, 136.5403825)",
+    "Locations": "34.848675369457325, 136.54055065631584",
     "Is Location Check Done?": "済",
     "Remarks": "コチラドライビングスクール付近"
   },
@@ -2806,7 +2809,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8537259, 136.5443489",
+    "Locations": "34.853609103844285, 136.5442778071529",
     "Is Location Check Done?": "済",
     "Remarks": "駐車場内"
   },
@@ -2834,7 +2837,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8386673, 136.5436130",
+    "Locations": "34.83859988711039, 136.54365595468838",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -2848,7 +2851,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8464233, 136.5355251)",
+    "Locations": "34.84647236657067, 136.53576713369023",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -2862,7 +2865,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8386673, 136.5436130",
+    "Locations": "34.838579766274684, 136.54364471832702",
     "Is Location Check Done?": "済",
     "Remarks": ""
   },
@@ -2890,7 +2893,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8443763, 136.5264398)",
+    "Locations": "34.84442096140621, 136.52641208644948",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
@@ -2918,7 +2921,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8431235, 136.5361021",
+    "Locations": "34.84282568580842, 136.53617724541368",
     "Is Location Check Done?": "済",
     "Remarks": "D席付近"
   },
@@ -2932,7 +2935,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8385600, 136.5415990",
+    "Locations": "34.838532035415575, 136.54169688099742",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -2946,7 +2949,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.8383649, 136.5419383",
+    "Locations": "34.838257223821664, 136.54207806888826",
     "Is Location Check Done?": "済",
     "Remarks": "C席付近"
   },
@@ -2988,7 +2991,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8435104, 136.5409992)",
+    "Locations": "34.8437078448746, 136.5408099081957",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -3002,7 +3005,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8440310, 136.5404543)",
+    "Locations": "34.84428091445667, 136.54020711335647",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -3016,7 +3019,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "34.845104, 136.539345",
+    "Locations": "34.845133800670204, 136.5393358547252",
     "Is Location Check Done?": "済",
     "Remarks": "V席付近"
   },
@@ -3030,7 +3033,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8451069, 136.5408667)",
+    "Locations": "34.84516700156152, 136.5409280592535",
     "Is Location Check Done?": "済",
     "Remarks": "Fanzone付近"
   },
@@ -3044,7 +3047,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8456757, 136.5398371)",
+    "Locations": "34.84571164289428, 136.5398704925487",
     "Is Location Check Done?": "済",
     "Remarks": "Fanzone付近"
   },
@@ -3072,7 +3075,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8465441, 136.5380598)",
+    "Locations": "34.84658313938465, 136.5381018360794",
     "Is Location Check Done?": "済",
     "Remarks": "S席付近"
   },
@@ -3100,7 +3103,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8466987, 136.5292849)",
+    "Locations": "34.846733397471986, 136.52931108001115",
     "Is Location Check Done?": "済",
     "Remarks": "I席付近"
   },
@@ -3128,7 +3131,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8486391, 136.5403527)",
+    "Locations": "34.848672685611635, 136.54054490457983",
     "Is Location Check Done?": "済",
     "Remarks": "コチラドライビングスクール付近"
   },
@@ -3142,7 +3145,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8472963, 136.5406109)",
+    "Locations": "34.847358691125024, 136.54064934125506",
     "Is Location Check Done?": "済",
     "Remarks": "ドリームR付近"
   },
@@ -3170,7 +3173,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8472020, 136.5428657)",
+    "Locations": "34.847210677995314, 136.54286326014068",
     "Is Location Check Done?": "済",
     "Remarks": "菜園メイロ付近"
   },
@@ -3184,7 +3187,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8451273, 136.5409247)",
+    "Locations": "34.84514984810384, 136.5408757039927",
     "Is Location Check Done?": "済",
     "Remarks": "Fanzone付近"
   },
@@ -3240,7 +3243,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8472771, 136.5406438)",
+    "Locations": "34.847358691125024, 136.54064944125506",
     "Is Location Check Done?": "済",
     "Remarks": "ドリームR付近"
   },
@@ -3268,7 +3271,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8486336, 136.5404714)",
+    "Locations": "34.84867125128818, 136.54053988322397",
     "Is Location Check Done?": "済",
     "Remarks": "コチラドライビングスクール付近"
   },
@@ -3310,7 +3313,7 @@
     "Line Button Text (If Area Introduction format)": "-",
     "Line Button URL": "-",
     "Top Image": "-",
-    "Locations": "(34.8445754, 136.5262677)",
+    "Locations": "34.844545414777485, 136.5262679642149",
     "Is Location Check Done?": "済",
     "Remarks": "O席付近"
   },
