@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -12,7 +12,7 @@ import MarkerInfo from "./MarkerInfo";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Icons imports (unchanged)
+// Icons imports
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -33,6 +33,7 @@ import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 import Official_Goods_Shop from "../assets/map-icons/mapicon_officialgoodsshop.png";
+
 const ICONS = {
   Ticket: TicketCounter,
   Attraction: MapIconAttraction,
@@ -53,7 +54,6 @@ const ICONS = {
   Restroom: RestRoom,
   "Coin Locker": CoinLockers,
   "Water Station": WaterStation,
-  // Toilet: ToiletIcon,
   "West Course Shuttle Stop": WestCourseShuttle,
   Parking: MapIconCar,
   "Official Goods Shop": Official_Goods_Shop,
@@ -62,7 +62,7 @@ const ICONS = {
 interface MapItem {
   "Icon Category": string;
   "Article Format": string;
-  "Zoom Level": "Low" | "Medium" | "High";
+  "Zoom Level": "Low" | "Medium"; // Updated to reflect only Low and Medium
   Title: string;
   "Sub Title": string;
   "Article Content": string;
@@ -74,7 +74,7 @@ interface MapItem {
   Remarks: string;
 }
 
-// Dynamic imports for react-leaflet components (unchanged)
+// Dynamic imports for react-leaflet components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -88,7 +88,7 @@ const Marker = dynamic(
   { ssr: false }
 );
 
-// Toast Component (unchanged)
+// Toast Component
 const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   message,
   onClose,
@@ -169,7 +169,7 @@ const CurrentLocationButton = ({
       lat >= 34.83 && lat <= 34.86 && lng >= 136.52 && lng <= 136.56;
 
     if (isWithinBounds) {
-      map.setView(userPosition, 20); // Changed from 16 to 20
+      map.setView(userPosition, 20);
     } else {
       onOutOfRange();
     }
@@ -257,15 +257,30 @@ const Map: React.FC = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  const getMarkerIcon = (category: string) => {
-    const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
-    return new L.Icon({
-      iconUrl: iconSrc.src,
-      iconSize: [25, 40],
-      iconAnchor: [12.5, 40],
-      popupAnchor: [0, -40],
+  // Preload icons to avoid latency
+  useEffect(() => {
+    Object.values(ICONS).forEach((icon) => {
+      const img = new Image();
+      img.src = icon.src;
     });
-  };
+  }, []);
+
+  // Memoize marker icons to optimize rendering and avoid unnecessary re-renders
+  const getMarkerIcon = useMemo(() => {
+    const iconCache: { [key: string]: L.Icon } = {};
+    return (category: string) => {
+      if (!iconCache[category]) {
+        const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
+        iconCache[category] = new L.Icon({
+          iconUrl: iconSrc.src,
+          iconSize: [25, 40],
+          iconAnchor: [12.5, 40],
+          popupAnchor: [0, -40],
+        });
+      }
+      return iconCache[category];
+    };
+  }, []);
 
   const handleMarkerClick = (item: MapItem) => {
     if (item["Article Format"] !== "Pin" && item["Article Content"] !== "-") {
@@ -350,19 +365,20 @@ const Map: React.FC = () => {
               return null;
             }
 
+            // Adjusted zoom filtering:
+            // Below 15: No markers
+            // 15-19: Only Medium markers
+            // 20: All markers (Low and Medium)
             if (zoomLevel < 15) {
-              console.log(
-                `Filtered out ${item.Title} at zoom ${zoomLevel} (< 15)`
-              );
-              return null;
-            } else if (zoomLevel >= 15 && zoomLevel <= 20) {
-              if (item["Zoom Level"] !== "Medium") {
-                console.log(
-                  `Filtered out ${item.Title} at zoom ${zoomLevel} (not Medium)`
-                );
-                return null;
-              }
+              return null; // No markers below 15
+            } else if (
+              zoomLevel >= 15 &&
+              zoomLevel < 20 &&
+              item["Zoom Level"] !== "Medium"
+            ) {
+              return null; // Only Medium markers at 15-19
             }
+            // At zoomLevel >= 20, all markers (Low and Medium) are shown
 
             return (
               <Marker

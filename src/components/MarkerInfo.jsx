@@ -187,7 +187,7 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           ) : null}
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-[60%] text-xl font-bold">
+            <div className="mt-5 w-[100%] text-xl font-bold">
               {item["Title"]}
             </div>
           )}
@@ -202,11 +202,11 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           )}
           {item["Sub Title"] !== "-" && (
-            <div className="text-lg text-black mt-5 font-semibold">
+            <div className="text-lg text-black mt-5 font-semibold w-full">
               {item["Sub Title"]}
             </div>
           )}
-          <div className="text-black my-5 font-normal">
+          <div className="text-black my-5 font-normal w-full">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>
