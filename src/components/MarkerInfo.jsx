@@ -193,12 +193,18 @@ const MarkerInfo = ({ item, onBack }) => {
           )}
           {item["Article Format"] === "Area Introduction" && (
             <div
-              className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex justify-center items-center rounded-full cursor-pointer"
+              className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
               onClick={() => {
                 window.open(item["Line Button URL"], "_blank");
               }}
             >
-              {item["Line Button Text (If Area Introduction format)"]}
+              {item["Line Button Text (If Area Introduction format)"]
+                .split("\r\n")
+                .map((line, index) => (
+                  <span key={index} className="block">
+                    {line}
+                  </span>
+                ))}
             </div>
           )}
           {item["Sub Title"] !== "-" && (

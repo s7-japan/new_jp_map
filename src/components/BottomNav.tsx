@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useMenuStore } from "../store/menuStore";
 
 import HomeIcon from "../images/home-icon.svg";
-import CircuitIcon from "../images/circuit-icon.svg";
+import CircuitIcon from "../images/circuitIcon.svg";
 import MenuIcon from "../images/menu-icon.svg";
 import DriverIcon from "../images/driver-icon.svg";
 
@@ -100,7 +100,7 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
         <BottomNavigationAction
           label="CIRCUIT"
           icon={
-            <Image src={CircuitIcon} alt="Circuit" width={30} height={30} />
+            <Image src={CircuitIcon} alt="Circuit" width={20} height={20} />
           }
           onClick={() =>
             handleNavigation(
