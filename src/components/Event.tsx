@@ -101,6 +101,7 @@ export default function EventCalendar() {
       ];
     const rgbaStart = `${bgColor}FF`; // Fully opaque (Hex format supports alpha as FF)
     const rgbaEnd = `${bgColor}00`;
+    if (!event.event) return;
     return (
       <div
         className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
@@ -231,6 +232,7 @@ export default function EventCalendar() {
                   );
                   const start_minute = event[0]["start time"].slice(-2);
                   const end_minute = event[0]["end time"].slice(-2);
+                  if (!event[0].event) return;
                   return (
                     <div
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
