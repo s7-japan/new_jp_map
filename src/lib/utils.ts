@@ -81,7 +81,13 @@ export const filterEventsByDate = (
   );
 
   return filteredEvents.reduce((acc, event) => {
-    const key = `${event["start time"]}-${event.Type}`;
+    const existingKey = Object.keys(acc).find((k) => {
+      const [start, end] = k.split("-");
+      return start === event["start time"] || end === event["end time"];
+    });
+    const key =
+      existingKey ||
+      `${event["start time"]}-${event["end time"]}-${event.Type}`;
     if (!acc[key]) {
       acc[key] = [];
     }

@@ -120,7 +120,7 @@ export default function EventCalendar() {
         <div className="absolute top-0 left-0 font-bold text-[12px]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute top-0 left-0 font-bold text-[12px]">
+        <div className="absolute bottom-0 left-0 font-bold text-[12px]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}

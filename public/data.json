@@ -1,8 +1,8 @@
 [
   {
     "Type": "メインゲートオープン",
-    "start time": "8:15",
-    "end time": "8:45",
+    "start time": "8:30",
+    "end time": "9:00",
     "event": "メインゲートオープン",
     "Date": "04/04/2025",
     "Event No": "",
@@ -11,13 +11,13 @@
   },
   {
     "Type": "レーシングコース",
-    "start time": "9:15",
-    "end time": "11:45",
+    "start time": "9:30",
+    "end time": "11:30",
     "event": "ピットウォーク",
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "race_f1",
-    "gradient": "yes"
+    "gradient": "no"
   },
   {
     "Type": "レーシングコース",
@@ -27,13 +27,13 @@
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "event",
-    "gradient": "yes"
+    "gradient": "no"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "10:45",
-    "end time": "13:30",
-    "event": "2023 F1日本GP予選・決勝プレイバック",
+    "start time": "10:30",
+    "end time": "14:00",
+    "event": "Test Event 10:30 ~ 14:00",
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "event_f1",
@@ -41,9 +41,9 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "14:00",
-    "end time": "14:30",
-    "event": "DJステージ",
+    "start time": "13:00",
+    "end time": "14:00",
+    "event": "Test Event 13:00 ~ 14:00",
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "event_other",
@@ -277,6 +277,26 @@
     "Date": "05/04/2025",
     "Event No": "",
     "event_id": "event",
+    "gradient": "yes"
+  },
+  {
+    "Type": "メインゲートクローズ",
+    "start time": "17:30",
+    "end time": "18:00",
+    "event": "メインゲートクローズ",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "event_other",
+    "gradient": "no"
+  },
+  {
+    "Type": "メインゲートオープン",
+    "start time": "20:00",
+    "end time": "20:30",
+    "event": "メインゲートオープン",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "race_support",
     "gradient": "yes"
   }
 ]
