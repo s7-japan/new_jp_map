@@ -125,9 +125,11 @@ export default function EventCalendar() {
             ? event["end time"].slice(-2)
             : ""}
         </div>
-        <div className="mt-3 text-[12px] text-center font-extrabold h-full flex justify-center items-center">
+        <span
+          className={`text-[12px] font-extrabold h-[90%] flex justify-center items-center`}
+        >
           {event.event}
-        </div>
+        </span>
       </div>
     );
   };
