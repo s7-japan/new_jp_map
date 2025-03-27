@@ -101,6 +101,7 @@ export default function EventCalendar() {
       ];
     const rgbaStart = `${bgColor}FF`; // Fully opaque (Hex format supports alpha as FF)
     const rgbaEnd = `${bgColor}00`;
+    if (!event.event) return;
     return (
       <div
         className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
@@ -120,14 +121,16 @@ export default function EventCalendar() {
         <div className="absolute top-0 left-0 font-bold text-[12px]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute top-0 left-0 font-bold text-[12px]">
+        <div className="absolute bottom-0 left-0 font-bold text-[12px]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
         </div>
-        <div className="mt-3 text-[12px] text-center font-extrabold h-full flex justify-center items-center">
+        <span
+          className={`text-[12px] font-extrabold h-[90%] flex justify-center items-center`}
+        >
           {event.event}
-        </div>
+        </span>
       </div>
     );
   };
@@ -229,6 +232,7 @@ export default function EventCalendar() {
                   );
                   const start_minute = event[0]["start time"].slice(-2);
                   const end_minute = event[0]["end time"].slice(-2);
+                  if (!event[0].event) return;
                   return (
                     <div
                       key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
