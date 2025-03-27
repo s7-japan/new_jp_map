@@ -6,7 +6,7 @@ const EventCalendar = () => {
       <div>
         <button
           className="bg-white py-2 w-[80dvw] rounded-full shadow-2xl mx-auto MyCustomFont"
-          onClick={() => router.push("/calendar")}
+          onClick={() => router.push("/eventcalender")}
         >
           <strong className="text-[#DD1C1C] font-normal">E</strong>VENT{" "}
           <strong className="text-[#DD1C1C] font-normal">C</strong>ALENDAR

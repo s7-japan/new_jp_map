@@ -74,7 +74,7 @@ const BottomNav = forwardRef<HTMLButtonElement>((props, ref) => {
         <BottomNavigationAction
           label="DRIVER"
           icon={<Image src={DriverIcon} alt="Driver" width={20} height={20} />}
-          onClick={() => handleNavigation(1, "/reactionspeedtest")}
+          onClick={() => handleNavigation(1, "/reactiontimetest")}
           sx={{
             color: "white",
             minWidth: "60px",
