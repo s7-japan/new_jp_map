@@ -127,7 +127,7 @@ const MarkerInfo = ({ item, onBack }) => {
           <Image src="/images/Cross.svg" width={30} height={30} alt="Close" />
         </button>
       )}
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[80%] MyCustomFont">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[75%] MyCustomFont">
         <div className="px-3 overflow-auto relative w-full h-full style-2">
           {item["Top Image"] !== "-" &&
           Array.isArray(item["Top Image"]) &&
@@ -153,7 +153,7 @@ const MarkerInfo = ({ item, onBack }) => {
                         <img
                           src={image}
                           alt={`${item.Title} - ${index + 1}`}
-                          className="rounded-sm h-[13rem] w-full object-cover"
+                          className="rounded-sm h-[11rem] w-full object-cover"
                         />
                       </div>
                     ))}
@@ -180,21 +180,21 @@ const MarkerInfo = ({ item, onBack }) => {
                     alt={item.Title}
                     width={800}
                     height={400}
-                    className="rounded-sm h-[13rem] w-full object-cover"
+                    className="rounded-sm h-[11rem] w-full object-cover"
                   />
                 </div>
               )}
             </div>
           ) : null}
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-[100%] text-xl font-bold">
+            <div className="mt-5 w-[100%] text-xl  japanese">
               {item["Title"]}
             </div>
           )}
           {item["Article Format"] === "Area Introduction" && (
             <>
               <div
-                className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
+                className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer japanese"
                 onClick={() => {
                   window.open(item["Line Button URL"], "_blank");
                 }}
@@ -208,7 +208,7 @@ const MarkerInfo = ({ item, onBack }) => {
                   ))}
               </div>
               {item["Title"] !== "-" && (
-                <div className="text-lg text-black mt-5 font-semibold w-full">
+                <div className="text-lg text-black mt-5  w-full japanese">
                   {item["Title"]}
                 </div>
               )}
@@ -217,11 +217,11 @@ const MarkerInfo = ({ item, onBack }) => {
 
           {item["Sub Title"] !== "-" &&
             item["Article Format"] != "Area Introduction" && (
-              <div className="text-lg text-black mt-5 font-semibold w-full">
+              <div className="text-lg text-black mt-5 font-semibold w-full japanese">
                 {item["Sub Title"]}
               </div>
             )}
-          <div className="text-black my-5 font-normal w-full">
+          <div className="text-black my-5 font-normal w-full japanese">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>

@@ -130,8 +130,27 @@
   font-style: normal; /* Optional: specify style */
 }
 
+@font-face {
+  font-family: "JapaneseCustomFont";
+  src: url("/fonts/custom_japanese/πâÆπâ⌐πé¡πéÖπâÄΦºÆπé│πéÖπé╖πââπé»\W0.ttc")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JapaneseCustomFont";
+  src: url("/fonts/custom_japanese/πâÆπâ⌐πé¡πéÖπâÄΦºÆπé│πéÖπé╖πââπé»/\W9.ttc")
+    format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
 .MyCustomFont {
   font-family: "MyCustomFont";
+}
+
+.japanese {
+  font-family: "JapaneseCustomFont";
 }
 
 body {
