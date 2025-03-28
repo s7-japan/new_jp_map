@@ -1,4 +1,5 @@
 "use client";
+import BottomFooter from "@/components/BottomFooter";
 import React from "react";
 
 const Page = () => {
@@ -18,6 +19,7 @@ const Page = () => {
         allowFullScreen
         allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
       />
+      <BottomFooter />
     </div>
   );
 };
