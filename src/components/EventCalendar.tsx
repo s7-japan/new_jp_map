@@ -6,7 +6,23 @@ const EventCalendar = () => {
   const router = useRouter();
   const { showLoader, hideLoader } = useStore();
 
+  const triggerURL = (url: string) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    console.log("working");
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
+
   const handleNavigation = () => {
+    triggerURL(
+      "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appcalendarcircuit"
+    );
     showLoader(); // Show loader when button is clicked
     router.push("/eventcalender"); // Navigate to /calendar
     // Optionally hide loader after a delay (simulating navigation completion)
