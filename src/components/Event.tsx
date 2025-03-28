@@ -252,6 +252,7 @@ export default function EventCalendar() {
                       } p-1 w-full font-extrabold mt-[15px]`}
                       style={{
                         ...eventStyle,
+                        height: `calc(${eventStyle.height} - 2px)`,
                         zIndex: 20,
                         marginLeft: 8,
                         marginRight: 8,
