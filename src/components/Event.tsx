@@ -119,10 +119,10 @@ export default function EventCalendar() {
             : "JPFont",
         }}
       >
-        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
+        <div className="absolute top-0 left-0 font-extrabold text-[12px] font-[JPFont]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute bottom-0 left-0 font-bold text-[12px] font-[JPFont]">
+        <div className="absolute bottom-0 left-0 font-extrabold text-[12px] font-[JPFont]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
@@ -148,7 +148,7 @@ export default function EventCalendar() {
         <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
           <div
-            className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2 "
+            className="flex-1 bg-[#E00400] text-white p-2 text-center font-extrabold text-[12px] ml-2 "
             style={{
               fontFamily: "JPFont",
             }}
@@ -156,7 +156,7 @@ export default function EventCalendar() {
             レーシングコース
           </div>
           <div
-            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]"
+            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-extrabold whitespace-pre-line text-[12px] mr-2 w-[10px]"
             style={{
               fontFamily: "JPFont",
             }}
@@ -174,7 +174,7 @@ export default function EventCalendar() {
                 className="flex"
                 style={{ height: `${HOUR_HEIGHT}px` }}
               >
-                <div className="w-10 bg-[#15151E] text-white flex items-start justify-center font-bold shrink-0 pt-2 text-[13px]">
+                <div className="w-10 bg-[#15151E] text-white flex items-start justify-center font-extrabold shrink-0 pt-2 text-[13px]">
                   {hour.toString().padStart(2, "0")}
                 </div>
 
@@ -262,12 +262,12 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full">
-                        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
+                        <div className="absolute top-0 left-0 font-extrabold text-[12px] font-[JPFont]">
                           {start_minute !== "00" && start_minute !== "30"
                             ? start_minute
                             : ""}
                         </div>
-                        <div className="absolute bottom-0   left-0 font-bold text-[12px] font-[JPFont]">
+                        <div className="absolute bottom-0   left-0 font-extrabold text-[12px] font-[JPFont]">
                           {end_minute !== "00" && end_minute !== "30"
                             ? end_minute
                             : ""}

@@ -196,7 +196,7 @@ const MarkerInfo = ({ item, onBack }) => {
 
           {item["Article Format"] === "Facility" && (
             <div
-              className={`mt-5 w-[100%] text-xl font-bold ${getFontFamily(
+              className={`mt-5 w-[100%] text-xl font-extrabold ${getFontFamily(
                 item["Title"]
               )}`}
             >
@@ -227,7 +227,7 @@ const MarkerInfo = ({ item, onBack }) => {
               </div>
               {item["Title"] !== "-" && (
                 <div
-                  className={`text-lg text-black mt-5 w-full font-bold ${getFontFamily(
+                  className={`text-xl text-black mt-5 w-full font-extrabold ${getFontFamily(
                     item["Title"]
                   )}`}
                 >
@@ -240,7 +240,7 @@ const MarkerInfo = ({ item, onBack }) => {
           {item["Sub Title"]?.trim() !== "-" &&
             item["Article Format"] !== "Area Introduction" && (
               <div
-                className={`text-lg text-black mt-5 font-semibold w-full ${getFontFamily(
+                className={`text-lg text-black mt-5 font-bold w-full ${getFontFamily(
                   item["Sub Title"]
                 )}`}
               >
@@ -248,7 +248,7 @@ const MarkerInfo = ({ item, onBack }) => {
               </div>
             )}
 
-          <div className="text-black my-5 font-normal w-full">
+          <div className="text-black my-5 font-normal w-full font-[JPFont]">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>

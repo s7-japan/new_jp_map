@@ -6,7 +6,7 @@ const EventMapHeader = () => {
         <span className="text-[#ff0000]">E</span>NDAR
       </strong>
       <p className="font-light text-[12px] font-[JPFonts] mb-5">
-        サーキットジャーニー
+        イベントカレンダー
       </p>
     </div>
   );
