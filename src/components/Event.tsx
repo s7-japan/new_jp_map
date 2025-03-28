@@ -107,6 +107,8 @@ export default function EventCalendar() {
         className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
         style={{
           ...eventStyle,
+          width: `calc(${eventStyle.width} - 2px)`,
+          height: `calc(${eventStyle.height} - 2px)`,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
@@ -138,7 +140,7 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl  mb-200 mt-[80px]">
+    <div className="w-full max-w-4xl  mb-200 mt-[100px]">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
