@@ -5,7 +5,9 @@ const Header = () => {
         CI<span className="text-[#ff0000]">R</span>CUIT JOURN
         <span className="text-[#ff0000]">E</span>Y
       </strong>
-      <p className="font-bold text-[12px]  mb-5">サーキットジャーニー</p>
+      <p className="font-bold text-[12px]  mb-5 font-[JPFonts]">
+        サーキットジャーニー
+      </p>
     </div>
   );
 };
