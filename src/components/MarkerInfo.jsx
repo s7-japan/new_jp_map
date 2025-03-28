@@ -124,6 +124,117 @@ const MarkerInfo = ({ item, onBack }) => {
   const totalTransform =
     -(currentIndex * 100) + (translateX / window.innerWidth) * 100;
 
+  // Filteration array of the objects
+  const data = [
+    {
+      Title: "西エリア",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "G席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "D席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat5",
+    },
+    {
+      Title: "E席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat5",
+    },
+    {
+      Title: "C席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "H席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "I席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "Q1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "A1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "B1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "R席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "S席（ファミリーシート）S-BOX",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "B2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "Q2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "A2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "V1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "V2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "VIPスイート・プレミアム",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "GRAN VIEW",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "R-BOX",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "Formula 1 Paddock Club™",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+  ];
+
+  const triggerURL = (url) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    console.log("working");
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
+  const handleClick = (Title, redirectionLink) => {
+    // Find the object in the array that matches the Title
+    const filteredObject = data.find((obj) => obj.Title === Title);
+
+    const link = filteredObject ? filteredObject.Link : null;
+    // If a matching object is found, use its Link property
+    triggerURL(link);
+
+    window.open(redirectionLink, "_blank");
+  };
+
   return (
     <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full">
       {onBack && (
@@ -211,7 +322,7 @@ const MarkerInfo = ({ item, onBack }) => {
                   item["Line Button Text (If Area Introduction format)"]
                 )}`}
                 onClick={() => {
-                  window.open(item["Line Button URL"], "_blank");
+                  handleClick(item["Title"], item["Line Button URL"]);
                 }}
               >
                 {item["Line Button Text (If Area Introduction format)"]
