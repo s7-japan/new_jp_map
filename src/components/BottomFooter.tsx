@@ -40,7 +40,7 @@ const BottomFooter = () => {
         </li>
         <li className="footer-btn__item">
           <Link
-            href="https://miniapp.line.me/2006998715-gnzj57yj"
+            href="https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney"
             onClick={handleNavigation}
           >
             <img src="/FooterIcons/footer_btn_03.svg" alt="CIRCUIT" />
