@@ -130,6 +130,12 @@
   font-style: normal; /* Optional: specify style */
 }
 
+@font-face {
+  font-family: "JPFont"; /* You can name this anything you like */
+  src: url("/assets/japanese.ttc") format("truetype"); /* Path to your .ttf file */
+  font-weight: normal; /* Optional: specify weight */
+  font-style: normal; /* Optional: specify style */
+}
 .MyCustomFont {
   font-family: "MyCustomFont";
 }
