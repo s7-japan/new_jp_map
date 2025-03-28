@@ -21,7 +21,7 @@ const EventCalendar = () => {
 
   const handleNavigation = () => {
     triggerURL(
-      "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appcalendarcircuit"
+      "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appCJcalendar"
     );
     showLoader(); // Show loader when button is clicked
     router.push("/eventcalender"); // Navigate to /calendar
