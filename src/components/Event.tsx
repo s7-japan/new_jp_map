@@ -119,10 +119,10 @@ export default function EventCalendar() {
             : "JPFont",
         }}
       >
-        <div className="absolute top-0 left-0 font-bold text-[12px]">
+        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute bottom-0 left-0 font-bold text-[12px]">
+        <div className="absolute bottom-0 left-0 font-bold text-[12px] font-[JPFont]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
@@ -262,12 +262,12 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full">
-                        <div className="absolute top-0 left-0 font-bold text-[12px]">
+                        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
                           {start_minute !== "00" && start_minute !== "30"
                             ? start_minute
                             : ""}
                         </div>
-                        <div className="absolute bottom-0   left-0 font-bold text-[12px]">
+                        <div className="absolute bottom-0   left-0 font-bold text-[12px] font-[JPFont]">
                           {end_minute !== "00" && end_minute !== "30"
                             ? end_minute
                             : ""}
