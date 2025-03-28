@@ -207,3 +207,10 @@ body {
     text-shadow: 0 0 3px #ff6699;
   }
 }
+
+@font-face {
+  font-family: "CustomFont";
+  src: url("/display-regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
