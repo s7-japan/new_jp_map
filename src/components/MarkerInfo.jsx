@@ -307,7 +307,7 @@ const MarkerInfo = ({ item, onBack }) => {
 
           {item["Article Format"] === "Facility" && (
             <div
-              className={`mt-5 w-[100%] text-xl font-extrabold ${getFontFamily(
+              className={`mt-5 w-[100%] text-2xl font-extrabold ${getFontFamily(
                 item["Title"]
               )}`}
             >
@@ -338,7 +338,7 @@ const MarkerInfo = ({ item, onBack }) => {
               </div>
               {item["Title"] !== "-" && (
                 <div
-                  className={`text-xl text-black mt-5 w-full font-extrabold ${getFontFamily(
+                  className={`text-2xl text-black mt-5 w-full font-extrabold ${getFontFamily(
                     item["Title"]
                   )}`}
                 >
