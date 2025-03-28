@@ -8,7 +8,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
       <div className="footer-menu__overlay" onClick={onClose}></div>
       <div className="footer-menu__nav">
         <div className="footer-menu__inner">
-          <ul className="footer-link">
+          <ul className="footer-link ">
             <li className="footer-link__item">
               <a href="https://www.suzukacircuit.jp/f1/ticket/index.html?utm_medium=lineeoa&utm_source=ln_miniapp_menu_ticket&utm_campaign=f1&utm_content=20250331">
                 チケット
@@ -17,6 +17,11 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             <li className="footer-link__item">
               <a href="https://www.suzukacircuit.jp/f1/access/index.html?utm_medium=lineeoa&utm_source=ln_miniapp_menu_access&utm_campaign=f1&utm_content=20250331">
                 アクセス
+              </a>
+            </li>
+            <li className="footer-link__item">
+              <a href="https://miniapp.line.me/2007078799-0oWyrXee/eventcalender">
+                イベント情報
               </a>
             </li>
             <li className="footer-link__item">
@@ -35,9 +40,6 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
                 お問い合わせ
               </a>
             </li>
-            {/* <li className="footer-link__item">
-              <a href="#">お問い合わせ</a>
-            </li> */}
           </ul>
           <ul className="footer-sub">
             <li className="footer-sub__item">

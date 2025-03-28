@@ -90,7 +90,13 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to process the article content with proper line breaks
+  // Function to determine font based on content
+  const getFontFamily = (text) => {
+    if (!text || text === "-") return "JPFont"; // Default to JPFont if no content
+    return /^[A-Za-z\s]+$/.test(text) ? "CustomFont" : "JPFont";
+  };
+
+  // Function to process the article content with proper line breaks and dynamic fonts
   const renderArticleContent = (content) => {
     if (!content || content === "-") return "No content available.";
 
@@ -102,10 +108,11 @@ const MarkerInfo = ({ item, onBack }) => {
       if (paragraph.trim() === "" && index !== paragraphs.length - 1) {
         return <div key={index} className="paragraph-break" />;
       }
-      // Render non-empty paragraphs
+      // Render non-empty paragraphs with dynamic font
       if (paragraph.trim() !== "") {
+        const fontClass = getFontFamily(paragraph);
         return (
-          <p key={index} className="paragraph">
+          <p key={index} className={`paragraph ${fontClass}`}>
             {paragraph}
           </p>
         );
@@ -186,15 +193,23 @@ const MarkerInfo = ({ item, onBack }) => {
               )}
             </div>
           ) : null}
+
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-[100%] text-xl  japanese">
+            <div
+              className={`mt-5 w-[100%] text-xl font-bold ${getFontFamily(
+                item["Title"]
+              )}`}
+            >
               {item["Title"]}
             </div>
           )}
+
           {item["Article Format"] === "Area Introduction" && (
             <>
               <div
-                className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer japanese"
+                className={`mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer ${getFontFamily(
+                  item["Line Button Text (If Area Introduction format)"]
+                )}`}
                 onClick={() => {
                   window.open(item["Line Button URL"], "_blank");
                 }}
@@ -202,26 +217,38 @@ const MarkerInfo = ({ item, onBack }) => {
                 {item["Line Button Text (If Area Introduction format)"]
                   .split("\r\n")
                   .map((line, index) => (
-                    <span key={index} className="block">
+                    <span
+                      key={index}
+                      className={`block ${getFontFamily(line)}`}
+                    >
                       {line}
                     </span>
                   ))}
               </div>
               {item["Title"] !== "-" && (
-                <div className="text-lg text-black mt-5  w-full japanese">
+                <div
+                  className={`text-lg text-black mt-5 w-full font-bold ${getFontFamily(
+                    item["Title"]
+                  )}`}
+                >
                   {item["Title"]}
                 </div>
               )}
             </>
           )}
 
-          {item["Sub Title"] !== "-" &&
-            item["Article Format"] != "Area Introduction" && (
-              <div className="text-lg text-black mt-5 font-semibold w-full japanese">
-                {item["Sub Title"]}
+          {item["Sub Title"]?.trim() !== "-" &&
+            item["Article Format"] !== "Area Introduction" && (
+              <div
+                className={`text-lg text-black mt-5 font-semibold w-full ${getFontFamily(
+                  item["Sub Title"]
+                )}`}
+              >
+                {item["Sub Title"] ?? "No Subtitle Available"}
               </div>
             )}
-          <div className="text-black my-5 font-normal w-full japanese">
+
+          <div className="text-black my-5 font-normal w-full">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>
@@ -291,6 +318,14 @@ const MarkerInfo = ({ item, onBack }) => {
 
         .paragraph-break {
           margin-bottom: 2rem; /* Double line break spacing for paragraphs */
+        }
+
+        .CustomFont {
+          font-family: "CustomFont", sans-serif;
+        }
+
+        .JPFont {
+          font-family: "JPFont", sans-serif;
         }
       `}</style>
     </div>

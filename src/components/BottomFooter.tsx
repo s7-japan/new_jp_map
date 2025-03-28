@@ -23,17 +23,26 @@ const BottomFooter = () => {
     <footer className="footer">
       <ul className="footer-btn">
         <li className="footer-btn__item">
-          <Link href="/" onClick={handleNavigation}>
+          <Link
+            href="https://miniapp.line.me/2006998715-gnzj57yj"
+            onClick={handleNavigation}
+          >
             <img src="/FooterIcons/footer_btn_01.svg" alt="HOME" />
           </Link>
         </li>
         <li className="footer-btn__item">
-          <Link href="/reactiontimetest" onClick={handleNavigation}>
+          <Link
+            href="https://miniapp.line.me/2006998715-gnzj57yj"
+            onClick={handleNavigation}
+          >
             <img src="/FooterIcons/footer_btn_02.svg" alt="DRIVER" />
           </Link>
         </li>
         <li className="footer-btn__item">
-          <Link href="/fingercircuit" onClick={handleNavigation}>
+          <Link
+            href="https://miniapp.line.me/2006998715-gnzj57yj"
+            onClick={handleNavigation}
+          >
             <img src="/FooterIcons/footer_btn_03.svg" alt="CIRCUIT" />
           </Link>
         </li>

@@ -1,48 +1,14 @@
-import { useEffect } from "react";
-import Image from "next/image";
-
 const EventMapHeader = () => {
-  useEffect(() => {
-    const headerFlag = false;
-    const header = document.querySelector('[data-js="header"]');
-    const range = 35;
-    let save = 0;
-
-    if (!header) return;
-
-    const handleScroll = () => {
-      if (!headerFlag) {
-        const now = window.scrollY;
-        if (now > save + range) {
-          header.classList.add("is-hide");
-          save = now;
-        } else if (now < save - range || now === 0) {
-          header.classList.remove("is-hide");
-          save = now;
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll); // Cleanup on unmount
-    };
-  }, []); // Runs only once when the component mounts
-
   return (
-    <header className="header" data-js="header">
-      <div className="header-hdg">
-        <h1 className="header-hdg__img">
-          <Image
-            src="/assets/logo_site_01.svg"
-            alt="FORMULA 1 JAPANESE GRAND PRIX 2025"
-            width={400}
-            height={400}
-          />
-        </h1>
-      </div>
-    </header>
+    <div className="fixed top-0 left-0 right-0 bg-white rounded-b-3xl text-center shadow-xl z-[1000] flex flex-col justify-center items-center h-[80px] font-[MyCustomFont] py-8">
+      <h1 className="text-black text-lg m-0 tracking-wider font-normal font-[MyCustomFont] md:text-base">
+        <span className="text-red-500">E</span>VENT CAL
+        <span className="text-red-500">E</span>NDAR
+      </h1>
+      <h2 className="text-black text-sm mt-1 font-normal font-[JPFont]">
+        リアクションタイムテスト
+      </h2>
+    </div>
   );
 };
 
