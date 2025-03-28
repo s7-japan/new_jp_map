@@ -9,6 +9,7 @@ import EventCalendar from "@/components/EventCalendar";
 import { useRouter, useSearchParams } from "next/navigation";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import BottomFooter from "@/components/BottomFooter";
 
 // Create a separate component that uses useSearchParams
 const RedirectHandler = () => {
@@ -27,6 +28,7 @@ const RedirectHandler = () => {
 };
 
 const MapPage = () => {
+  useEffect(() => {});
   return (
     <div className="bg-white w-full h-full">
       <Header />
@@ -35,6 +37,7 @@ const MapPage = () => {
       <Suspense fallback={null}>
         <RedirectHandler />
       </Suspense>
+      <BottomFooter />
     </div>
   );
 };

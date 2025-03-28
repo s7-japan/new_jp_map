@@ -33,6 +33,7 @@ import MapIcon from "../assets/map-icons/mapicon_.png";
 import MapIconCar from "../assets/map-icons/mapicon_car.png";
 import MapIconSmoking from "../assets/map-icons/mapicon_smokingarea.png";
 import Official_Goods_Shop from "../assets/map-icons/mapicon_officialgoodsshop.png";
+import MapIconInfo from "../assets/map-icons/mapicon_Information.png";
 
 const ICONS = {
   Ticket: TicketCounter,
@@ -42,7 +43,7 @@ const ICONS = {
   Car: MapIconCar,
   Bus: WestCourseShuttle,
   Event: MapEvent,
-  Information: MapIconAttraction,
+  Information: MapIconInfo,
   "Seat Guide": SeatGuide,
   "Aid Station": FirstAidStation,
   "Smoking Area": MapIconSmoking,

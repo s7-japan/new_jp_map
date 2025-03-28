@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import Modal from "@/components/Modal";
-import BottomNav from "@/components/BottomNav";
+// import BottomNav from "@/components/BottomNav";
 import TapHereButton from "@/images/start-button.svg";
 import Svg7 from "@/images/7.svg"; // Initial screen background image
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import BottomFooter from "./BottomFooter";
 const RedLight: React.FC = () => {
   const router = useRouter();
   const [gameState, setGameState] = useState<
@@ -482,7 +483,7 @@ const RedLight: React.FC = () => {
       />
 
       {/* Bottom Navigation */}
-      <BottomNav />
+      <BottomFooter />
     </Box>
   );
 };

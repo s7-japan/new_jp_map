@@ -192,26 +192,35 @@ const MarkerInfo = ({ item, onBack }) => {
             </div>
           )}
           {item["Article Format"] === "Area Introduction" && (
-            <div
-              className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
-              onClick={() => {
-                window.open(item["Line Button URL"], "_blank");
-              }}
-            >
-              {item["Line Button Text (If Area Introduction format)"]
-                .split("\r\n")
-                .map((line, index) => (
-                  <span key={index} className="block">
-                    {line}
-                  </span>
-                ))}
-            </div>
+            <>
+              <div
+                className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
+                onClick={() => {
+                  window.open(item["Line Button URL"], "_blank");
+                }}
+              >
+                {item["Line Button Text (If Area Introduction format)"]
+                  .split("\r\n")
+                  .map((line, index) => (
+                    <span key={index} className="block">
+                      {line}
+                    </span>
+                  ))}
+              </div>
+              {item["Title"] !== "-" && (
+                <div className="text-lg text-black mt-5 font-semibold w-full">
+                  {item["Title"]}
+                </div>
+              )}
+            </>
           )}
-          {item["Sub Title"] !== "-" && (
-            <div className="text-lg text-black mt-5 font-semibold w-full">
-              {item["Sub Title"]}
-            </div>
-          )}
+
+          {item["Sub Title"] !== "-" &&
+            item["Article Format"] != "Area Introduction" && (
+              <div className="text-lg text-black mt-5 font-semibold w-full">
+                {item["Sub Title"]}
+              </div>
+            )}
           <div className="text-black my-5 font-normal w-full">
             {renderArticleContent(item["Article Content"])}
           </div>
