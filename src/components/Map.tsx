@@ -120,16 +120,8 @@ const LoadJSONAndProcess = (): MapItem[] => {
   return data;
 };
 
-// Unified MapControls Component
-const MapControls = ({
-  userPosition,
-  onOutOfRange,
-}: {
-  userPosition: [number, number] | null;
-  onOutOfRange: () => void;
-}) => {
+const ZoomControl = () => {
   const map = useMap();
-
   const ZOOM_LEVELS = [13, 15, 20];
 
   const zoomIn = () => {
@@ -145,6 +137,27 @@ const MapControls = ({
     const prevIndex = Math.max(currentIndex - 1, 0);
     map.setZoom(ZOOM_LEVELS[prevIndex]);
   };
+
+  return (
+    <div className="flex flex-col gap-2 absolute bottom-[13rem] right-10 z-[1000]">
+      <Button onClick={zoomIn} aria-label="Zoom in">
+        <Plus size={15} />
+      </Button>
+      <Button onClick={zoomOut} aria-label="Zoom out">
+        <Minus size={15} />
+      </Button>
+    </div>
+  );
+};
+
+const CurrentLocationButton = ({
+  userPosition,
+  onOutOfRange,
+}: {
+  userPosition: [number, number] | null;
+  onOutOfRange: () => void;
+}) => {
+  const map = useMap();
 
   const centerOnUser = () => {
     if (!userPosition) {
@@ -164,41 +177,25 @@ const MapControls = ({
   };
 
   return (
-    <div className="absolute bottom-5 right-5 z-[1000] flex flex-col gap-2">
-      <Button
-        onClick={zoomIn}
-        aria-label="Zoom in"
-        className="bg-white text-black hover:bg-black hover:text-white"
+    <div
+      onClick={centerOnUser}
+      className="absolute bottom-[18rem] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
+      title="Center on my current location"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
-        <Plus size={15} />
-      </Button>
-      <Button
-        onClick={zoomOut}
-        aria-label="Zoom out"
-        className="bg-white text-black hover:bg-black hover:text-white"
-      >
-        <Minus size={15} />
-      </Button>
-      <div
-        onClick={centerOnUser}
-        className="bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
-        title="Center on my current location"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-          <circle cx="12" cy="10" r="3"></circle>
-        </svg>
-      </div>
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
     </div>
   );
 };
@@ -220,6 +217,7 @@ const Map: React.FC = () => {
     maxLng: 136.56,
   };
 
+  // Define map bounds to prevent invalid tile requests
   const mapBounds = L.latLngBounds(
     [BOUNDING_BOX.minLat, BOUNDING_BOX.minLng],
     [BOUNDING_BOX.maxLat, BOUNDING_BOX.maxLng]
@@ -266,6 +264,7 @@ const Map: React.FC = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
+  // Preload icons to avoid latency
   useEffect(() => {
     Object.values(ICONS).forEach((icon) => {
       const img = new Image();
@@ -273,6 +272,7 @@ const Map: React.FC = () => {
     });
   }, []);
 
+  // Memoize marker icons to optimize rendering and avoid unnecessary re-renders
   const getMarkerIcon = useMemo(() => {
     const iconCache: { [key: string]: L.Icon } = {};
     return (category: string) => {
@@ -342,9 +342,9 @@ const Map: React.FC = () => {
           fadeAnimation={false}
           renderer={L.canvas()}
           zoomControl={false}
-          bounds={mapBounds}
-          maxBounds={mapBounds}
-          maxBoundsViscosity={1.0}
+          bounds={mapBounds} // Restrict map to valid bounds
+          maxBounds={mapBounds} // Prevent panning outside bounds
+          maxBoundsViscosity={1.0} // Enforce bounds strictly
         >
           <TileLayer
             url="/suzuka-tiles/{z}/{x}/{y}.png"
@@ -354,8 +354,8 @@ const Map: React.FC = () => {
             noWrap={true}
             updateWhenIdle={false}
             keepBuffer={4}
-            errorTileUrl="/suzuka-tiles/error-tile.png"
-            bounds={mapBounds}
+            errorTileUrl="/suzuka-tiles/error-tile.png" // Fallback tile for missing tiles
+            bounds={mapBounds} // Restrict tile loading to valid bounds
           />
 
           {processedData.map((item: MapItem, index: number) => {
@@ -377,15 +377,20 @@ const Map: React.FC = () => {
               return null;
             }
 
+            // Adjusted zoom filtering:
+            // Below 15: No markers
+            // 15-19: Only Medium markers
+            // 20: All markers (Low and Medium)
             if (zoomLevel < 15) {
-              return null;
+              return null; // No markers below 15
             } else if (
               zoomLevel >= 15 &&
               zoomLevel < 20 &&
               item["Zoom Level"] !== "Medium"
             ) {
-              return null;
+              return null; // Only Medium markers at 15-19
             }
+            // At zoomLevel >= 20, all markers (Low and Medium) are shown
 
             return (
               <Marker
@@ -408,7 +413,8 @@ const Map: React.FC = () => {
             />
           )}
 
-          <MapControls
+          <ZoomControl />
+          <CurrentLocationButton
             userPosition={userPosition}
             onOutOfRange={() => setShowToast(true)}
           />
