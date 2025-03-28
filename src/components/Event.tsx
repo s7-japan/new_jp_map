@@ -112,10 +112,7 @@ export default function EventCalendar() {
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
               : bgColor,
           color: "#000000",
-          fontFamily: "Hiragino Kaku Gothic Std",
-        }}
-        onClick={() => {
-          console.log("clicked");
+          fontFamily: "CustomFont",
         }}
       >
         <div className="absolute top-0 left-0 font-bold text-[12px]">
@@ -127,7 +124,7 @@ export default function EventCalendar() {
             : ""}
         </div>
         <span
-          className={`text-[12px] font-extrabold h-[90%] flex justify-center items-center`}
+          className={`text-[12px] font-extrabold h-[90%] flex justify-center items-center text-center`}
         >
           {event.event}
         </span>
@@ -139,17 +136,27 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl  mb-200 ">
+    <div className="w-full max-w-4xl  mb-200  mt-[100px]">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
       <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
         <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2 ">
+          <div
+            className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2 "
+            style={{
+              fontFamily: "CustomFont",
+            }}
+          >
             レーシングコース
           </div>
-          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]">
+          <div
+            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]"
+            style={{
+              fontFamily: "CustomFont",
+            }}
+          >
             GPスクエア オフィシャルステージ
           </div>
         </div>
@@ -245,6 +252,7 @@ export default function EventCalendar() {
                         marginLeft: 8,
                         marginRight: 8,
                         width: "95%",
+                        fontFamily: "CustomFont",
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full">
