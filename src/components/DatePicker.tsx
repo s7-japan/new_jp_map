@@ -39,7 +39,7 @@ export default function DatePicker({ data, onDateChange }: DatePickerProps) {
         onChange={handleDateChange}
         className="p-2 border border-gray-300 rounded-md bg-white w-[100%] "
         style={{
-          fontFamily: "CustomFont",
+          fontFamily: "JPFont",
         }}
       >
         {uniqueDates.map((date) => (

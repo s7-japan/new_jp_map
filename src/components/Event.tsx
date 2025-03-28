@@ -107,6 +107,8 @@ export default function EventCalendar() {
         className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
         style={{
           ...eventStyle,
+          width: `calc(${eventStyle.width} - 2px)`,
+          height: `calc(${eventStyle.height} - 2px)`,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
@@ -117,10 +119,10 @@ export default function EventCalendar() {
             : "JPFont",
         }}
       >
-        <div className="absolute top-0 left-0 font-bold text-[12px]">
+        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
-        <div className="absolute bottom-0 left-0 font-bold text-[12px]">
+        <div className="absolute bottom-0 left-0 font-bold text-[12px] font-[JPFont]">
           {end_minute !== "00" && end_minute !== "30"
             ? event["end time"].slice(-2)
             : ""}
@@ -138,7 +140,7 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl  mb-200 mt-[80px]">
+    <div className="w-full max-w-4xl  mb-200 mt-[100px]">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
@@ -260,12 +262,12 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full">
-                        <div className="absolute top-0 left-0 font-bold text-[12px]">
+                        <div className="absolute top-0 left-0 font-bold text-[12px] font-[JPFont]">
                           {start_minute !== "00" && start_minute !== "30"
                             ? start_minute
                             : ""}
                         </div>
-                        <div className="absolute bottom-0   left-0 font-bold text-[12px]">
+                        <div className="absolute bottom-0   left-0 font-bold text-[12px] font-[JPFont]">
                           {end_minute !== "00" && end_minute !== "30"
                             ? end_minute
                             : ""}
