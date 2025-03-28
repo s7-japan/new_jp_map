@@ -8,7 +8,7 @@ const EventCalendar = () => {
 
   const handleNavigation = () => {
     showLoader(); // Show loader when button is clicked
-    router.push("/calendar"); // Navigate to /calendar
+    router.push("/eventcalender"); // Navigate to /calendar
     // Optionally hide loader after a delay (simulating navigation completion)
     setTimeout(() => hideLoader(), 1000); // Adjust delay as needed
   };
