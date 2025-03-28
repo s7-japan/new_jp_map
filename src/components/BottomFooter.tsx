@@ -19,10 +19,30 @@ const BottomFooter = () => {
     setTimeout(() => hideLoader(), 500); // Hide loader after menu transition
   };
 
+  const triggerURL = (url: string) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    console.log("working");
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
+
   return (
     <footer className="footer">
       <ul className="footer-btn">
-        <li className="footer-btn__item">
+        <li
+          onClick={() => {
+            triggerURL(
+              "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfooterhome"
+            );
+          }}
+          className="footer-btn__item"
+        >
           <Link
             href="https://miniapp.line.me/2006998715-gnzj57yj"
             onClick={handleNavigation}
@@ -30,7 +50,14 @@ const BottomFooter = () => {
             <img src="/FooterIcons/footer_btn_01.svg" alt="HOME" />
           </Link>
         </li>
-        <li className="footer-btn__item">
+        <li
+          onClick={() => {
+            triggerURL(
+              "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfooterdriver"
+            );
+          }}
+          className="footer-btn__item"
+        >
           <Link
             href="https://miniapp.line.me/2006998715-gnzj57yj/driver"
             onClick={handleNavigation}
@@ -38,7 +65,14 @@ const BottomFooter = () => {
             <img src="/FooterIcons/footer_btn_02.svg" alt="DRIVER" />
           </Link>
         </li>
-        <li className="footer-btn__item">
+        <li
+          onClick={() => {
+            triggerURL(
+              "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfootercircuit"
+            );
+          }}
+          className="footer-btn__item"
+        >
           <Link
             href="https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney"
             onClick={handleNavigation}
