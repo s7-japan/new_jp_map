@@ -106,7 +106,7 @@ export default function EventCalendar() {
         style={{
           ...eventStyle,
           width: `calc(${eventStyle.width} - 2px)`,
-          height: `calc(${eventStyle.height} - 2px)`,
+          height: `calc(${eventStyle.height} - 4px)`,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
