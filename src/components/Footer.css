@@ -1,6 +1,5 @@
 .footer {
   font-family: "JPFont", sans-serif;
-  font-weight: normal;
   font-style: normal;
   line-height: 1;
   color: #15151e;
@@ -139,7 +138,7 @@
 }
 .footer-link {
   font-size: 4.8vw;
-  font-weight: 500;
+  font-weight: 600; /* Changed from 500 to 700 for bold */
   color: #fff;
 }
 .footer-link__item ~ li {
@@ -154,6 +153,7 @@
   align-items: center;
   position: relative;
   height: 9.6vw;
+  font-weight: 600; /* Ensure link text itself is bold */
 }
 .footer-link a:after {
   position: absolute;
@@ -169,7 +169,7 @@
 .footer-sub {
   margin-top: 3.2vw;
   font-size: 3.7333333333vw;
-  font-weight: 500;
+  font-weight: 600; /* Changed from 500 to 700 for bold */
   color: #fff;
 }
 .footer-sub a {
@@ -180,6 +180,7 @@
   -ms-flex-align: center;
   align-items: center;
   height: 8vw;
+  font-weight: 600; /* Ensure link text itself is bold */
 }
 .footer-sns {
   display: -webkit-box;
@@ -196,4 +197,7 @@
 }
 .footer-sns__item {
   width: 7.4666666667vw;
+}
+.footer-sns a {
+  font-weight: 600; /* Added to make SNS links bold */
 }
