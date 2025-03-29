@@ -1,6 +1,6 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
-import React, { useEffect } from "react";
+import React from "react";
 
 const Page = () => {
 

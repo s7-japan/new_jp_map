@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "@/components/Header";
 import dynamic from "next/dynamic";
 const Map = dynamic(() => import("@/components/Map"), {
