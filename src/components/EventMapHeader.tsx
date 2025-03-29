@@ -17,7 +17,7 @@ const EventMapHeader = () => {
   }, [prevScrollPos]);
 
   return (
-    <div className=" bg-white rounded-b-3xl text-center shadow-xl z-[1000] flex-col justify-between items-center  MyCustomFont pb-3">
+    <div className=" bg-white rounded-b-3xl text-center shadow-xl z-[1000] flex-col justify-between items-center  MyCustomFont ">
       <strong className="font-normal text-[1.6rem]">
         <span className="text-[#ff0000]">E</span>VENT CAL
         <span className="text-[#ff0000]">E</span>NDAR
