@@ -78,11 +78,13 @@ export default function EventCalendar() {
     event,
     totalInGroup,
     index,
+    previousEventEndTime,
   }: {
     event: EventItem;
     totalInGroup: number;
     index: number;
     showGradient: boolean;
+    previousEventEndTime: string;
   }) => {
     const { bg, text } = getEventColor(event.Type, event.event);
     const eventStyle = calculateEventStyle(
@@ -100,14 +102,17 @@ export default function EventCalendar() {
     const rgbaStart = `${bgColor}FF`;
     const rgbaEnd = `${bgColor}00`;
     if (!event.event) return null;
+    const timeDifference =
+      parseTime(event["start time"]).minute -
+      parseTime(previousEventEndTime).minute;
     return (
       <div
-        className="p-1 relative text-[10px] overflow-hidden mt-[15px] "
+        className="p-1 relative text-[10px] overflow-hidden mt-[15px]"
         style={{
           ...eventStyle,
           width: `calc(${eventStyle.width} - 2px)`,
-          height: `calc(${eventStyle.height} - 2px)`,
-          marginBottom: 20,
+          height: `calc(${eventStyle.height} - 6px)`,
+          padding: 2,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
@@ -119,16 +124,18 @@ export default function EventCalendar() {
         }}
       >
         <div
-          className="absolute top-0 left-0 font-bold text-[8px]"
+          className="absolute top-0 left-0 font-bold text-[8px] "
           style={{ fontFamily: "JPFont" }}
         >
           {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
         </div>
         <div
-          className="absolute bottom-0 left-0 font-bold text-[8px]"
+          className="absolute bottom-0 left-0 font-bold text-[8px] "
           style={{ fontFamily: "JPFont" }}
         >
-          {end_minute !== "00" && end_minute !== "30" ? end_minute : ""}
+          {end_minute !== "00" && timeDifference > 10 && end_minute !== "30"
+            ? end_minute
+            : ""}
         </div>
         <span
           className={`text-[9px]  h-[90%] flex justify-center items-center text-center text-over`}
@@ -186,15 +193,26 @@ export default function EventCalendar() {
                     .filter((event) => event[0].Type === "レーシングコース")
                     .map((overlapping_event, index) => (
                       <div key={index} className="flex flex-row">
-                        {overlapping_event.map((event, idx) => (
-                          <RenderEvent
-                            event={event}
-                            key={`${event.Type}-${event["start time"]}-${event.event}`}
-                            index={idx}
-                            totalInGroup={overlapping_event.length}
-                            showGradient={showGradient}
-                          />
-                        ))}
+                        {overlapping_event.map((event, idx) => {
+                          const prevEvent =
+                            index > 0
+                              ? filteredEvents.filter(
+                                  (event) =>
+                                    event[0].Type ===
+                                    "GPスクエア オフィシャルステージ"
+                                )[index - 1][0]["end time"]
+                              : null;
+                          return (
+                            <RenderEvent
+                              event={event}
+                              key={`${event.Type}-${event["start time"]}-${event.event}`}
+                              index={idx}
+                              totalInGroup={overlapping_event.length}
+                              showGradient={showGradient}
+                              previousEventEndTime={prevEvent || "8:00"}
+                            />
+                          );
+                        })}
                       </div>
                     ))}
                 </div>
@@ -205,18 +223,30 @@ export default function EventCalendar() {
                         event[0].Type === "GPスクエア オフィシャルステージ"
                     )
                     .map((overlapping_event, index) => {
-                      console.log(overlapping_event);
                       return (
                         <div key={index} className="flex flex-row">
-                          {overlapping_event.map((event, idx) => (
-                            <RenderEvent
-                              event={event}
-                              key={`${event.Type}-${event["start time"]}-${event.event}`}
-                              index={idx}
-                              totalInGroup={overlapping_event.length}
-                              showGradient={showGradient}
-                            />
-                          ))}
+                          {overlapping_event.map((event, idx) => {
+                            // Get the previous event if available
+                            const prevEvent =
+                              index > 0
+                                ? filteredEvents.filter(
+                                    (event) =>
+                                      event[0].Type ===
+                                      "GPスクエア オフィシャルステージ"
+                                  )[index - 1][0]["end time"]
+                                : null;
+
+                            return (
+                              <RenderEvent
+                                event={event}
+                                key={`${event.Type}-${event["start time"]}-${event.event}`}
+                                index={idx}
+                                totalInGroup={overlapping_event.length}
+                                showGradient={showGradient}
+                                previousEventEndTime={prevEvent || "8:00"} // Pass the previous event as a prop if needed
+                              />
+                            );
+                          })}
                         </div>
                       );
                     })}
