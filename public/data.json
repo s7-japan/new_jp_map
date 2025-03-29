@@ -671,9 +671,39 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:15",
-    "end time": "11:30",
+    "start time": "9:00",
+    "end time": "9:30",
     "event": "Test1",
+    "Date": "04/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "GPスクエア オフィシャルステージ",
+    "start time": "9:30",
+    "end time": "10:00",
+    "event": "Test2",
+    "Date": "04/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "GPスクエア オフィシャルステージ",
+    "start time": "9:45",
+    "end time": "10:30",
+    "event": "Test2",
+    "Date": "04/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "9:00",
+    "end time": "9:30",
+    "event": "Test9999",
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "event",

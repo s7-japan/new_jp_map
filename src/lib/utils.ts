@@ -82,12 +82,22 @@ export const filterEventsByDate = (
 
   return filteredEvents.reduce((acc, event) => {
     const existingKey = Object.keys(acc).find((k) => {
-      const [start, end, type] = k.split("-");
+      const [existingStart, existingEnd, existingType] = k.split("-");
+      const eventStart = parseTime(event["start time"]);
+      const eventEnd = parseTime(event["end time"]);
+      const keyStart = parseTime(existingStart);
+      const keyEnd = parseTime(existingEnd);
+
+      // Check if events overlap and have the same type
       return (
-        (start === event["start time"] || end === event["end time"]) &&
-        type === event.Type
+        event.Type === existingType &&
+        eventStart.hour * 60 + eventStart.minute <
+          keyEnd.hour * 60 + keyEnd.minute &&
+        keyStart.hour * 60 + keyStart.minute <
+          eventEnd.hour * 60 + eventEnd.minute
       );
     });
+
     const key =
       existingKey ||
       `${event["start time"]}-${event["end time"]}-${event.Type}`;
