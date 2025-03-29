@@ -1,28 +1,28 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
-import React, { useEffect } from "react";
+import React from "react";
 
 const Page = () => {
 
   
-  const triggerURL = (url: string) => {
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = url;
+  // const triggerURL = (url: string) => {
+  //   const iframe = document.createElement("iframe");
+  //   iframe.style.display = "none";
+  //   iframe.src = url;
 
-    document.body.appendChild(iframe);
+  //   document.body.appendChild(iframe);
 
-    console.log("working");
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-    }, 1000);
-  };
+  //   console.log("working");
+  //   setTimeout(() => {
+  //     document.body.removeChild(iframe);
+  //   }, 1000);
+  // };
 
-  useEffect(() => {
-    triggerURL(
-      "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appFCcircuit"
-    );
-  }, []);
+  // useEffect(() => {
+  //   triggerURL(
+  //     "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appFCcircuit"
+  //   );
+  // }, []);
 
 
   return (
