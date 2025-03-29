@@ -150,7 +150,9 @@ export const filterEventsByDate = (
             events: parsedEvents
               .filter(
                 ({ startMinutes, endMinutes }) =>
-                  startMinutes < endTime && endMinutes >= intervalStart
+                  intervalStart &&
+                  startMinutes < endTime &&
+                  endMinutes >= intervalStart
               )
               .map(({ event }) => event),
           });
