@@ -1,122 +1,181 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
-import { useState, useEffect } from "react";
-import type { EventItem, CalendarData } from "../types";
-import { BackgroundColorForEvent } from "@/constants";
+import { useEffect, useState } from "react";
+import type { EventItem } from "@/types";
+import { parseTime } from "@/lib/utils";
 import DatePicker from "./DatePicker";
-import {
-  parseTime,
-  calculateDuration,
-  getEventColor,
-  filterEventsByDate,
-  generateTimeSlots,
-  isFullWidthEvent,
-} from "../lib/utils";
+import { BackgroundColorForEvent } from "@/constants";
+import { getEventColor, isFullWidthEvent } from "@/lib/utils";
+import { calculateDuration } from "@/lib/utils";
+import { generateTimeSlots } from "@/lib/utils";
 
 export default function EventCalendar() {
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [filteredEvents, setFilteredEvents] = useState<EventItem[][]>([]);
-  const [showGradient, _setGradient] = useState(true);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [showGradient] = useState(true);
   const HOUR_HEIGHT = 120;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
-  const [eventData, setEventData] = useState<CalendarData>([]);
 
   useEffect(() => {
     fetch("/data.json")
       .then((response) => response.json())
-      .then((json) => setEventData(json));
+      .then((json) => setEvents(json));
   }, []);
 
   useEffect(() => {
     const dates = Array.from(
-      new Set(
-        eventData?.filter((event) => event.Date).map((event) => event.Date)
-      )
+      new Set(events?.filter((event) => event.Date).map((event) => event.Date))
     ).sort();
-    if (dates.length > 0) {
-      // @ts-expect-error: dates is not empty
+    if (dates.length > 0 && dates[0] !== undefined) {
       setSelectedDate(dates[0]);
     }
-  }, [eventData]);
-
-  useEffect(() => {
-    if (selectedDate) {
-      const eventsForDate = filterEventsByDate(eventData, selectedDate);
-      setFilteredEvents(Array.from(Object.values(eventsForDate)));
-    }
-  }, [selectedDate, eventData]);
+  }, [events]);
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
   };
 
-  const calculateEventStyle = (
-    startTime: string,
-    endTime: string,
-    totalInGroup: number,
-    index: number
+  // Improved positioning algorithm for events
+  const calculateEventPosition = (
+    event: EventItem,
+    eventsOfType: EventItem[]
   ) => {
-    const { hour: startHour, minute: startMinute } = parseTime(startTime);
-    const duration = calculateDuration(startTime, endTime);
-    const minutesFromDayStart = (startHour - 8) * 60 + startMinute;
-    const topPosition = minutesFromDayStart * MINUTE_HEIGHT;
-    const width = totalInGroup > 1 ? `${100 / totalInGroup}%` : "100%";
-    const left = totalInGroup > 1 ? `${(index / totalInGroup) * 100}%` : "0";
-    const height = duration * MINUTE_HEIGHT;
+    const { hour: startHour, minute: startMinute } = parseTime(
+      event["start time"]
+    );
+    const duration = calculateDuration(event["start time"], event["end time"]);
+    const startMinutes = (startHour - 8) * 60 + startMinute;
+
+    // Fixed constants for better spacing
+    const GAP_X = 2; // Horizontal gap in pixels
+    const GAP_Y = 10; // Vertical gap in pixels
+
+    // Group overlapping events
+    const overlappingEvents = findOverlappingEvents(event, eventsOfType);
+
+    // If this is the only event in its time slot, use full width
+    if (overlappingEvents.length === 1) {
+      const EVENT_EXTRA_HEIGHT = 8;
+      return {
+        top: `${startMinutes * MINUTE_HEIGHT + GAP_Y}px`,
+        height: `${
+          duration * MINUTE_HEIGHT - GAP_Y * 2 + EVENT_EXTRA_HEIGHT
+        }px`,
+        width: `calc(100% - ${GAP_X * 2}px)`,
+        left: `${GAP_X}px`,
+        position: "absolute" as const,
+        minHeight: "30px",
+        boxSizing: "border-box" as const,
+      };
+    }
+
+    // For multiple overlapping events
+    const totalColumns = calculateMaxColumns(overlappingEvents);
+    const columnIndex = overlappingEvents.indexOf(event);
+
+    // Calculate width and position based on overlaps
+    const columnWidth = 100 / totalColumns;
+    const EVENT_EXTRA_HEIGHT = 8;
     return {
-      top: `${topPosition}px`,
-      height: `${height}px`,
-      minHeight: "30px",
+      top: `${startMinutes * MINUTE_HEIGHT + GAP_Y}px`,
+      height: `${duration * MINUTE_HEIGHT - GAP_Y * 2 + EVENT_EXTRA_HEIGHT}px`,
+      width: `calc(${columnWidth}% - ${GAP_X * 2}px)`,
+      left: `calc(${columnIndex * columnWidth}% + ${GAP_X}px)`,
       position: "absolute" as const,
-      width,
-      left,
+      minHeight: "30px",
+      boxSizing: "border-box" as const,
     };
+  };
+  // Function to calculate max columns based on overlapping events
+  const calculateMaxColumns = (overlappingEvents: EventItem[]) => {
+    if (overlappingEvents.length === 0) return 1;
+
+    const timeSlots: Record<number, number> = {};
+
+    overlappingEvents.forEach((event) => {
+      const eventStart = parseTime(event["start time"]);
+      const eventEnd = parseTime(event["end time"]);
+      const eventStartMinutes = eventStart.hour * 60 + eventStart.minute;
+      const eventEndMinutes = eventEnd.hour * 60 + eventEnd.minute;
+
+      for (let i = eventStartMinutes; i < eventEndMinutes; i++) {
+        timeSlots[i] = (timeSlots[i] || 0) + 1;
+      }
+    });
+
+    return Math.max(...Object.values(timeSlots), 1);
+  };
+
+  // Helper function to find overlapping events
+  const findOverlappingEvents = (event: EventItem, allEvents: EventItem[]) => {
+    const eventStart = parseTime(event["start time"]);
+    const eventEnd = parseTime(event["end time"]);
+    const eventStartMinutes = eventStart.hour * 60 + eventStart.minute;
+    const eventEndMinutes = eventEnd.hour * 60 + eventEnd.minute;
+
+    const BUFFER_MINUTES = 0;
+
+    return allEvents
+      .filter((e) => {
+        const eStart = parseTime(e["start time"]);
+        const eEnd = parseTime(e["end time"]);
+        const eStartMinutes = eStart.hour * 60 + eStart.minute;
+        const eEndMinutes = eEnd.hour * 60 + eEnd.minute;
+
+        // Check for actual overlap with buffer
+        // Two events overlap if one starts before the other ends (accounting for buffer)
+        return (
+          eStartMinutes < eventEndMinutes &&
+          eventStartMinutes < eEndMinutes &&
+          // Additional check: if the gap between events is >= BUFFER_MINUTES, don't consider them overlapping
+          !(
+            (eEndMinutes <= eventStartMinutes + BUFFER_MINUTES &&
+              eEndMinutes <= eventStartMinutes) ||
+            (eventEndMinutes <= eStartMinutes + BUFFER_MINUTES &&
+              eventEndMinutes <= eStartMinutes)
+          )
+        );
+      })
+      .sort((a, b) => {
+        // Sort by start time, then by duration
+        const aStart = parseTime(a["start time"]);
+        const bStart = parseTime(b["start time"]);
+        const aStartMinutes = aStart.hour * 60 + aStart.minute;
+        const bStartMinutes = bStart.hour * 60 + bStart.minute;
+
+        if (aStartMinutes !== bStartMinutes) {
+          return aStartMinutes - bStartMinutes;
+        }
+
+        const aDuration = calculateDuration(a["start time"], a["end time"]);
+        const bDuration = calculateDuration(b["start time"], b["end time"]);
+        return bDuration - aDuration;
+      });
   };
 
   const RenderEvent = ({
     event,
-    totalInGroup,
-    index,
-    previousEventEndTime,
+    eventsOfType,
   }: {
     event: EventItem;
-    totalInGroup: number;
-    index: number;
-    showGradient: boolean;
-    previousEventEndTime: string;
+    eventsOfType: EventItem[];
   }) => {
-    const { bg, text } = getEventColor(event.Type, event.event);
-    const eventStyle = calculateEventStyle(
-      event["start time"],
-      event["end time"],
-      totalInGroup,
-      index
-    );
-    const start_minute = event["start time"].slice(-2);
-    const end_minute = event["end time"].slice(-2);
+    const { bg } = getEventColor(event.Type, event.event);
+    const style = calculateEventPosition(event, eventsOfType);
+    const startMinute = event["start time"].slice(-2);
+    const endMinute = event["end time"].slice(-2);
     const bgColor =
       BackgroundColorForEvent[
         event.event_id as keyof typeof BackgroundColorForEvent
-      ];
-    const rgbaStart = `${bgColor}FF`;
-    const rgbaEnd = `${bgColor}00`;
-    if (!event.event) return null;
-    const timeDifference =
-      parseTime(event["start time"]).minute -
-      parseTime(previousEventEndTime).minute;
+      ] || bg;
 
     return (
       <div
-        className="p-1 relative text-[10px] overflow-hidden mt-[15px]"
+        className="p-1 relative text-[10px] overflow-hidden"
         style={{
-          ...eventStyle,
-          width: `calc(${eventStyle.width} - 2px)`,
-          height: `calc(${eventStyle.height} - 6px)`,
-          padding: 2,
+          ...style,
           background:
             event.gradient === "yes"
-              ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
+              ? `linear-gradient(to bottom, ${bgColor}FF 0%, ${bgColor}00 100%)`
               : bgColor,
           color: "#000000",
           fontFamily: /^[A-Za-z\s]+$/.test(event.event)
@@ -125,22 +184,18 @@ export default function EventCalendar() {
         }}
       >
         <div
-          className="absolute top-0 left-0 font-bold text-[8px] "
+          className="absolute top-0 left-0 font-bold text-[8px]"
           style={{ fontFamily: "JPFont" }}
         >
-          {start_minute !== "00" && start_minute !== "30" ? start_minute : ""}
+          {startMinute !== "00" && startMinute !== "30" ? startMinute : ""}
         </div>
         <div
-          className="absolute bottom-0 left-0 font-bold text-[8px] "
+          className="absolute bottom-0 left-0 font-bold text-[8px]"
           style={{ fontFamily: "JPFont" }}
         >
-          {end_minute !== "00" && timeDifference < 5 && end_minute !== "30"
-            ? end_minute
-            : ""}
+          {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
-        <span
-          className={`text-[9px]  h-[90%] flex justify-center items-center text-center text-over`}
-        >
+        <span className="text-[9px] h-[90%] flex justify-center items-center text-center">
           {event.event}
         </span>
       </div>
@@ -148,14 +203,15 @@ export default function EventCalendar() {
   };
 
   const timeSlots = generateTimeSlots();
+  const filteredEvents = events.filter((event) => event.Date === selectedDate);
 
   return (
-    <div className="w-full max-w-4xl  mb-200 ">
-      <div className="flex  items-center px-3">
-        <DatePicker data={eventData} onDateChange={handleDateChange} />
+    <div className="w-full max-w-4xl mb-8">
+      <div className="flex items-center px-3 mb-2">
+        <DatePicker data={events} onDateChange={handleDateChange} />
       </div>
-      <div className="flex flex-col border border-gray-300 mb-100 ">
-        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
+      <div className="flex flex-col border border-gray-300 overflow-hidden w-[90%] mx-auto bg-white rounded-lg shadow-md">
+        <div className="flex sticky top-0 bg-white w-full font-extrabold z-10">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
           <div
             className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2"
@@ -164,15 +220,15 @@ export default function EventCalendar() {
             レーシングコース
           </div>
           <div
-            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2 w-[10px]"
+            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2"
             style={{ fontFamily: "JPFont", fontWeight: 700 }}
           >
             GPスクエア オフィシャルステージ
           </div>
         </div>
 
-        <div className=" relative ">
-          <div className="relative w-[90dvw] mx-auto">
+        <div className="relative">
+          <div className="relative w-full">
             {timeSlots.map((hour) => (
               <div
                 key={`hour-${hour}`}
@@ -189,98 +245,65 @@ export default function EventCalendar() {
 
             <div className="absolute top-0 left-10 right-0 h-full mx-2 bg-gray-50">
               <div className="flex h-full">
-                <div className="flex-1 relative gap-2">
+                <div className="flex-1 relative">
                   {filteredEvents
-                    .filter((event) => event[0].Type === "レーシングコース")
-                    .map((overlapping_event, index) => (
-                      <div key={index} className="flex flex-row">
-                        {overlapping_event.map((event, idx) => {
-                          const prevEvent =
-                            index > 0
-                              ? filteredEvents.filter(
-                                  (event) =>
-                                    event[0].Type ===
-                                    "GPスクエア オフィシャルステージ"
-                                )[index - 1][0]["end time"]
-                              : null;
-                          return (
-                            <RenderEvent
-                              event={event}
-                              key={`${event.Type}-${event["start time"]}-${event.event}`}
-                              index={idx}
-                              totalInGroup={overlapping_event.length}
-                              showGradient={showGradient}
-                              previousEventEndTime={prevEvent || "8:00"}
-                            />
-                          );
-                        })}
-                      </div>
+                    .filter((event) => event.Type === "レーシングコース")
+                    .map((event) => (
+                      <RenderEvent
+                        key={`${event.Type}-${event["start time"]}-${event.event}`}
+                        event={event}
+                        eventsOfType={filteredEvents.filter(
+                          (e) => e.Type === "レーシングコース"
+                        )}
+                      />
                     ))}
                 </div>
                 <div className="flex-1 relative">
                   {filteredEvents
                     .filter(
                       (event) =>
-                        event[0].Type === "GPスクエア オフィシャルステージ"
+                        event.Type === "GPスクエア オフィシャルステージ"
                     )
-                    .map((overlapping_event, index) => {
-                      return (
-                        <div key={index} className="flex flex-row">
-                          {overlapping_event.map((event, idx) => {
-                            // Get the previous event if available
-                            const prevEvent =
-                              index > 0
-                                ? filteredEvents.filter(
-                                    (event) =>
-                                      event[0].Type ===
-                                      "GPスクエア オフィシャルステージ"
-                                  )[index - 1][0]["end time"]
-                                : null;
-
-                            return (
-                              <RenderEvent
-                                event={event}
-                                key={`${event.Type}-${event["start time"]}-${event.event}`}
-                                index={idx}
-                                totalInGroup={overlapping_event.length}
-                                showGradient={showGradient}
-                                previousEventEndTime={prevEvent || "8:00"} // Pass the previous event as a prop if needed
-                              />
-                            );
-                          })}
-                        </div>
-                      );
-                    })}
+                    .map((event) => (
+                      <RenderEvent
+                        key={`${event.Type}-${event["start time"]}-${event.event}`}
+                        event={event}
+                        eventsOfType={filteredEvents.filter(
+                          (e) => e.Type === "GPスクエア オフィシャルステージ"
+                        )}
+                      />
+                    ))}
                 </div>
               </div>
             </div>
 
             <div className="absolute top-0 left-10 right-0 h-full">
               {filteredEvents
-                .filter((event) => isFullWidthEvent(event[0].Type))
+                .filter((event) => isFullWidthEvent(event.Type))
                 .map((event) => {
-                  const eventStyle = calculateEventStyle(
-                    event[0]["start time"],
-                    event[0]["end time"],
-                    1,
-                    0
+                  const { hour: startHour, minute: startMinute } = parseTime(
+                    event["start time"]
                   );
-                  const start_minute = event[0]["start time"].slice(-2);
-                  const end_minute = event[0]["end time"].slice(-2);
-                  if (!event[0].event) return null;
+                  const duration = calculateDuration(
+                    event["start time"],
+                    event["end time"]
+                  );
+                  const startMinutes = (startHour - 8) * 60 + startMinute;
+                  const minuteEnd = event["end time"].slice(-2);
+
                   return (
                     <div
-                      key={`fullwidth-${event[0]["start time"]}-${event[0].event}`}
+                      key={`fullwidth-${event["start time"]}-${event.event}`}
                       className={`${
                         showGradient ? "bg-[#B3B3B3]" : "bg-[#f8fafc]"
-                      } p-1 w-full font-bold mt-[15px]`}
+                      } p-1 absolute mx-2  `}
                       style={{
-                        ...eventStyle,
-                        height: `calc(${eventStyle.height} - 2px)`,
-                        marginLeft: 8,
-                        marginRight: 8,
-                        width: "95%",
-                        fontFamily: /^[A-Za-z\s]+$/.test(event[0].event)
+                        top: `${startMinutes * MINUTE_HEIGHT + 2}px`,
+                        height: `${duration * MINUTE_HEIGHT - 4}px`,
+                        left: "0",
+                        right: "0",
+                        width: "calc(100% - 16px)",
+                        fontFamily: /^[A-Za-z\s]+$/.test(event.event)
                           ? "CustomFont"
                           : "JPFont",
                         fontWeight: 700,
@@ -288,23 +311,23 @@ export default function EventCalendar() {
                     >
                       <div className="text-sm flex justify-center items-center h-full">
                         <div
-                          className="absolute top-0 left-0 font-bold text-[12px]"
+                          className="absolute top-0 left-0 font-bold text-[12px] p-1"
                           style={{ fontFamily: "JPFont" }}
                         >
-                          {start_minute !== "00" && start_minute !== "30"
-                            ? start_minute
+                          {startMinute !== 0 && startMinute !== 30
+                            ? startMinute.toString()
                             : ""}
                         </div>
                         <div
-                          className="absolute bottom-0 left-0 font-bold text-[12px]"
+                          className="absolute bottom-0 left-0 font-bold text-[12px] p-1"
                           style={{ fontFamily: "JPFont" }}
                         >
-                          {end_minute !== "00" && end_minute !== "30"
-                            ? end_minute
+                          {minuteEnd !== "00" && minuteEnd !== "30"
+                            ? minuteEnd
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center text-[9px]">
-                          {event[0].event}
+                        <div className="flex justify-center items-center h-full text-center text-[10px]">
+                          {event.event}
                         </div>
                       </div>
                     </div>
