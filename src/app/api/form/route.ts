@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
 import * as XLSX from "xlsx";
 import path from "path";
 
@@ -21,19 +21,26 @@ export async function POST(req: NextRequest) {
     const sheet = workbook.Sheets[sheetName];
 
     let jsonData = XLSX.utils.sheet_to_json(sheet, { raw: false });
+    const filePath = path.join(process.cwd(), "public", "data.json");
+
+    // Delete existing file if it exists
+    try {
+      await unlink(filePath);
+    } catch (error) {
+      console.log("File does not exist or could not be deleted:", error);
+    }
 
     jsonData = jsonData.map((row: any) => ({
       Type: row["Type"] || "",
-      "start time": formatTime(row["start time"]),
-      "end time": formatTime(row["end time"]),
+      "start time": row["start time"],
+      "end time": row["end time"],
       event: row["event"] || "",
-      Date: formatDate(row["Date"]),
+      Date: row["Date"],
       "Event No": row["Event No"] || "",
       event_id: row["event_id"] || "",
       gradient: row["gradient"] || "",
     }));
 
-    const filePath = path.join(process.cwd(), "public", "data.json");
     await writeFile(filePath, JSON.stringify(jsonData, null, 2));
 
     return NextResponse.json({
@@ -49,30 +56,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-function formatTime(value: any): string {
-  if (!value) return "";
-
-  if (!isNaN(value)) {
-    const date = XLSX.SSF.parse_date_code(value);
-    return `${padZero(date.H)}:${padZero(date.M)}`;
-  }
-
-  return value;
-}
-
-function formatDate(value: any): string {
-  if (!value) return "";
-
-  if (!isNaN(value)) {
-    const date = XLSX.SSF.parse_date_code(value);
-    return `${padZero(date.D)}/${padZero(date.M)}/${date.Y}`;
-  }
-
-  return value;
-}
-
-function padZero(num: number): string {
-  return num < 10 ? `0${num}` : `${num}`;
 }

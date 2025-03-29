@@ -668,5 +668,15 @@
     "Event No": "",
     "event_id": "event",
     "gradient": "no"
+  },
+  {
+    "Type": "GPスクエア オフィシャルステージ",
+    "start time": "9:15",
+    "end time": "11:30",
+    "event": "Test1",
+    "Date": "04/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
   }
 ]
