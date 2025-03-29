@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 
 const EventMapHeader = () => {
-  const [visible, setVisible] = useState(true);
+  const [_visible, setVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
   useEffect(() => {
