@@ -1,6 +1,6 @@
 const EventMapHeader = () => {
   return (
-    <div className="fixed top-0 left-0 right-0 bg-white rounded-b-3xl text-center shadow-xl z-[1000] flex-col justify-center items-center  font-[MyCustomFont] py-3">
+    <div className="fixed h-[65px] top-0 left-0 right-0 bg-white rounded-b-3xl text-center shadow-xl z-[1000] flex-col justify-between items-center  MyCustomFont pb-3">
       <strong className="font-normal text-[1.6rem]">
         <span className="text-[#ff0000]">E</span>VENT CAL
         <span className="text-[#ff0000]">E</span>NDAR
