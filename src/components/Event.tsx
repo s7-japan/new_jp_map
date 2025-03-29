@@ -106,7 +106,7 @@ export default function EventCalendar() {
         style={{
           ...eventStyle,
           width: `calc(${eventStyle.width} - 2px)`,
-          height: `calc(${eventStyle.height} - 2px)`,
+          height: `calc(${eventStyle.height} - 4px)`,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
@@ -130,13 +130,7 @@ export default function EventCalendar() {
           {end_minute !== "00" && end_minute !== "30" ? end_minute : ""}
         </div>
         <span
-          className="text-[12px] font-extrabold h-[90%] flex justify-center items-center text-center"
-          style={{
-            fontFamily: /^[A-Za-z\s]+$/.test(event.event)
-              ? "CustomFont"
-              : "JPFont",
-            fontWeight: 700, // Ensure bold is enforced
-          }}
+          className={`text-[9px]  h-[90%] flex justify-center items-center text-center text-over`}
         >
           {event.event}
         </span>
@@ -147,12 +141,12 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl mb-200 mt-[100px]">
-      <div className="flex items-center px-3">
+    <div className="w-full max-w-4xl  mb-200 ">
+      <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
-      <div className="flex flex-col border border-gray-300 h-[500px] mb-100">
-        <div className="flex sticky top-0 bg-white w-[90dvw] mx-auto font-bold">
+      <div className="flex flex-col border border-gray-300 mb-100 ">
+        <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
           <div
             className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2"
@@ -168,7 +162,7 @@ export default function EventCalendar() {
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[70vh] relative">
+        <div className=" relative ">
           <div className="relative w-[90dvw] mx-auto">
             {timeSlots.map((hour) => (
               <div
@@ -247,7 +241,7 @@ export default function EventCalendar() {
                       } p-1 w-full font-bold mt-[15px]`}
                       style={{
                         ...eventStyle,
-                        zIndex: 20,
+                        height: `calc(${eventStyle.height} - 2px)`,
                         marginLeft: 8,
                         marginRight: 8,
                         width: "95%",
@@ -274,7 +268,7 @@ export default function EventCalendar() {
                             ? end_minute
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center font-bold">
+                        <div className="flex justify-center items-center h-full text-center text-[9px]">
                           {event[0].event}
                         </div>
                       </div>
