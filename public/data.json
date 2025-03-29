@@ -51,7 +51,17 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "15:00",
+    "start time": "14:50",
+    "end time": "15:10",
+    "event": "Test",
+    "Date": "03/04/2025",
+    "Event No": "",
+    "event_id": "event_other",
+    "gradient": "yes"
+  },
+  {
+    "Type": "GPスクエア オフィシャルステージ",
+    "start time": "15:10",
     "end time": "15:20",
     "event": "ゲストトーク\n （大島璃音）",
     "Date": "03/04/2025",
@@ -351,46 +361,6 @@
   },
   {
     "Type": "レーシングコース",
-    "start time": "9:45",
-    "end time": "10:20",
-    "event": "フェラーリ\n 決勝2回目",
-    "Date": "06/04/2025",
-    "Event No": "",
-    "event_id": "race_support",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
-    "start time": "11:00",
-    "end time": "11:35",
-    "event": "ポルシェ\n 決勝2回目",
-    "Date": "06/04/2025",
-    "Event No": "",
-    "event_id": "race_support",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
-    "start time": "12:00",
-    "end time": "12:30",
-    "event": "ドライバーパレード",
-    "Date": "06/04/2025",
-    "Event No": "",
-    "event_id": "race_f1",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
-    "start time": "13:20",
-    "end time": "13:30",
-    "event": "ピットレーンオープン",
-    "Date": "06/04/2025",
-    "Event No": "",
-    "event_id": "race_f1",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
     "start time": "13:20",
     "end time": "14:00",
     "event": "スタートセレモニー",
@@ -461,8 +431,8 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:45",
-    "end time": "9:55",
+    "start time": "9:40",
+    "end time": "9:50",
     "event": "F1パドックトーク",
     "Date": "05/04/2025",
     "Event No": "",
@@ -471,7 +441,7 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:55",
+    "start time": "9:50",
     "end time": "10:05",
     "event": "F1ドライバーステージ",
     "Date": "05/04/2025",
@@ -481,7 +451,17 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "10:10",
+    "start time": "10:05",
+    "end time": "10:15",
+    "event": "test222",
+    "Date": "05/04/2025",
+    "Event No": "",
+    "event_id": "event_f1",
+    "gradient": "yes"
+  },
+  {
+    "Type": "GPスクエア オフィシャルステージ",
+    "start time": "10:20",
     "end time": "10:40",
     "event": "DJパフォーマンス",
     "Date": "05/04/2025",
@@ -538,6 +518,46 @@
     "Event No": "",
     "event_id": "event_f1",
     "gradient": "yes"
+  },
+  {
+    "Type": "メインゲートオープン",
+    "start time": "8:00",
+    "end time": "8:30",
+    "event": "メインゲートオープン",
+    "Date": "05/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "メインゲートクローズ",
+    "start time": "20:45",
+    "end time": "21:15",
+    "event": "メインゲートクローズ",
+    "Date": "05/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "メインゲートオープン",
+    "start time": "8:00",
+    "end time": "8:30",
+    "event": "メインゲートオープン",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
+  },
+  {
+    "Type": "メインゲートクローズ",
+    "start time": "19:00",
+    "end time": "19:30",
+    "event": "メインゲートクローズ",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "event",
+    "gradient": "no"
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -610,43 +630,43 @@
     "gradient": "yes"
   },
   {
-    "Type": "メインゲートオープン",
-    "start time": "8:00",
-    "end time": "8:30",
-    "event": "メインゲートオープン",
-    "Date": "05/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "no"
-  },
-  {
-    "Type": "メインゲートクローズ",
-    "start time": "20:45",
-    "end time": "21:15",
-    "event": "メインゲートクローズ",
-    "Date": "05/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "no"
-  },
-  {
-    "Type": "メインゲートオープン",
-    "start time": "8:00",
-    "end time": "8:30",
-    "event": "メインゲートオープン",
+    "Type": "レーシングコース",
+    "start time": "9:45",
+    "end time": "10:20",
+    "event": "フェラーリ\n 決勝2回目",
     "Date": "06/04/2025",
     "Event No": "",
-    "event_id": "event",
-    "gradient": "no"
+    "event_id": "race_support",
+    "gradient": "yes"
   },
   {
-    "Type": "メインゲートクローズ",
-    "start time": "19:00",
-    "end time": "19:30",
-    "event": "メインゲートクローズ",
+    "Type": "レーシングコース",
+    "start time": "11:00",
+    "end time": "11:35",
+    "event": "ポルシェ\n 決勝2回目",
     "Date": "06/04/2025",
     "Event No": "",
-    "event_id": "event",
-    "gradient": "no"
+    "event_id": "race_support",
+    "gradient": "yes"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "12:00",
+    "end time": "12:30",
+    "event": "ドライバーパレード",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "race_f1",
+    "gradient": "yes"
+  },
+  {
+    "Type": "レーシングコース",
+    "start time": "13:20",
+    "end time": "13:30",
+    "event": "ピットレーンオープン",
+    "Date": "06/04/2025",
+    "Event No": "",
+    "event_id": "race_f1",
+    "gradient": "yes"
   }
 ]

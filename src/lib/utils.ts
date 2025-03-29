@@ -118,13 +118,14 @@ export const filterEventsByDate = (
       timePoints.push({ time: endMinutes, isStart: false, event });
     });
 
-    // Corrected sorting logic
+    // Modified sorting logic to handle adjacent events
     timePoints.sort((a, b) => {
       if (a.time !== b.time) return a.time - b.time;
-      return a.isStart ? -1 : 1; // Ensure start events come before end events if times are equal
+      // When times are equal, prioritize end events before start events
+      // This ensures that when one event ends at the same time another starts,
+      // the first event is considered closed before the second one opens
+      return a.isStart ? 1 : -1;
     });
-
-    console.log(`Time points for type ${type}:`, timePoints);
 
     const mergedIntervals: {
       start: number;
@@ -136,12 +137,14 @@ export const filterEventsByDate = (
 
     timePoints.forEach((point) => {
       if (point.isStart) {
-        openEvents.push(point.event);
-        if (openEvents.length === 1) {
+        // Only start a new interval if there are no open events
+        if (openEvents.length === 0) {
           intervalStart = point.time;
         }
+        openEvents.push(point.event);
       } else {
         openEvents = openEvents.filter((e) => e !== point.event);
+        // Close the interval when all events end
         if (openEvents.length === 0 && intervalStart !== null) {
           const endTime = point.time;
           mergedIntervals.push({
@@ -150,9 +153,9 @@ export const filterEventsByDate = (
             events: parsedEvents
               .filter(
                 ({ startMinutes, endMinutes }) =>
-                  intervalStart &&
+                  intervalStart !== null &&
                   startMinutes < endTime &&
-                  endMinutes >= intervalStart
+                  endMinutes > intervalStart
               )
               .map(({ event }) => event),
           });
@@ -160,8 +163,6 @@ export const filterEventsByDate = (
         }
       }
     });
-
-    console.log(`Merged intervals for type ${type}:`, mergedIntervals);
 
     mergedIntervals.forEach((interval, index) => {
       const startTime = `${Math.floor(interval.start / 60)

@@ -102,11 +102,12 @@ export default function EventCalendar() {
     if (!event.event) return null;
     return (
       <div
-        className="p-1 relative text-[10px] overflow-hidden mt-[15px]"
+        className="p-1 relative text-[10px] overflow-hidden mt-[15px] "
         style={{
           ...eventStyle,
           width: `calc(${eventStyle.width} - 2px)`,
-          height: `calc(${eventStyle.height} - 4px)`,
+          height: `calc(${eventStyle.height} - 2px)`,
+          marginBottom: 20,
           background:
             event.gradient === "yes"
               ? `linear-gradient(to bottom, ${rgbaStart} 0%, ${rgbaEnd} 100%)`
@@ -184,7 +185,7 @@ export default function EventCalendar() {
                   {filteredEvents
                     .filter((event) => event[0].Type === "レーシングコース")
                     .map((overlapping_event, index) => (
-                      <div key={index} className="flex flex-row flex-1/2">
+                      <div key={index} className="flex flex-row">
                         {overlapping_event.map((event, idx) => (
                           <RenderEvent
                             event={event}
