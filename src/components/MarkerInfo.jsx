@@ -90,7 +90,13 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to process the article content with proper line breaks
+  // Function to determine font based on content
+  const getFontFamily = (text) => {
+    if (!text || text === "-") return "JPFont"; // Default to JPFont if no content
+    return /^[A-Za-z\s]+$/.test(text) ? "CustomFont" : "JPFont";
+  };
+
+  // Function to process the article content with proper line breaks and dynamic fonts
   const renderArticleContent = (content) => {
     if (!content || content === "-") return "No content available.";
 
@@ -102,10 +108,11 @@ const MarkerInfo = ({ item, onBack }) => {
       if (paragraph.trim() === "" && index !== paragraphs.length - 1) {
         return <div key={index} className="paragraph-break" />;
       }
-      // Render non-empty paragraphs
+      // Render non-empty paragraphs with dynamic font
       if (paragraph.trim() !== "") {
+        const fontClass = getFontFamily(paragraph);
         return (
-          <p key={index} className="paragraph">
+          <p key={index} className={`paragraph ${fontClass}`}>
             {paragraph}
           </p>
         );
@@ -117,6 +124,117 @@ const MarkerInfo = ({ item, onBack }) => {
   const totalTransform =
     -(currentIndex * 100) + (translateX / window.innerWidth) * 100;
 
+  // Filteration array of the objects
+  const data = [
+    {
+      Title: "西エリア",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "G席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "D席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat5",
+    },
+    {
+      Title: "E席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat5",
+    },
+    {
+      Title: "C席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "H席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "I席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat4",
+    },
+    {
+      Title: "Q1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "A1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "B1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "R席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "S席（ファミリーシート）S-BOX",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "B2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat1",
+    },
+    {
+      Title: "Q2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "A2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "V1席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "V2席",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "VIPスイート・プレミアム",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+    {
+      Title: "GRAN VIEW",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "R-BOX",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat2",
+    },
+    {
+      Title: "Formula 1 Paddock Club™",
+      Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
+    },
+  ];
+
+  const triggerURL = (url) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    console.log("working");
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
+  const handleClick = (Title, redirectionLink) => {
+    // Find the object in the array that matches the Title
+    const filteredObject = data.find((obj) => obj.Title === Title);
+
+    const link = filteredObject ? filteredObject.Link : null;
+    // If a matching object is found, use its Link property
+    triggerURL(link);
+
+    window.open(redirectionLink, "_blank");
+  };
+
   return (
     <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] flex items-center justify-center z-[2000] h-full">
       {onBack && (
@@ -127,7 +245,7 @@ const MarkerInfo = ({ item, onBack }) => {
           <Image src="/images/Cross.svg" width={30} height={30} alt="Close" />
         </button>
       )}
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[80%] MyCustomFont">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[75%] MyCustomFont">
         <div className="px-3 overflow-auto relative w-full h-full style-2">
           {item["Top Image"] !== "-" &&
           Array.isArray(item["Top Image"]) &&
@@ -153,7 +271,7 @@ const MarkerInfo = ({ item, onBack }) => {
                         <img
                           src={image}
                           alt={`${item.Title} - ${index + 1}`}
-                          className="rounded-sm h-[13rem] w-full object-cover"
+                          className="rounded-sm h-[11rem] w-full object-cover"
                         />
                       </div>
                     ))}
@@ -180,48 +298,68 @@ const MarkerInfo = ({ item, onBack }) => {
                     alt={item.Title}
                     width={800}
                     height={400}
-                    className="rounded-sm h-[13rem] w-full object-cover"
+                    className="rounded-sm h-[11rem] w-full object-cover"
                   />
                 </div>
               )}
             </div>
           ) : null}
+
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-[100%] text-xl font-bold">
+            <div
+              className={`mt-5 w-[100%] text-2xl font-extrabold ${getFontFamily(
+                item["Title"]
+              )}`}
+            >
               {item["Title"]}
             </div>
           )}
+
           {item["Article Format"] === "Area Introduction" && (
             <>
               <div
-                className="mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
+                className={`mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer ${getFontFamily(
+                  item["Line Button Text (If Area Introduction format)"]
+                )}`}
                 onClick={() => {
-                  window.open(item["Line Button URL"], "_blank");
+                  handleClick(item["Title"], item["Line Button URL"]);
                 }}
               >
                 {item["Line Button Text (If Area Introduction format)"]
                   .split("\r\n")
                   .map((line, index) => (
-                    <span key={index} className="block">
+                    <span
+                      key={index}
+                      className={`block ${getFontFamily(line)}`}
+                    >
                       {line}
                     </span>
                   ))}
               </div>
               {item["Title"] !== "-" && (
-                <div className="text-lg text-black mt-5 font-semibold w-full">
+                <div
+                  className={`text-2xl text-black mt-5 w-full font-extrabold ${getFontFamily(
+                    item["Title"]
+                  )}`}
+                >
                   {item["Title"]}
                 </div>
               )}
             </>
           )}
 
-          {item["Sub Title"] !== "-" &&
-            item["Article Format"] != "Area Introduction" && (
-              <div className="text-lg text-black mt-5 font-semibold w-full">
-                {item["Sub Title"]}
+          {item["Sub Title"]?.trim() !== "-" &&
+            item["Article Format"] !== "Area Introduction" && (
+              <div
+                className={`text-lg text-black mt-5 font-bold w-full ${getFontFamily(
+                  item["Sub Title"]
+                )}`}
+              >
+                {item["Sub Title"] ?? "No Subtitle Available"}
               </div>
             )}
-          <div className="text-black my-5 font-normal w-full">
+
+          <div className="text-black my-5 font-normal w-full font-[JPFont]">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>
@@ -291,6 +429,14 @@ const MarkerInfo = ({ item, onBack }) => {
 
         .paragraph-break {
           margin-bottom: 2rem; /* Double line break spacing for paragraphs */
+        }
+
+        .CustomFont {
+          font-family: "CustomFont", sans-serif;
+        }
+
+        .JPFont {
+          font-family: "JPFont", sans-serif;
         }
       `}</style>
     </div>

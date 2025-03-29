@@ -122,22 +122,51 @@
     @apply bg-background text-foreground;
   }
 }
-
+/* For English text */
 @font-face {
-  font-family: "MyCustomFont"; /* You can name this anything you like */
-  src: url("../assets/display-regular.ttf") format("truetype"); /* Path to your .ttf file */
-  font-weight: normal; /* Optional: specify weight */
-  font-style: normal; /* Optional: specify style */
+  font-family: "CustomFont";
+  src: url("/display-regular.ttf") format("truetype");
+  font-weight: 400; /* Normal */
+  font-style: normal;
+}
+@font-face {
+  font-family: "CustomFont";
+  src: url("/display-semibold.ttf") format("truetype");
+  font-weight: 600; /* Semibold */
+  font-style: normal;
+}
+@font-face {
+  font-family: "CustomFont";
+  src: url("/display-bold.ttf") format("truetype");
+  font-weight: 700; /* Bold */
+  font-style: normal;
 }
 
+/* For Japanese text */
 @font-face {
-  font-family: "JPFont"; /* You can name this anything you like */
-  src: url("/assets/japanese.ttc") format("truetype"); /* Path to your .ttf file */
-  font-weight: normal; /* Optional: specify weight */
-  font-style: normal; /* Optional: specify style */
+  font-family: "JPFont";
+  src: url("/assets/japanese-regular.ttc") format("truetype");
+  font-weight: 400; /* Normal */
+  font-style: normal;
+}
+@font-face {
+  font-family: "JPFont";
+  src: url("/assets/japanese-semibold.ttc") format("truetype");
+  font-weight: 600; /* Semibold */
+  font-style: normal;
+}
+@font-face {
+  font-family: "JPFont";
+  src: url("/assets/japanese-bold.ttc") format("truetype");
+  font-weight: 700; /* Bold */
+  font-style: normal;
 }
 .MyCustomFont {
-  font-family: "MyCustomFont";
+  font-family: "CustomFont";
+}
+
+.japanese {
+  font-family: "JPFont";
 }
 
 body {

@@ -217,6 +217,12 @@ const Map: React.FC = () => {
     maxLng: 136.56,
   };
 
+  // Define map bounds to prevent invalid tile requests
+  const mapBounds = L.latLngBounds(
+    [BOUNDING_BOX.minLat, BOUNDING_BOX.minLng],
+    [BOUNDING_BOX.maxLat, BOUNDING_BOX.maxLng]
+  );
+
   useEffect(() => {
     setIsClient(true);
 
@@ -335,7 +341,10 @@ const Map: React.FC = () => {
           style={{ height: "100%", width: "100%", zIndex: 0 }}
           fadeAnimation={false}
           renderer={L.canvas()}
-          zoomControl={false} // Disable default Leaflet zoom control
+          zoomControl={false}
+          bounds={mapBounds} // Restrict map to valid bounds
+          maxBounds={mapBounds} // Prevent panning outside bounds
+          maxBoundsViscosity={1.0} // Enforce bounds strictly
         >
           <TileLayer
             url="/suzuka-tiles/{z}/{x}/{y}.png"
@@ -345,7 +354,8 @@ const Map: React.FC = () => {
             noWrap={true}
             updateWhenIdle={false}
             keepBuffer={4}
-            errorTileUrl=""
+            errorTileUrl="/suzuka-tiles/error-tile.png" // Fallback tile for missing tiles
+            bounds={mapBounds} // Restrict tile loading to valid bounds
           />
 
           {processedData.map((item: MapItem, index: number) => {
