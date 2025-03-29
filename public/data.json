@@ -10,27 +10,7 @@
     "gradient": "no"
   },
   {
-    "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:00",
-    "end time": "10:00",
-    "event": "東コース\n ピットウォーク",
-    "Date": "03/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "yes"
-  },
-  {
-    "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:00",
-    "end time": "10:00",
-    "event": "東コース\n ピットウォーク",
-    "Date": "03/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "yes"
-  },
-  {
-    "Type": "GPスクエア オフィシャルステージ",
+    "Type": "レーシングコース",
     "start time": "9:00",
     "end time": "12:00",
     "event": "東コース\n ピットウォーク",
@@ -44,26 +24,6 @@
     "start time": "9:00",
     "end time": "12:00",
     "event": "ホームストレート\n ストレートウォーク",
-    "Date": "03/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
-    "start time": "9:00",
-    "end time": "12:00",
-    "event": "TEST1111",
-    "Date": "03/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "yes"
-  },
-  {
-    "Type": "レーシングコース",
-    "start time": "9:00",
-    "end time": "12:00",
-    "event": "TEST",
     "Date": "03/04/2025",
     "Event No": "",
     "event_id": "event",
