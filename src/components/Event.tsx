@@ -104,7 +104,7 @@ export default function EventCalendar() {
     if (!event.event) return;
     return (
       <div
-        className={`p-1 relative  text-[10px] overflow-hidden mt-[15px]`}
+        className={`p-1 relative  text-[6px] overflow-hidden mt-[15px]`}
         style={{
           ...eventStyle,
           width: `calc(${eventStyle.width} - 2px)`,
@@ -128,7 +128,7 @@ export default function EventCalendar() {
             : ""}
         </div>
         <span
-          className={`text-[12px] font-extrabold h-[90%] flex justify-center items-center text-center`}
+          className={`text-[9px]  h-[90%] flex justify-center items-center text-center text-over`}
         >
           {event.event}
         </span>
@@ -140,11 +140,11 @@ export default function EventCalendar() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className="w-full max-w-4xl  mb-200 mt-[100px]">
+    <div className="w-full max-w-4xl  mb-200 ">
       <div className="flex  items-center px-3">
         <DatePicker data={eventData} onDateChange={handleDateChange} />
       </div>
-      <div className="flex flex-col border border-gray-300 h-[500px] mb-100 ">
+      <div className="flex flex-col border border-gray-300 mb-100 ">
         <div className="flex sticky top-0  bg-white w-[90dvw] mx-auto font-extrabold">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
           <div
@@ -165,7 +165,7 @@ export default function EventCalendar() {
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[70vh] relative ">
+        <div className=" relative ">
           <div className="relative w-[90dvw] mx-auto">
             {/* Hour markers */}
             {timeSlots.map((hour) => (
@@ -253,7 +253,6 @@ export default function EventCalendar() {
                       style={{
                         ...eventStyle,
                         height: `calc(${eventStyle.height} - 2px)`,
-                        zIndex: 20,
                         marginLeft: 8,
                         marginRight: 8,
                         width: "95%",
@@ -273,7 +272,7 @@ export default function EventCalendar() {
                             ? end_minute
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center font-extrabold">
+                        <div className="flex justify-center items-center h-full text-center text-[9px]">
                           {event[0].event}
                         </div>
                       </div>

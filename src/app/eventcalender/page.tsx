@@ -7,7 +7,7 @@ import EventMapHeader from "@/components/EventMapHeader";
 import BottomFooter from "@/components/BottomFooter";
 const EventPage = () => {
   return (
-    <div className="bg-white w-full h-[100dvh] ">
+    <div className="bg-white w-full h-[100dvh] overflow-y-auto">
       <div>
         <EventMapHeader />
         <Event />
