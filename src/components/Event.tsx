@@ -105,6 +105,7 @@ export default function EventCalendar() {
     const timeDifference =
       parseTime(event["start time"]).minute -
       parseTime(previousEventEndTime).minute;
+
     return (
       <div
         className="p-1 relative text-[10px] overflow-hidden mt-[15px]"
@@ -133,7 +134,7 @@ export default function EventCalendar() {
           className="absolute bottom-0 left-0 font-bold text-[8px] "
           style={{ fontFamily: "JPFont" }}
         >
-          {end_minute !== "00" && timeDifference > 10 && end_minute !== "30"
+          {end_minute !== "00" && timeDifference < 5 && end_minute !== "30"
             ? end_minute
             : ""}
         </div>
