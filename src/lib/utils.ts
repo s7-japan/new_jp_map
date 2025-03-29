@@ -1,15 +1,20 @@
 import type { EventItem } from "../types";
 import { BackgroundColorForEvent } from "@/constants";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 // Parse time string (HH:MM) to get hour and minute
 export const parseTime = (
   timeString: string
 ): { hour: number; minute: number } => {
   const [hourStr, minuteStr] = timeString.split(":");
-  return {
-    hour: Number.parseInt(hourStr, 10),
-    minute: Number.parseInt(minuteStr, 10),
-  };
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  return { hour, minute };
 };
 
 // Calculate duration in minutes between two time strings
