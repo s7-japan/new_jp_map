@@ -76,36 +76,113 @@ export const filterEventsByDate = (
   events: EventItem[],
   selectedDate: string
 ): { [key: string]: EventItem[] } => {
+  console.log("Input events:", events);
+
+  // First filter by date
   const filteredEvents = events.filter(
     (event) => event.Date === selectedDate || !event.Date
   );
+  console.log("Filtered events:", filteredEvents);
 
-  return filteredEvents.reduce((acc, event) => {
-    const existingKey = Object.keys(acc).find((k) => {
-      const [existingStart, existingEnd, existingType] = k.split("-");
-      const eventStart = parseTime(event["start time"]);
-      const eventEnd = parseTime(event["end time"]);
-      const keyStart = parseTime(existingStart);
-      const keyEnd = parseTime(existingEnd);
+  // Group events by type
+  const eventsByType = filteredEvents.reduce((acc, event) => {
+    if (!acc[event.Type]) {
+      acc[event.Type] = [];
+    }
+    acc[event.Type].push(event);
+    return acc;
+  }, {} as { [key: string]: EventItem[] });
+  console.log("Events by type:", eventsByType);
 
-      // Check if events overlap and have the same type
-      return (
-        event.Type === existingType &&
-        eventStart.hour * 60 + eventStart.minute <
-          keyEnd.hour * 60 + keyEnd.minute &&
-        keyStart.hour * 60 + keyStart.minute <
-          eventEnd.hour * 60 + eventEnd.minute
-      );
+  return Object.entries(eventsByType).reduce((result, [type, typeEvents]) => {
+    // Create a flat list of all time points from all events
+    const timePoints: { time: number; isStart: boolean; event: EventItem }[] =
+      [];
+
+    // Add all start and end times to the list
+    typeEvents.forEach((event) => {
+      const startMinutes =
+        parseTime(event["start time"]).hour * 60 +
+        parseTime(event["start time"]).minute;
+      const endMinutes =
+        parseTime(event["end time"]).hour * 60 +
+        parseTime(event["end time"]).minute;
+
+      timePoints.push({ time: startMinutes, isStart: true, event });
+      timePoints.push({ time: endMinutes, isStart: false, event });
     });
 
-    const key =
-      existingKey ||
-      `${event["start time"]}-${event["end time"]}-${event.Type}`;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(event);
-    return acc;
+    // Sort time points
+    timePoints.sort((a, b) => {
+      // Sort by time first
+      if (a.time !== b.time) return a.time - b.time;
+      // If times are equal, put end times before start times
+      // This ensures that touching intervals (one ends exactly when another starts) are merged
+      return a.isStart ? 1 : -1;
+    });
+
+    console.log(`Time points for type ${type}:`, timePoints);
+
+    // Process time points to create merged intervals
+    const mergedIntervals: {
+      start: number;
+      end: number;
+      events: EventItem[];
+    }[] = [];
+    let openEvents: EventItem[] = [];
+    let intervalStart: number | null = null;
+
+    timePoints.forEach((point) => {
+      if (point.isStart) {
+        // If this is a start point
+        openEvents.push(point.event);
+        // If this is the first open event, mark the interval start
+        if (openEvents.length === 1) {
+          intervalStart = point.time;
+        }
+      } else {
+        // If this is an end point
+        openEvents = openEvents.filter((e) => e !== point.event);
+        // If no more open events, close the interval
+        if (openEvents.length === 0 && intervalStart !== null) {
+          const endTime = point.time;
+          mergedIntervals.push({
+            start: intervalStart,
+            end: endTime,
+            events: typeEvents.filter((event) => {
+              const eventStart =
+                parseTime(event["start time"]).hour * 60 +
+                parseTime(event["start time"]).minute;
+              const eventEnd =
+                parseTime(event["end time"]).hour * 60 +
+                parseTime(event["end time"]).minute;
+              // Check if event overlaps with this interval
+              return eventStart <= endTime && eventEnd >= (intervalStart ?? 0);
+            }),
+          });
+          intervalStart = null;
+        }
+      }
+    });
+
+    console.log(`Merged intervals for type ${type}:`, mergedIntervals);
+
+    // Convert merged intervals to result format
+    mergedIntervals.forEach((interval) => {
+      const startTime = `${Math.floor(interval.start / 60)
+        .toString()
+        .padStart(2, "0")}:${(interval.start % 60)
+        .toString()
+        .padStart(2, "0")}`;
+      const endTime = `${Math.floor(interval.end / 60)
+        .toString()
+        .padStart(2, "0")}:${(interval.end % 60).toString().padStart(2, "0")}`;
+      const key = `${startTime}-${endTime}-${type}`;
+      result[key] = interval.events;
+    });
+
+    console.log("Result for type", type, ":", result);
+    return result;
   }, {} as { [key: string]: EventItem[] });
 };
 

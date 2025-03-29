@@ -203,19 +203,22 @@ export default function EventCalendar() {
                       (event) =>
                         event[0].Type === "GPスクエア オフィシャルステージ"
                     )
-                    .map((overlapping_event, index) => (
-                      <div key={index} className="flex flex-row">
-                        {overlapping_event.map((event, idx) => (
-                          <RenderEvent
-                            event={event}
-                            key={`${event.Type}-${event["start time"]}-${event.event}`}
-                            index={idx}
-                            totalInGroup={overlapping_event.length}
-                            showGradient={showGradient}
-                          />
-                        ))}
-                      </div>
-                    ))}
+                    .map((overlapping_event, index) => {
+                      console.log(overlapping_event);
+                      return (
+                        <div key={index} className="flex flex-row">
+                          {overlapping_event.map((event, idx) => (
+                            <RenderEvent
+                              event={event}
+                              key={`${event.Type}-${event["start time"]}-${event.event}`}
+                              index={idx}
+                              totalInGroup={overlapping_event.length}
+                              showGradient={showGradient}
+                            />
+                          ))}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>
