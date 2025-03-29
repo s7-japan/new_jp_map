@@ -22,7 +22,7 @@ const EventMapHeader = () => {
         <span className="text-[#ff0000]">E</span>VENT CAL
         <span className="text-[#ff0000]">E</span>NDAR
       </strong>
-      <p className="font-light text-[12px] font-[JPFonts] mb-5">
+      <p className="font-light text-[12px] font-[JPFont] mb-5">
         イベントカレンダー
       </p>
     </div>
