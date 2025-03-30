@@ -12,7 +12,7 @@ import MarkerInfo from "./MarkerInfo";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Icons imports
+// Icons imports (unchanged)
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -75,7 +75,7 @@ interface MapItem {
   Remarks: string;
 }
 
-// Dynamic imports for react-leaflet components
+// Dynamic imports for react-leaflet components (unchanged)
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -89,7 +89,7 @@ const Marker = dynamic(
   { ssr: false }
 );
 
-// Toast Component
+// Toast Component (unchanged)
 const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   message,
   onClose,
@@ -139,7 +139,7 @@ const ZoomControl = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 absolute bottom-[13rem] right-10 z-[1000]">
+    <div className="flex flex-col gap-2">
       <Button onClick={zoomIn} aria-label="Zoom in">
         <Plus size={15} />
       </Button>
@@ -179,13 +179,13 @@ const CurrentLocationButton = ({
   return (
     <div
       onClick={centerOnUser}
-      className="absolute bottom-[18rem] right-10 z-[1000] bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
+      className="bg-white p-2 rounded-full shadow-md cursor-pointer text-black hover:bg-black hover:text-white active:bg-black active:text-white"
       title="Center on my current location"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
+        width="19"
+        height="19"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -217,7 +217,6 @@ const Map: React.FC = () => {
     maxLng: 136.56,
   };
 
-  // Define map bounds to prevent invalid tile requests
   const mapBounds = L.latLngBounds(
     [BOUNDING_BOX.minLat, BOUNDING_BOX.minLng],
     [BOUNDING_BOX.maxLat, BOUNDING_BOX.maxLng]
@@ -264,7 +263,6 @@ const Map: React.FC = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  // Preload icons to avoid latency
   useEffect(() => {
     Object.values(ICONS).forEach((icon) => {
       const img = new Image();
@@ -272,7 +270,6 @@ const Map: React.FC = () => {
     });
   }, []);
 
-  // Memoize marker icons to optimize rendering and avoid unnecessary re-renders
   const getMarkerIcon = useMemo(() => {
     const iconCache: { [key: string]: L.Icon } = {};
     return (category: string) => {
@@ -342,9 +339,9 @@ const Map: React.FC = () => {
           fadeAnimation={false}
           renderer={L.canvas()}
           zoomControl={false}
-          bounds={mapBounds} // Restrict map to valid bounds
-          maxBounds={mapBounds} // Prevent panning outside bounds
-          maxBoundsViscosity={1.0} // Enforce bounds strictly
+          bounds={mapBounds}
+          maxBounds={mapBounds}
+          maxBoundsViscosity={1.0}
         >
           <TileLayer
             url="/suzuka-tiles/{z}/{x}/{y}.png"
@@ -354,8 +351,8 @@ const Map: React.FC = () => {
             noWrap={true}
             updateWhenIdle={false}
             keepBuffer={4}
-            errorTileUrl="/suzuka-tiles/error-tile.png" // Fallback tile for missing tiles
-            bounds={mapBounds} // Restrict tile loading to valid bounds
+            errorTileUrl="/bg-image.png"
+            bounds={mapBounds}
           />
 
           {processedData.map((item: MapItem, index: number) => {
@@ -377,20 +374,15 @@ const Map: React.FC = () => {
               return null;
             }
 
-            // Adjusted zoom filtering:
-            // Below 15: No markers
-            // 15-19: Only Medium markers
-            // 20: All markers (Low and Medium)
             if (zoomLevel < 15) {
-              return null; // No markers below 15
+              return null;
             } else if (
               zoomLevel >= 15 &&
               zoomLevel < 20 &&
               item["Zoom Level"] !== "Medium"
             ) {
-              return null; // Only Medium markers at 15-19
+              return null;
             }
-            // At zoomLevel >= 20, all markers (Low and Medium) are shown
 
             return (
               <Marker
@@ -413,11 +405,15 @@ const Map: React.FC = () => {
             />
           )}
 
-          <ZoomControl />
-          <CurrentLocationButton
-            userPosition={userPosition}
-            onOutOfRange={() => setShowToast(true)}
-          />
+          {/* Combined Controls Container */}
+          <div className="absolute bottom-40 right-10 z-[1000] flex flex-col items-center gap-2">
+            <CurrentLocationButton
+              userPosition={userPosition}
+              onOutOfRange={() => setShowToast(true)}
+            />
+            <ZoomControl />
+          </div>
+
           <MapEvents />
         </MapContainer>
       </div>

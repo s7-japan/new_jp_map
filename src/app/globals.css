@@ -169,6 +169,11 @@
   font-family: "JPFont";
 }
 
+/*  font-family: "Hiragino Sans" */
+.hiragino {
+  font-family: "Hiragino Sans";
+}
+
 body {
   margin: 0;
   padding: 0;

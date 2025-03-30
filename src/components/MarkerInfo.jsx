@@ -90,30 +90,44 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to determine font based on content
-  const getFontFamily = (text) => {
-    if (!text || text === "-") return "JPFont"; // Default to JPFont if no content
-    return /^[A-Za-z\s]+$/.test(text) ? "CustomFont" : "JPFont";
+  // Function to check if a character is Japanese (Hiragana, Katakana, Kanji)
+  const isJapanese = (char) => {
+    const code = char.charCodeAt(0);
+    return (
+      (code >= 0x3040 && code <= 0x309f) || // Hiragana
+      (code >= 0x30a0 && code <= 0x30ff) || // Katakana
+      (code >= 0x4e00 && code <= 0x9faf) // Common Kanji
+    );
   };
 
-  // Function to process the article content with proper line breaks and dynamic fonts
+  // Function to render text with character-by-character font application
+  const renderTextWithFonts = (text) => {
+    if (!text || text === "-") return "No content available.";
+
+    return text.split("").map((char, index) => {
+      const fontClass = isJapanese(char) ? "hiragino" : "MyCustomFont";
+      return (
+        <span key={index} className={`${fontClass}`}>
+          {char}
+        </span>
+      );
+    });
+  };
+
+  // Updated renderArticleContent to handle paragraphs with character-by-character fonts
   const renderArticleContent = (content) => {
     if (!content || content === "-") return "No content available.";
 
-    // Split the content by \r\n
     const paragraphs = content.split("\r\n");
 
     return paragraphs.map((paragraph, index) => {
-      // If the paragraph is empty (result of consecutive \r\n), add extra spacing
       if (paragraph.trim() === "" && index !== paragraphs.length - 1) {
         return <div key={index} className="paragraph-break" />;
       }
-      // Render non-empty paragraphs with dynamic font
       if (paragraph.trim() !== "") {
-        const fontClass = getFontFamily(paragraph);
         return (
-          <p key={index} className={`paragraph ${fontClass}`}>
-            {paragraph}
+          <p key={index} className="paragraph">
+            {renderTextWithFonts(paragraph)}
           </p>
         );
       }
@@ -211,7 +225,6 @@ const MarkerInfo = ({ item, onBack }) => {
       Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
     },
   ];
-
   const triggerURL = (url) => {
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
@@ -224,14 +237,11 @@ const MarkerInfo = ({ item, onBack }) => {
       document.body.removeChild(iframe);
     }, 1000);
   };
+
   const handleClick = (Title, redirectionLink) => {
-    // Find the object in the array that matches the Title
     const filteredObject = data.find((obj) => obj.Title === Title);
-
     const link = filteredObject ? filteredObject.Link : null;
-    // If a matching object is found, use its Link property
     triggerURL(link);
-
     window.open(redirectionLink, "_blank");
   };
 
@@ -245,7 +255,7 @@ const MarkerInfo = ({ item, onBack }) => {
           <Image src="/images/Cross.svg" width={30} height={30} alt="Close" />
         </button>
       )}
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[75%] MyCustomFont">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl px-3 py-6 m-4 relative h-[75%]">
         <div className="px-3 overflow-auto relative w-full h-full style-2">
           {item["Top Image"] !== "-" &&
           Array.isArray(item["Top Image"]) &&
@@ -306,60 +316,42 @@ const MarkerInfo = ({ item, onBack }) => {
           ) : null}
 
           {item["Article Format"] === "Facility" && (
-            <div
-              className={`mt-5 w-[100%] text-2xl font-extrabold ${getFontFamily(
-                item["Title"]
-              )}`}
-            >
-              {item["Title"]}
+            <div className="mt-5 w-full text-2xl ">
+              {renderTextWithFonts(item["Title"])}
             </div>
           )}
 
           {item["Article Format"] === "Area Introduction" && (
             <>
               <div
-                className={`mt-5 w-full bg-[#08c757] text-center text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer ${getFontFamily(
-                  item["Line Button Text (If Area Introduction format)"]
-                )}`}
+                className="mt-5 w-full bg-[#08c757] text-center text-[12px] text-white px-5 py-3 flex flex-col justify-center items-center rounded-full cursor-pointer"
                 onClick={() => {
                   handleClick(item["Title"], item["Line Button URL"]);
                 }}
               >
-                {item["Line Button Text (If Area Introduction format)"]
-                  .split("\r\n")
-                  .map((line, index) => (
-                    <span
-                      key={index}
-                      className={`block ${getFontFamily(line)}`}
-                    >
-                      {line}
-                    </span>
-                  ))}
+                <span>
+                  {renderTextWithFonts(
+                    item["Line Button Text (If Area Introduction format)"]
+                  )}
+                </span>
               </div>
               {item["Title"] !== "-" && (
-                <div
-                  className={`text-2xl text-black mt-5 w-full font-extrabold ${getFontFamily(
-                    item["Title"]
-                  )}`}
-                >
-                  {item["Title"]}
+                <div className="text-2xl text-black mt-5 w-full ">
+                  {renderTextWithFonts(item["Title"])}
                 </div>
               )}
             </>
           )}
-
           {item["Sub Title"]?.trim() !== "-" &&
             item["Article Format"] !== "Area Introduction" && (
-              <div
-                className={`text-lg text-black mt-5 font-bold w-full ${getFontFamily(
-                  item["Sub Title"]
-                )}`}
-              >
-                {item["Sub Title"] ?? "No Subtitle Available"}
+              <div className="text-lg text-black mt-5 w-full weight-semibold">
+                {renderTextWithFonts(
+                  item["Sub Title"] ?? "No Subtitle Available"
+                )}
               </div>
             )}
 
-          <div className="text-black my-5 font-normal w-full font-[JPFont]">
+          <div className="text-black my-5 font-normal w-full">
             {renderArticleContent(item["Article Content"])}
           </div>
         </div>
@@ -424,19 +416,11 @@ const MarkerInfo = ({ item, onBack }) => {
         }
 
         .paragraph {
-          margin-bottom: 1rem; /* Single line break spacing */
+          margin-bottom: 1rem;
         }
 
         .paragraph-break {
-          margin-bottom: 2rem; /* Double line break spacing for paragraphs */
-        }
-
-        .CustomFont {
-          font-family: "CustomFont", sans-serif;
-        }
-
-        .JPFont {
-          font-family: "JPFont", sans-serif;
+          margin-bottom: 2rem;
         }
       `}</style>
     </div>
