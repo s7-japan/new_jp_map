@@ -514,7 +514,7 @@ const Map: React.FC = () => {
                 {pinPopup.Title.split("").map((char, index) => (
                   <span
                     key={index}
-                    className={isEnglish(char) ? "hiragino" : "MyCustomFont"}
+                    className={isEnglish(char) ? "MyCustomFont" : "hiragino"}
                   >
                     {char}
                   </span>
