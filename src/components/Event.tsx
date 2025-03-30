@@ -216,7 +216,7 @@ export default function EventCalendar() {
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
         <span
-          className="text-[9px] h-[90%] flex justify-center items-center text-center custom-text"
+          className="text-[9px] h-[90%] flex justify-center items-center text-center custom-text font-extrabold"
           style={{ whiteSpace: "pre-line" }}
         >
           {event.event}
@@ -343,7 +343,7 @@ export default function EventCalendar() {
                             ? minuteEnd
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center text-[10px]">
+                        <div className="flex justify-center items-center h-full text-center text-[10px] custom-text font-extrabold">
                           {event.event}
                         </div>
                       </div>
