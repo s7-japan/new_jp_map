@@ -471,7 +471,7 @@ const Map: React.FC = () => {
             />
           )}
 
-          <div className="absolute bottom-40 right-10 z-[1000] flex flex-col items-center gap-2">
+          <div className="absolute bottom-52 right-10 z-[1000] flex flex-col items-center gap-2">
             <CurrentLocationButton
               userPosition={userPosition}
               onOutOfRange={() => setShowToast(true)}
