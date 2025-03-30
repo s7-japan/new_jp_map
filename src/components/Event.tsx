@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState } from "react";
 import type { EventItem } from "@/types";
@@ -49,22 +50,37 @@ export default function EventCalendar() {
     const GAP_X = 2; // Horizontal gap in pixels
     const GAP_Y = 10; // Vertical gap in pixels
 
+    // Check if this event is consecutive with any other event
+    const isConsecutiveEvent = eventsOfType.some((e) => {
+      if (e === event) return false;
+      const eStart = parseTime(e["start time"]);
+      const eEnd = parseTime(e["end time"]);
+      const eStartMinutes = eStart.hour * 60 + eStart.minute;
+      const eEndMinutes = eEnd.hour * 60 + eEnd.minute;
+      const eventStart = parseTime(event["start time"]);
+      const eventEnd = parseTime(event["end time"]);
+      const eventStartMinutes = eventStart.hour * 60 + eventStart.minute;
+      const eventEndMinutes = eventEnd.hour * 60 + eventEnd.minute;
+
+      return (
+        eStartMinutes === eventEndMinutes || eventStartMinutes === eEndMinutes
+      );
+    });
+
     // Group overlapping events
     const overlappingEvents = findOverlappingEvents(event, eventsOfType);
 
     // If this is the only event in its time slot, use full width
     if (overlappingEvents.length === 1) {
-      const EVENT_EXTRA_HEIGHT = 8;
       return {
         top: `${startMinutes * MINUTE_HEIGHT + GAP_Y}px`,
-        height: `${
-          duration * MINUTE_HEIGHT - GAP_Y * 2 + EVENT_EXTRA_HEIGHT
-        }px`,
+        height: `${duration * MINUTE_HEIGHT}px`,
         width: `calc(100% - ${GAP_X * 2}px)`,
         left: `${GAP_X}px`,
         position: "absolute" as const,
-        minHeight: "30px",
+        minHeight: "27px",
         boxSizing: "border-box" as const,
+        border: "1px solid white", // Add white border
       };
     }
 
@@ -74,15 +90,15 @@ export default function EventCalendar() {
 
     // Calculate width and position based on overlaps
     const columnWidth = 100 / totalColumns;
-    const EVENT_EXTRA_HEIGHT = 8;
+
     return {
       top: `${startMinutes * MINUTE_HEIGHT + GAP_Y}px`,
-      height: `${duration * MINUTE_HEIGHT - GAP_Y * 2 + EVENT_EXTRA_HEIGHT}px`,
+      height: `${duration * MINUTE_HEIGHT}px`,
       width: `calc(${columnWidth}% - ${GAP_X * 2}px)`,
       left: `calc(${columnIndex * columnWidth}% + ${GAP_X}px)`,
       position: "absolute" as const,
-      minHeight: "30px",
       boxSizing: "border-box" as const,
+      border: "1px solid white", // Add white border
     };
   };
   // Function to calculate max columns based on overlapping events
@@ -105,14 +121,12 @@ export default function EventCalendar() {
     return Math.max(...Object.values(timeSlots), 1);
   };
 
-  // Helper function to find overlapping events
+  // Helper function to find overlapping events - FIXED VERSION
   const findOverlappingEvents = (event: EventItem, allEvents: EventItem[]) => {
     const eventStart = parseTime(event["start time"]);
     const eventEnd = parseTime(event["end time"]);
     const eventStartMinutes = eventStart.hour * 60 + eventStart.minute;
     const eventEndMinutes = eventEnd.hour * 60 + eventEnd.minute;
-
-    const BUFFER_MINUTES = 0;
 
     return allEvents
       .filter((e) => {
@@ -121,18 +135,18 @@ export default function EventCalendar() {
         const eStartMinutes = eStart.hour * 60 + eStart.minute;
         const eEndMinutes = eEnd.hour * 60 + eEnd.minute;
 
-        // Check for actual overlap with buffer
-        // Two events overlap if one starts before the other ends (accounting for buffer)
+        // For consecutive events (one ends exactly when the other starts),
+        // don't consider them overlapping
+        if (
+          eStartMinutes === eventEndMinutes ||
+          eventStartMinutes === eEndMinutes
+        ) {
+          return false;
+        }
+
+        // Standard overlap check for other cases
         return (
-          eStartMinutes < eventEndMinutes &&
-          eventStartMinutes < eEndMinutes &&
-          // Additional check: if the gap between events is >= BUFFER_MINUTES, don't consider them overlapping
-          !(
-            (eEndMinutes <= eventStartMinutes + BUFFER_MINUTES &&
-              eEndMinutes <= eventStartMinutes) ||
-            (eventEndMinutes <= eStartMinutes + BUFFER_MINUTES &&
-              eventEndMinutes <= eStartMinutes)
-          )
+          eStartMinutes < eventEndMinutes && eventStartMinutes < eEndMinutes
         );
       })
       .sort((a, b) => {
@@ -167,10 +181,14 @@ export default function EventCalendar() {
       BackgroundColorForEvent[
         event.event_id as keyof typeof BackgroundColorForEvent
       ] || bg;
-
+    const duration = Math.abs(
+      parseTime(event["end time"]).minute -
+        parseTime(event["start time"]).minute
+    );
+    console.log(duration === 10);
     return (
       <div
-        className="p-1 relative text-[10px] overflow-hidden"
+        className="p-1 relative text-[10px] overflow-hidden  border border-white"
         style={{
           ...style,
           background:
@@ -190,12 +208,17 @@ export default function EventCalendar() {
           {startMinute !== "00" && startMinute !== "30" ? startMinute : ""}
         </div>
         <div
-          className="absolute bottom-0 left-0 font-bold text-[8px]"
-          style={{ fontFamily: "JPFont" }}
+          className="absolute left-0 bottom-1 font-bold text-[8px]"
+          style={{
+            fontFamily: "JPFont",
+          }}
         >
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
-        <span className="text-[9px] h-[90%] flex justify-center items-center text-center">
+        <span
+          className="text-[9px] h-[90%] flex justify-center items-center text-center custom-text font-extrabold"
+          style={{ whiteSpace: "pre-line" }}
+        >
           {event.event}
         </span>
       </div>
@@ -210,19 +233,13 @@ export default function EventCalendar() {
       <div className="flex items-center px-3 mb-2">
         <DatePicker data={events} onDateChange={handleDateChange} />
       </div>
-      <div className="flex flex-col border border-gray-300 overflow-hidden w-[90%] mx-auto bg-white rounded-lg shadow-md">
+      <div className="flex flex-col border border-gray-300 overflow-hidden w-[90%] mx-auto bg-white shadow-md">
         <div className="flex sticky top-0 bg-white w-full font-extrabold z-10">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div
-            className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2"
-            style={{ fontFamily: "JPFont", fontWeight: 700 }}
-          >
+          <div className="flex-1 bg-[#E00400] text-white p-2 text-center  text-[12px] ml-2 custom-text font-extrabold">
             レーシングコース
           </div>
-          <div
-            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2"
-            style={{ fontFamily: "JPFont", fontWeight: 700 }}
-          >
+          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center  whitespace-pre-line text-[12px] mr-2 custom-text font-extrabold">
             GPスクエア オフィシャルステージ
           </div>
         </div>
@@ -326,7 +343,7 @@ export default function EventCalendar() {
                             ? minuteEnd
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center text-[10px]">
+                        <div className="flex justify-center items-center h-full text-center text-[10px] custom-text font-extrabold">
                           {event.event}
                         </div>
                       </div>

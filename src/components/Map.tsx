@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import type React from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -12,7 +13,7 @@ import MarkerInfo from "./MarkerInfo";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Icons imports (unchanged)
+// Icons imports
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -75,7 +76,11 @@ interface MapItem {
   Remarks: string;
 }
 
-// Dynamic imports for react-leaflet components (unchanged)
+interface PopupPosition {
+  x: number;
+  y: number;
+}
+
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -89,15 +94,12 @@ const Marker = dynamic(
   { ssr: false }
 );
 
-// Toast Component (unchanged)
 const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   message,
   onClose,
 }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 5000);
+    const timer = setTimeout(() => onClose(), 5000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
@@ -200,6 +202,16 @@ const CurrentLocationButton = ({
   );
 };
 
+// Add this helper function to check for English characters
+const isEnglish = (char: string) => {
+  // Check if character is in basic English alphabet range (A-Z, a-z)
+  const code = char.charCodeAt(0);
+  return (
+    (code >= 0x0041 && code <= 0x005a) || // A-Z
+    (code >= 0x0061 && code <= 0x007a) // a-z
+  );
+};
+
 const Map: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
@@ -208,6 +220,12 @@ const Map: React.FC = () => {
   );
   const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
   const [showToast, setShowToast] = useState(false);
+  const [pinPopup, setPinPopup] = useState<MapItem | null>(null);
+  const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(
+    null
+  );
+  const mapRef = useRef<L.Map | null>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const processedData: MapItem[] = LoadJSONAndProcess();
 
   const BOUNDING_BOX = {
@@ -253,11 +271,7 @@ const Map: React.FC = () => {
         }
         console.warn(errorMessage);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
@@ -289,6 +303,19 @@ const Map: React.FC = () => {
   const handleMarkerClick = (item: MapItem) => {
     if (item["Article Format"] !== "Pin" && item["Article Content"] !== "-") {
       setSelectedMarker(item);
+      setPinPopup(null);
+    } else {
+      const [lat, lng] = item.Locations.replace(/[()]/g, "")
+        .split(",")
+        .map(Number);
+      if (mapRef.current) {
+        const point = mapRef.current.latLngToContainerPoint([lat, lng]);
+        setPopupPosition({
+          x: point.x,
+          y: point.y - 40, // Offset for marker height
+        });
+        setPinPopup(item);
+      }
     }
   };
 
@@ -301,7 +328,40 @@ const Map: React.FC = () => {
       zoomend: () => {
         const newZoom = map.getZoom();
         setZoomLevel(newZoom);
-        console.log(`Zoom level changed to: ${newZoom}`);
+        if (pinPopup) {
+          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
+            .split(",")
+            .map(Number);
+          const point = map.latLngToContainerPoint([lat, lng]);
+          setPopupPosition({
+            x: point.x,
+            y: point.y - 40,
+          });
+        }
+      },
+      move: () => {
+        if (pinPopup) {
+          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
+            .split(",")
+            .map(Number);
+          const point = map.latLngToContainerPoint([lat, lng]);
+          setPopupPosition({
+            x: point.x,
+            y: point.y - 40,
+          });
+        }
+      },
+      moveend: () => {
+        if (pinPopup) {
+          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
+            .split(",")
+            .map(Number);
+          const point = map.latLngToContainerPoint([lat, lng]);
+          setPopupPosition({
+            x: point.x,
+            y: point.y - 40,
+          });
+        }
       },
     });
     return null;
@@ -313,6 +373,11 @@ const Map: React.FC = () => {
       userPosition[1] >= BOUNDING_BOX.minLng &&
       userPosition[1] <= BOUNDING_BOX.maxLng
     : false;
+
+  const closePinPopup = () => {
+    setPinPopup(null);
+    setPopupPosition(null);
+  };
 
   if (!isClient) return <div>Loading map...</div>;
 
@@ -342,6 +407,9 @@ const Map: React.FC = () => {
           bounds={mapBounds}
           maxBounds={mapBounds}
           maxBoundsViscosity={1.0}
+          ref={(map) => {
+            mapRef.current = map;
+          }}
         >
           <TileLayer
             url="/suzuka-tiles/{z}/{x}/{y}.png"
@@ -389,9 +457,7 @@ const Map: React.FC = () => {
                 key={`${item.Title}-${index}`}
                 position={[lat, lng]}
                 icon={getMarkerIcon(item["Icon Category"])}
-                eventHandlers={{
-                  click: () => handleMarkerClick(item),
-                }}
+                eventHandlers={{ click: () => handleMarkerClick(item) }}
               />
             );
           })}
@@ -405,7 +471,6 @@ const Map: React.FC = () => {
             />
           )}
 
-          {/* Combined Controls Container */}
           <div className="absolute bottom-40 right-10 z-[1000] flex flex-col items-center gap-2">
             <CurrentLocationButton
               userPosition={userPosition}
@@ -424,6 +489,42 @@ const Map: React.FC = () => {
         </div>
       )}
 
+      {pinPopup && popupPosition && (
+        <div
+          ref={popupRef}
+          className="fixed z-[1500] bg-white rounded-lg shadow-lg p-4 inline-block whitespace-nowrap animate-fade-in"
+          style={{
+            left: `${popupPosition.x}px`,
+            top: `${popupPosition.y}px`,
+            transform: "translate(-50%, -120%)",
+          }}
+        >
+          <div className="relative">
+            <div className="flex items-center justify-end">
+              <button
+                onClick={closePinPopup}
+                className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                aria-label="Close popup"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-lg">
+                {pinPopup.Title.split("").map((char, index) => (
+                  <span
+                    key={index}
+                    className={isEnglish(char) ? "hiragino" : "MyCustomFont"}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </h3>
+              <div className="absolute left-1/2 bottom-0 top-9 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white "></div>
+            </div>
+          </div>
+        </div>
+      )}
       {showToast && (
         <Toast
           message="You are outside the map range"
@@ -447,6 +548,20 @@ const Map: React.FC = () => {
         .leaflet-tile {
           transition: none !important;
           background: transparent !important;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-in-out;
+          transition: left 0.2s ease-out, top 0.2s ease-out;
         }
       `}</style>
     </div>

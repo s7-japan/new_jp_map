@@ -140,25 +140,13 @@
   src: url("/display-bold.ttf") format("truetype");
   font-weight: 700; /* Bold */
   font-style: normal;
+  unicode-range: U+0041-005A, U+0061-007A;
 }
 
-/* For Japanese text */
 @font-face {
   font-family: "JPFont";
-  src: url("/assets/japanese-regular.ttc") format("truetype");
-  font-weight: 400; /* Normal */
-  font-style: normal;
-}
-@font-face {
-  font-family: "JPFont";
-  src: url("/assets/japanese-semibold.ttc") format("truetype");
-  font-weight: 600; /* Semibold */
-  font-style: normal;
-}
-@font-face {
-  font-family: "JPFont";
-  src: url("/assets/japanese-bold.ttc") format("truetype");
-  font-weight: 700; /* Bold */
+  src: url("/assets/japanese.OTF") format("opentype");
+  font-weight: 800; /* Bold */
   font-style: normal;
 }
 .MyCustomFont {
@@ -167,6 +155,10 @@
 
 .japanese {
   font-family: "JPFont";
+}
+
+.custom-text {
+  font-family: "CustomFont", "JPFont", sans-serif;
 }
 
 /*  font-family: "Hiragino Sans" */

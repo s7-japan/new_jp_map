@@ -100,14 +100,20 @@ const MarkerInfo = ({ item, onBack }) => {
     );
   };
 
-  // Function to render text with character-by-character font application
-  const renderTextWithFonts = (text) => {
+  // Updated renderTextWithFonts to accept a weight parameter
+  const renderTextWithFonts = (text, weight = "normal") => {
     if (!text || text === "-") return "No content available.";
 
     return text.split("").map((char, index) => {
       const fontClass = isJapanese(char) ? "hiragino" : "MyCustomFont";
+      const weightClass =
+        weight === "bold"
+          ? "font-bold"
+          : weight === "semibold"
+          ? "font-semibold"
+          : "";
       return (
-        <span key={index} className={`${fontClass}`}>
+        <span key={index} className={`${fontClass} ${weightClass}`}>
           {char}
         </span>
       );
@@ -127,7 +133,7 @@ const MarkerInfo = ({ item, onBack }) => {
       if (paragraph.trim() !== "") {
         return (
           <p key={index} className="paragraph">
-            {renderTextWithFonts(paragraph)}
+            {renderTextWithFonts(paragraph)} {/* Default weight is normal */}
           </p>
         );
       }
@@ -225,6 +231,7 @@ const MarkerInfo = ({ item, onBack }) => {
       Link: "https://app.dialogue.jp/v1/lineLogin/auth/414a525aca27bd6661index=20250329appC1openchat3",
     },
   ];
+
   const triggerURL = (url) => {
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
@@ -316,8 +323,8 @@ const MarkerInfo = ({ item, onBack }) => {
           ) : null}
 
           {item["Article Format"] === "Facility" && (
-            <div className="mt-5 w-full text-2xl ">
-              {renderTextWithFonts(item["Title"])}
+            <div className="mt-5 w-full text-2xl">
+              {renderTextWithFonts(item["Title"], "bold")}
             </div>
           )}
 
@@ -336,17 +343,18 @@ const MarkerInfo = ({ item, onBack }) => {
                 </span>
               </div>
               {item["Title"] !== "-" && (
-                <div className="text-2xl text-black mt-5 w-full ">
-                  {renderTextWithFonts(item["Title"])}
+                <div className="text-2xl text-black mt-5 w-full">
+                  {renderTextWithFonts(item["Title"], "bold")}
                 </div>
               )}
             </>
           )}
           {item["Sub Title"]?.trim() !== "-" &&
             item["Article Format"] !== "Area Introduction" && (
-              <div className="text-lg text-black mt-5 w-full weight-semibold">
+              <div className="text-lg text-black mt-5 w-full">
                 {renderTextWithFonts(
-                  item["Sub Title"] ?? "No Subtitle Available"
+                  item["Sub Title"] ?? "No Subtitle Available",
+                  "semibold"
                 )}
               </div>
             )}
