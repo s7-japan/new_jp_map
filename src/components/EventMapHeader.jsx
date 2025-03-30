@@ -10,7 +10,6 @@ const EventMapHeader = ({ scrollRef }) => {
 
     const handleScroll = () => {
       const currentScrollPos = scrollRef.current.scrollTop;
-      const range = 10;
 
       // Debugging
       console.log(
@@ -22,8 +21,8 @@ const EventMapHeader = ({ scrollRef }) => {
         isVisible
       );
 
-      const shouldShow = currentScrollPos < 30; // Show only when less than 10px from top
-      const shouldHide = currentScrollPos > prevScrollPos + range; // Hide when scrolling down by 10px
+      const shouldShow = currentScrollPos < 10; // Show only when less than 10px from top
+      const shouldHide = currentScrollPos > prevScrollPos; // Hide as soon as you scroll down even a little
 
       if (shouldShow && !isVisible) setIsVisible(true);
       else if (shouldHide && isVisible) setIsVisible(false);
