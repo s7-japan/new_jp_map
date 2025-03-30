@@ -145,7 +145,7 @@
 
 @font-face {
   font-family: "JPFont";
-  src: url("/assets/japanese.ttc") format("truetype");
+  src: url("/assets/japanese.OTF") format("opentype");
   font-weight: 800; /* Bold */
   font-style: normal;
 }
