@@ -145,19 +145,19 @@
 /* For Japanese text */
 @font-face {
   font-family: "JPFont";
-  src: url("/assets/japanese-regular.ttc") format("truetype");
+  src: url("/assets/japanese.ttc") format("truetype");
   font-weight: 400; /* Normal */
   font-style: normal;
 }
 @font-face {
   font-family: "JPFont";
-  src: url("/assets/japanese-semibold.ttc") format("truetype");
+  src: url("/assets/japanese.ttc") format("truetype");
   font-weight: 600; /* Semibold */
   font-style: normal;
 }
 @font-face {
   font-family: "JPFont";
-  src: url("/assets/japanese-bold.ttc") format("truetype");
+  src: url("/assets/japanese.ttc") format("truetype");
   font-weight: 700; /* Bold */
   font-style: normal;
 }
