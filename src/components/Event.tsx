@@ -215,7 +215,10 @@ export default function EventCalendar() {
         >
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
-        <span className="text-[9px] h-[90%] flex justify-center items-center text-center">
+        <span
+          className="text-[9px] h-[90%] flex justify-center items-center text-center custom-text"
+          style={{ whiteSpace: "pre-line" }}
+        >
           {event.event}
         </span>
       </div>
@@ -233,16 +236,10 @@ export default function EventCalendar() {
       <div className="flex flex-col border border-gray-300 overflow-hidden w-[90%] mx-auto bg-white shadow-md">
         <div className="flex sticky top-0 bg-white w-full font-extrabold z-10">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div
-            className="flex-1 bg-[#E00400] text-white p-2 text-center font-bold text-[12px] ml-2"
-            style={{ fontFamily: "JPFont", fontWeight: 700 }}
-          >
+          <div className="flex-1 bg-[#E00400] text-white p-2 text-center  text-[12px] ml-2 custom-text font-extrabold">
             レーシングコース
           </div>
-          <div
-            className="flex-1 bg-[#1716BB] text-white p-2 text-center font-bold whitespace-pre-line text-[12px] mr-2"
-            style={{ fontFamily: "JPFont", fontWeight: 700 }}
-          >
+          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center  whitespace-pre-line text-[12px] mr-2 custom-text font-extrabold">
             GPスクエア オフィシャルステージ
           </div>
         </div>
