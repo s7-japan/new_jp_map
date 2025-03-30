@@ -1,33 +1,20 @@
+import type { EventItem } from "../types";
+import { BackgroundColorForEvent } from "@/constants";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { BackgroundColorForEvent } from "@/constants";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const scale_to_padding = {
-  "1": { left: 0, right: 0, top: 0, bottom: 0 },
-  "1.5": { left: 0, right: 0, top: 0, bottom: 0 },
-  "2": { left: 40, right: 0, top: 0, bottom: 0 },
-  "2.5": { left: 10, right: 10, top: 0, bottom: 0 },
-  "3": { left: 0, right: 0, top: 0, bottom: 0 },
-  "3.5": { left: -40, right: 80, top: -80, bottom: 0 },
-  "4": { left: 0, right: 0, top: 0, bottom: 0 },
-  "4.5": { left: -120, right: 0, top: -200, bottom: 0 },
-  "5": { left: 0, right: 0, top: 0, bottom: 0 },
-};
-
-import type { EventItem } from "../types";
-
 // Parse time string (HH:MM) to get hour and minute
 export const parseTime = (
   timeString: string
 ): { hour: number; minute: number } => {
   const [hourStr, minuteStr] = timeString.split(":");
-  return {
-    hour: Number.parseInt(hourStr, 10),
-    minute: Number.parseInt(minuteStr, 10),
-  };
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  return { hour, minute };
 };
 
 // Calculate duration in minutes between two time strings
@@ -71,121 +58,6 @@ export const getEventColor = (
   }
 };
 
-// Filter events by date
-export const filterEventsByDate = (
-  events: EventItem[],
-  selectedDate: string
-): { [key: string]: EventItem[] } => {
-  console.log("Input events:", events);
-
-  // First filter by date
-  const filteredEvents = events.filter(
-    (event) => event.Date === selectedDate || !event.Date
-  );
-  console.log("Filtered events:", filteredEvents);
-
-  // Group events by type
-  const eventsByType = filteredEvents.reduce((acc, event) => {
-    if (!acc[event.Type]) {
-      acc[event.Type] = [];
-    }
-    acc[event.Type].push(event);
-    return acc;
-  }, {} as { [key: string]: EventItem[] });
-  console.log("Events by type:", eventsByType);
-
-  return Object.entries(eventsByType).reduce((result, [type, typeEvents]) => {
-    // Create a flat list of all time points from all events
-    const timePoints: { time: number; isStart: boolean; event: EventItem }[] =
-      [];
-
-    // Add all start and end times to the list
-    typeEvents.forEach((event) => {
-      const startMinutes =
-        parseTime(event["start time"]).hour * 60 +
-        parseTime(event["start time"]).minute;
-      const endMinutes =
-        parseTime(event["end time"]).hour * 60 +
-        parseTime(event["end time"]).minute;
-
-      timePoints.push({ time: startMinutes, isStart: true, event });
-      timePoints.push({ time: endMinutes, isStart: false, event });
-    });
-
-    // Sort time points
-    timePoints.sort((a, b) => {
-      // Sort by time first
-      if (a.time !== b.time) return a.time - b.time;
-      // If times are equal, put end times before start times
-      // This ensures that touching intervals (one ends exactly when another starts) are merged
-      return a.isStart ? 1 : -1;
-    });
-
-    console.log(`Time points for type ${type}:`, timePoints);
-
-    // Process time points to create merged intervals
-    const mergedIntervals: {
-      start: number;
-      end: number;
-      events: EventItem[];
-    }[] = [];
-    let openEvents: EventItem[] = [];
-    let intervalStart: number | null = null;
-
-    timePoints.forEach((point) => {
-      if (point.isStart) {
-        // If this is a start point
-        openEvents.push(point.event);
-        // If this is the first open event, mark the interval start
-        if (openEvents.length === 1) {
-          intervalStart = point.time;
-        }
-      } else {
-        // If this is an end point
-        openEvents = openEvents.filter((e) => e !== point.event);
-        // If no more open events, close the interval
-        if (openEvents.length === 0 && intervalStart !== null) {
-          const endTime = point.time;
-          mergedIntervals.push({
-            start: intervalStart,
-            end: endTime,
-            events: typeEvents.filter((event) => {
-              const eventStart =
-                parseTime(event["start time"]).hour * 60 +
-                parseTime(event["start time"]).minute;
-              const eventEnd =
-                parseTime(event["end time"]).hour * 60 +
-                parseTime(event["end time"]).minute;
-              // Check if event overlaps with this interval
-              return eventStart <= endTime && eventEnd >= (intervalStart ?? 0);
-            }),
-          });
-          intervalStart = null;
-        }
-      }
-    });
-
-    console.log(`Merged intervals for type ${type}:`, mergedIntervals);
-
-    // Convert merged intervals to result format
-    mergedIntervals.forEach((interval) => {
-      const startTime = `${Math.floor(interval.start / 60)
-        .toString()
-        .padStart(2, "0")}:${(interval.start % 60)
-        .toString()
-        .padStart(2, "0")}`;
-      const endTime = `${Math.floor(interval.end / 60)
-        .toString()
-        .padStart(2, "0")}:${(interval.end % 60).toString().padStart(2, "0")}`;
-      const key = `${startTime}-${endTime}-${type}`;
-      result[key] = interval.events;
-    });
-
-    console.log("Result for type", type, ":", result);
-    return result;
-  }, {} as { [key: string]: EventItem[] });
-};
-
 // Generate array of hours from 8 to 21
 export const generateTimeSlots = (): number[] => {
   return Array.from({ length: 14 }, (_, i) => i + 8);
@@ -194,4 +66,17 @@ export const generateTimeSlots = (): number[] => {
 // Check if event is a full-width event
 export const isFullWidthEvent = (type: string): boolean => {
   return type === "メインゲートオープン" || type === "メインゲートクローズ";
+};
+
+// Filter events by date (simplified version)
+export const filterEventsByDate = (
+  events: EventItem[],
+  selectedDate: string
+): EventItem[] => {
+  return events.filter(
+    (event) =>
+      event.Date === selectedDate ||
+      event.Date === undefined ||
+      event.Date === null
+  );
 };
