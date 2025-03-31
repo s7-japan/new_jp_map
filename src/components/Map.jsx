@@ -527,20 +527,15 @@ const Map = () => {
           }}
         >
           <div className="relative">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-lg">
-                {pinPopup.Title.split("").map((char, index) => (
-                  <span
-                    key={index}
-                    // className={isEnglish(char) ? "formula1" : "Hiragino"}
-                    className="Hiragino"
-                  >
-                    {char}
-                  </span>
-                ))}
-              </h3>
-              <div className="absolute left-1/2 bottom-0 top-5 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white"></div>
-            </div>
+            <h3 className="font-medium text-lg text-center">
+              {pinPopup.Title.split("\r\n").map((line, index) => (
+                <span key={index} className="Hiragino block">
+                  {line}
+                </span>
+              ))}
+            </h3>
+            {/* Triangle */}
+            <div className="absolute left-1/2 bottom-[-30px] transform -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white"></div>
           </div>
         </div>
       )}
