@@ -21,11 +21,14 @@ const EventMapHeader = ({ scrollRef }) => {
         isVisible
       );
 
-      const shouldShow = currentScrollPos < 10; // Show only when less than 10px from top
-      const shouldHide = currentScrollPos > prevScrollPos; // Hide as soon as you scroll down even a little
-
-      if (shouldShow && !isVisible) setIsVisible(true);
-      else if (shouldHide && isVisible) setIsVisible(false);
+      // Show header when scrolling up, hide when scrolling down
+      if (currentScrollPos < prevScrollPos) {
+        // Scrolling up - show header
+        if (!isVisible) setIsVisible(true);
+      } else if (currentScrollPos > prevScrollPos) {
+        // Scrolling down - hide header
+        if (isVisible) setIsVisible(false);
+      }
 
       setPrevScrollPos(currentScrollPos);
     };
@@ -38,7 +41,7 @@ const EventMapHeader = ({ scrollRef }) => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-full bg-white rounded-b-3xl text-center shadow-xl z-[1000] transition-all duration-1000 ease-in-out ${
+        className={`fixed top-0 left-0 w-full bg-white rounded-b-3xl text-center shadow-xl z-[1000] transition-all duration-500 ease-in-out ${
           isVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full"
