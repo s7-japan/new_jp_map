@@ -166,6 +166,44 @@
   font-family: "Hiragino Sans";
 }
 
+/* Updated the fonts */
+
+/* english */
+@font-face {
+  font-family: "formula1";
+  src: url("/fonts/Formula1-Display-Regular.ttf");
+}
+@font-face {
+  font-family: "formula1Bold";
+  src: url("/fonts/Formula1-Display-Bold.ttf");
+}
+
+.formula1 {
+  font-family: "formula1";
+}
+
+.formula1Bold {
+  font-family: "formula1Bold";
+}
+
+/* Japanese */
+@font-face {
+  font-family: "Hiragino";
+  src: url("/fonts/Hiragino-Kakugo-Pro\ W3.otf");
+}
+@font-face {
+  font-family: "HiraginoBold";
+  src: url("/fonts/Hiragino-Kakugo-Pro\ W6.otf");
+}
+
+.Hiragino {
+  font-family: "Hiragino";
+}
+
+.HiraginoBold {
+  font-family: "HiraginoBold";
+}
+
 body {
   margin: 0;
   padding: 0;

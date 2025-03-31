@@ -90,30 +90,33 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to check if a character is Japanese (Hiragana, Katakana, Kanji)
-  const isJapanese = (char) => {
+  // Function to check if a character is Japanese (Hiragana, Katakana, Kanji) or a number
+  const isJapaneseOrNumber = (char) => {
     const code = char.charCodeAt(0);
-    return (
+    const isJapanese =
       (code >= 0x3040 && code <= 0x309f) || // Hiragana
       (code >= 0x30a0 && code <= 0x30ff) || // Katakana
-      (code >= 0x4e00 && code <= 0x9faf) // Common Kanji
-    );
+      (code >= 0x4e00 && code <= 0x9faf); // Common Kanji
+    const isNumber = code >= 0x30 && code <= 0x39; // ASCII numbers 0-9
+    return isJapanese || isNumber;
   };
 
-  // Updated renderTextWithFonts to accept a weight parameter
+  // Updated renderTextWithFonts to use Hiragino for numbers
   const renderTextWithFonts = (text, weight = "normal") => {
     if (!text || text === "-") return "No content available.";
 
     return text.split("").map((char, index) => {
-      const fontClass = isJapanese(char) ? "hiragino" : "MyCustomFont";
-      const weightClass =
-        weight === "bold"
-          ? "font-bold"
-          : weight === "semibold"
-          ? "font-semibold"
-          : "";
+      const isJapOrNum = isJapaneseOrNumber(char);
+      const fontClass =
+        weight === "bold" || weight === "semibold"
+          ? isJapOrNum
+            ? "HiraginoBold"
+            : "formula1Bold"
+          : isJapOrNum
+          ? "Hiragino"
+          : "formula1";
       return (
-        <span key={index} className={`${fontClass} ${weightClass}`}>
+        <span key={index} className={fontClass}>
           {char}
         </span>
       );
