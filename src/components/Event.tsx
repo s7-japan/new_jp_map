@@ -205,7 +205,7 @@ export default function EventCalendar() {
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
         <span
-          className="text-[8px] h-[90%] flex justify-center items-center text-center EventTextBold px-1"
+          className="text-[8px] h-[90%] flex justify-center items-center text-center HiraginoBold px-1"
           style={{ whiteSpace: "pre-line" }}
         >
           {event.event}
@@ -242,7 +242,7 @@ export default function EventCalendar() {
                 className="flex"
                 style={{ height: `${HOUR_HEIGHT}px` }}
               >
-                <div className="w-10 bg-[#15151E] text-white flex items-start justify-center font-bold shrink-0 pt-2 text-[13px]">
+                <div className="w-10 bg-[#15151E] text-white flex items-start justify-center font-bold shrink-0 pt-2 text-[13px] HiraginoBold">
                   {hour.toString().padStart(2, "0")}
                 </div>
                 <div className="flex-1 border-r border-gray-200 bg-white"></div>
