@@ -12,7 +12,7 @@ import MarkerInfo from "./MarkerInfo";
 import { UserLocation } from "./user-location";
 import { useMap, useMapEvents } from "react-leaflet";
 
-// Icons imports
+// Icons imports (unchanged)
 import FirstAidStation from "../assets/map-icons/mapicon_aidstation.png";
 import ATMIcon from "../assets/map-icons/mapicon_atm.png";
 import MapIconAttraction from "../assets/map-icons/mapicon_attraction.png";
@@ -506,6 +506,7 @@ const Map = () => {
                 position={[lat, lng]}
                 icon={getMarkerIcon(item["Icon Category"])}
                 eventHandlers={{ click: () => handleMarkerClick(item) }}
+                zIndexOffset={isActive ? 1000 : 0} // Higher z-index for active marker
               />
             );
           })}

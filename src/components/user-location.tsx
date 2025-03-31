@@ -1,4 +1,3 @@
-// user-location.tsx
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -97,7 +96,11 @@ export const UserLocation: React.FC<UserLocationProps> = ({
   }
 
   return (
-    <Marker position={position} icon={userIcon}>
+    <Marker
+      position={position}
+      icon={userIcon}
+      zIndexOffset={1500} // Yeh line add kiya—user marker ko normal markers ke upar rakhega
+    >
       <Popup>
         <div>
           <h3>Your Location</h3>
