@@ -198,22 +198,14 @@ export default function EventCalendar() {
           color: "#000000",
         }}
       >
-        <div
-          className="absolute top-0 left-0  text-[8px] Hiragino"
-          style={{ fontFamily: "JPFont" }}
-        >
+        <div className="absolute top-0 left-0  text-[8px] Hiragino">
           {startMinute !== "00" && startMinute !== "30" ? startMinute : ""}
         </div>
-        <div
-          className="absolute left-0 bottom-1  text-[8px] Hiragino"
-          style={{
-            fontFamily: "JPFont",
-          }}
-        >
+        <div className="absolute left-0 bottom-1  text-[8px] Hiragino">
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
         <span
-          className="text-[9px] h-[90%] flex justify-center items-center text-center EventTextBold"
+          className="text-[8px] h-[90%] flex justify-center items-center text-center EventTextBold px-1"
           style={{ whiteSpace: "pre-line" }}
         >
           {event.event}
@@ -322,17 +314,17 @@ export default function EventCalendar() {
                       }}
                     >
                       <div className="text-sm flex justify-center items-center h-full EventTextBold">
-                        <div className="absolute top-0 left-0  text-[12px] p-1 Hiragino">
+                        <div className="absolute top-0 left-0  text-[8px] Hiragino">
                           {startMinute !== 0 && startMinute !== 30
                             ? startMinute.toString()
                             : ""}
                         </div>
-                        <div className="absolute bottom-0 left-0  text-[12px] p-1 Hiragino">
+                        <div className="absolute bottom-0 left-0  text-[8px] Hiragino">
                           {minuteEnd !== "00" && minuteEnd !== "30"
                             ? minuteEnd
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center text-[10px] ">
+                        <div className="flex justify-center items-center h-full text-center text-[8px] ">
                           {event.event}
                         </div>
                       </div>
