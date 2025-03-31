@@ -133,8 +133,8 @@ const MarkerInfo = ({ item, onBack }) => {
       }
       if (paragraph.trim() !== "") {
         return (
-          <p key={index} className="paragraph">
-            {renderTextWithFonts(paragraph)} {/* Default weight is normal */}
+          <p key={index} className="paragraph Hiragino">
+            {paragraph} {/* Default weight is normal */}
           </p>
         );
       }
