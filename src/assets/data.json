@@ -3334,6 +3334,38 @@
     "Remarks": "Fanzone付近"
   },
   {
+    "Icon Category": "Event",
+    "Article Format": "Pin",
+    "Zoom Level": "Medium",
+    "Title": "PIN MIDIUM",
+    "Sub Title": "日本GP開催中はシャトルバスが運行！",
+    "Article Content": "数多くのブースが立ち並ぶGPスクエアの東端に乗降場を設置します。",
+    "Line Button Text (If Area Introduction format)": "-",
+    "Line Button URL": "-",
+    "Top Image": [
+      "/F1_ArticleTopImages/Facility/GPスクエア西ストレートシャトルバス乗り場.png"
+    ],
+    "Locations": "34.844104200, 136.528453127",
+    "Is Location Check Done?": "済",
+    "Remarks": "Fanzone付近"
+  },
+  {
+    "Icon Category": "Event",
+    "Article Format": "Facility",
+    "Zoom Level": "Medium",
+    "Title": "FACILITY - Midium - NO CONTENT",
+    "Sub Title": "日本GP開催中はシャトルバスが運行！",
+    "Article Content": "数多くのブースが立ち並ぶGPスクエアの東端に乗降場を設置します。",
+    "Line Button Text (If Area Introduction format)": "-",
+    "Line Button URL": "-",
+    "Top Image": [
+      "/F1_ArticleTopImages/Facility/GPスクエア西ストレートシャトルバス乗り場.png"
+    ],
+    "Locations": "34.844339800, 136.527360414",
+    "Is Location Check Done?": "済",
+    "Remarks": "Fanzone付近"
+  },
+  {
     "Icon Category": "Bicycle Parking",
     "Article Format": "Pin",
     "Zoom Level": "Low",
