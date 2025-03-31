@@ -187,7 +187,6 @@ const Map = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [pinPopup, setPinPopup] = useState(null);
-  const [popupPosition, setPopupPosition] = useState(null);
   const [swipeCount, setSwipeCount] = useState(0);
   const [activeMarker, setActiveMarker] = useState(null);
   const mapRef = useRef(null);
@@ -264,6 +263,33 @@ const Map = () => {
     });
   }, []);
 
+  // Popup position sync with zero delay
+  useEffect(() => {
+    if (!pinPopup || !mapRef.current || !popupRef.current) return;
+
+    const map = mapRef.current;
+    const popupElement = popupRef.current;
+
+    const updatePopupPosition = () => {
+      const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
+        .split(",")
+        .map(Number);
+      const point = map.latLngToContainerPoint([lat, lng]);
+      popupElement.style.left = `${point.x}px`;
+      popupElement.style.top = `${point.y - 40}px`; // Adjust offset as needed
+    };
+
+    map.on("move", updatePopupPosition);
+    map.on("zoom", updatePopupPosition);
+    updatePopupPosition(); // Initial position
+
+    return () => {
+      map.off("move", updatePopupPosition);
+      map.off("zoom", updatePopupPosition);
+    };
+  }, [pinPopup]);
+
+  // Swipe functionality
   useEffect(() => {
     let touchStartX = 0;
     let touchStartY = 0;
@@ -342,19 +368,9 @@ const Map = () => {
     if (item["Article Format"] !== "Pin" && item["Article Content"] !== "-") {
       setSelectedMarker(item);
     } else {
-      const [lat, lng] = item.Locations.replace(/[()]/g, "")
-        .split(",")
-        .map(Number);
-      if (mapRef.current) {
-        const point = mapRef.current.latLngToContainerPoint([lat, lng]);
-        setPopupPosition({
-          x: point.x,
-          y: point.y - 40,
-        });
-        setPinPopup(item);
-        setActiveMarker(item);
-        setSwipeCount(0);
-      }
+      setPinPopup(item);
+      setActiveMarker(item);
+      setSwipeCount(0);
     }
   };
 
@@ -365,42 +381,7 @@ const Map = () => {
   const MapEvents = () => {
     const map = useMapEvents({
       zoomend: () => {
-        const newZoom = map.getZoom();
-        setZoomLevel(newZoom);
-        if (pinPopup) {
-          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
-            .split(",")
-            .map(Number);
-          const point = map.latLngToContainerPoint([lat, lng]);
-          setPopupPosition({
-            x: point.x,
-            y: point.y - 40,
-          });
-        }
-      },
-      move: () => {
-        if (pinPopup) {
-          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
-            .split(",")
-            .map(Number);
-          const point = map.latLngToContainerPoint([lat, lng]);
-          setPopupPosition({
-            x: point.x,
-            y: point.y - 40,
-          });
-        }
-      },
-      moveend: () => {
-        if (pinPopup) {
-          const [lat, lng] = pinPopup.Locations.replace(/[()]/g, "")
-            .split(",")
-            .map(Number);
-          const point = map.latLngToContainerPoint([lat, lng]);
-          setPopupPosition({
-            x: point.x,
-            y: point.y - 40,
-          });
-        }
+        setZoomLevel(map.getZoom());
       },
     });
     return null;
@@ -415,7 +396,6 @@ const Map = () => {
 
   const closePinPopup = () => {
     setPinPopup(null);
-    setPopupPosition(null);
     setActiveMarker(null);
     setSwipeCount(0);
   };
@@ -506,7 +486,7 @@ const Map = () => {
                 position={[lat, lng]}
                 icon={getMarkerIcon(item["Icon Category"])}
                 eventHandlers={{ click: () => handleMarkerClick(item) }}
-                zIndexOffset={isActive ? 1000 : 0} // Higher z-index for active marker
+                zIndexOffset={isActive ? 1000 : 0}
               />
             );
           })}
@@ -538,26 +518,15 @@ const Map = () => {
         </div>
       )}
 
-      {pinPopup && popupPosition && (
+      {pinPopup && (
         <div
           ref={popupRef}
-          className="fixed z-[100] bg-white rounded-lg shadow-lg p-4 inline-block whitespace-nowrap animate-fade-in"
+          className="fixed z-[1000] bg-white rounded-lg shadow-lg p-4 inline-block whitespace-nowrap animate-fade-in"
           style={{
-            left: `${popupPosition.x}px`,
-            top: `${popupPosition.y}px`,
             transform: "translate(-50%, -120%)",
           }}
         >
           <div className="relative">
-            <div className="flex items-center justify-end">
-              <button
-                onClick={closePinPopup}
-                className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                aria-label="Close popup"
-              >
-                <X size={20} />
-              </button>
-            </div>
             <div className="flex items-center justify-between">
               <h3 className="font-medium text-lg">
                 {pinPopup.Title.split("").map((char, index) => (
@@ -569,7 +538,7 @@ const Map = () => {
                   </span>
                 ))}
               </h3>
-              <div className="absolute left-1/2 bottom-0 top-9 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white"></div>
+              <div className="absolute left-1/2 bottom-0 top-5 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white"></div>
             </div>
           </div>
         </div>
@@ -611,7 +580,7 @@ const Map = () => {
 
         .animate-fade-in {
           animation: fadeIn 0.3s ease-in-out;
-          transition: left 0.2s ease-out, top 0.2s ease-out;
+          transition: none; /* Remove transition for instant movement */
         }
       `}</style>
     </div>
