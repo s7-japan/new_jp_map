@@ -90,31 +90,29 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to check if a character is Japanese (Hiragana, Katakana, Kanji) or a number
-  const isJapaneseOrNumber = (char) => {
+  // Function to check if a character is an English letter (a-z or A-Z)
+  const isEnglishLetter = (char) => {
     const code = char.charCodeAt(0);
-    const isJapanese =
-      (code >= 0x3040 && code <= 0x309f) || // Hiragana
-      (code >= 0x30a0 && code <= 0x30ff) || // Katakana
-      (code >= 0x4e00 && code <= 0x9faf); // Common Kanji
-    const isNumber = code >= 0x30 && code <= 0x39; // ASCII numbers 0-9
-    return isJapanese || isNumber;
+    return (
+      (code >= 0x41 && code <= 0x5a) || // A-Z
+      (code >= 0x61 && code <= 0x7a) // a-z
+    );
   };
 
-  // Updated renderTextWithFonts to use Hiragino for numbers
+  // Updated renderTextWithFonts to use formula1 only for a-z/A-Z, Hiragino for everything else
   const renderTextWithFonts = (text, weight = "normal") => {
     if (!text || text === "-") return "No content available.";
 
     return text.split("").map((char, index) => {
-      const isJapOrNum = isJapaneseOrNumber(char);
+      const isEngLetter = isEnglishLetter(char);
       const fontClass =
         weight === "bold" || weight === "semibold"
-          ? isJapOrNum
-            ? "HiraginoBold"
-            : "formula1Bold"
-          : isJapOrNum
-          ? "Hiragino"
-          : "formula1";
+          ? isEngLetter
+            ? "formula1Bold"
+            : "HiraginoBold"
+          : isEngLetter
+          ? "formula1"
+          : "Hiragino";
       return (
         <span key={index} className={fontClass}>
           {char}
