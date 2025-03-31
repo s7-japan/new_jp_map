@@ -188,7 +188,7 @@ export default function EventCalendar() {
     console.log(duration === 10);
     return (
       <div
-        className="p-1 relative text-[10px] overflow-hidden  border border-white"
+        className="p-1 relative text-[10px]   border border-white"
         style={{
           ...style,
           background:
