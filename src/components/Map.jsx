@@ -189,6 +189,7 @@ const Map = () => {
   const [pinPopup, setPinPopup] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
   const [swipeCount, setSwipeCount] = useState(0);
+  const [activeMarker, setActiveMarker] = useState(null);
   const mapRef = useRef(null);
   const popupRef = useRef(null);
   const processedData = LoadJSONAndProcess();
@@ -269,13 +270,17 @@ const Map = () => {
     let isSwiping = false;
 
     const handleTouchStart = (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      isSwiping = true;
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = true;
+      } else {
+        isSwiping = false;
+      }
     };
 
     const handleTouchMove = (e) => {
-      if (!pinPopup || !isSwiping) return;
+      if (!pinPopup || !isSwiping || e.touches.length > 1) return;
 
       const touchEndX = e.touches[0].clientX;
       const touchEndY = e.touches[0].clientY;
@@ -347,6 +352,7 @@ const Map = () => {
           y: point.y - 40,
         });
         setPinPopup(item);
+        setActiveMarker(item);
         setSwipeCount(0);
       }
     }
@@ -410,6 +416,7 @@ const Map = () => {
   const closePinPopup = () => {
     setPinPopup(null);
     setPopupPosition(null);
+    setActiveMarker(null);
     setSwipeCount(0);
   };
 
@@ -476,14 +483,21 @@ const Map = () => {
               return null;
             }
 
-            if (zoomLevel < 15) {
-              return null;
-            } else if (
-              zoomLevel >= 15 &&
-              zoomLevel < 20 &&
-              item["Zoom Level"] !== "Medium"
-            ) {
-              return null;
+            const isActive =
+              activeMarker &&
+              activeMarker.Title === item.Title &&
+              activeMarker.Locations === item.Locations;
+
+            if (!isActive) {
+              if (zoomLevel < 15) {
+                return null;
+              } else if (
+                zoomLevel >= 15 &&
+                zoomLevel < 20 &&
+                item["Zoom Level"] !== "Medium"
+              ) {
+                return null;
+              }
             }
 
             return (
