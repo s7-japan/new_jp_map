@@ -196,19 +196,16 @@ export default function EventCalendar() {
               ? `linear-gradient(to bottom, ${bgColor}FF 0%, ${bgColor}00 100%)`
               : bgColor,
           color: "#000000",
-          fontFamily: /^[A-Za-z\s]+$/.test(event.event)
-            ? "CustomFont"
-            : "JPFont",
         }}
       >
         <div
-          className="absolute top-0 left-0 font-bold text-[8px]"
+          className="absolute top-0 left-0  text-[8px] Hiragino"
           style={{ fontFamily: "JPFont" }}
         >
           {startMinute !== "00" && startMinute !== "30" ? startMinute : ""}
         </div>
         <div
-          className="absolute left-0 bottom-1 font-bold text-[8px]"
+          className="absolute left-0 bottom-1  text-[8px] Hiragino"
           style={{
             fontFamily: "JPFont",
           }}
@@ -216,7 +213,7 @@ export default function EventCalendar() {
           {endMinute !== "00" && endMinute !== "30" ? endMinute : ""}
         </div>
         <span
-          className="text-[9px] h-[90%] flex justify-center items-center text-center custom-text font-extrabold"
+          className="text-[9px] h-[90%] flex justify-center items-center text-center EventTextBold"
           style={{ whiteSpace: "pre-line" }}
         >
           {event.event}
@@ -236,11 +233,12 @@ export default function EventCalendar() {
       <div className="flex flex-col border border-gray-300 overflow-hidden w-[90%] mx-auto bg-white shadow-md">
         <div className="flex sticky top-0 bg-white w-full font-extrabold z-10">
           <div className="w-10 bg-[#15151E] text-white shrink-0"></div>
-          <div className="flex-1 bg-[#E00400] text-white p-2 text-center  text-[12px] ml-2 custom-text font-extrabold">
+          <div className="flex-1 bg-[#E00400] text-white p-2 text-center  text-[12px] ml-2 HiraginoBold">
             レーシングコース
           </div>
-          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center  whitespace-pre-line text-[12px] mr-2 custom-text font-extrabold">
-            GPスクエア オフィシャルステージ
+          <div className="flex-1 bg-[#1716BB] text-white p-2 text-center  whitespace-pre-line text-[12px] mr-2 HiraginoBold">
+            <span className="formula1Bold">GP</span>スクエア
+            オフィシャルステージ
           </div>
         </div>
 
@@ -313,37 +311,28 @@ export default function EventCalendar() {
                       key={`fullwidth-${event["start time"]}-${event.event}`}
                       className={`${
                         showGradient ? "bg-[#B3B3B3]" : "bg-[#f8fafc]"
-                      } p-1 absolute mx-2  `}
+                      } p-1 absolute mx-2  HiraginoBold`}
                       style={{
                         top: `${startMinutes * MINUTE_HEIGHT + 2}px`,
                         height: `${duration * MINUTE_HEIGHT - 4}px`,
                         left: "0",
                         right: "0",
                         width: "calc(100% - 16px)",
-                        fontFamily: /^[A-Za-z\s]+$/.test(event.event)
-                          ? "CustomFont"
-                          : "JPFont",
                         fontWeight: 700,
                       }}
                     >
-                      <div className="text-sm flex justify-center items-center h-full">
-                        <div
-                          className="absolute top-0 left-0 font-bold text-[12px] p-1"
-                          style={{ fontFamily: "JPFont" }}
-                        >
+                      <div className="text-sm flex justify-center items-center h-full EventTextBold">
+                        <div className="absolute top-0 left-0  text-[12px] p-1 Hiragino">
                           {startMinute !== 0 && startMinute !== 30
                             ? startMinute.toString()
                             : ""}
                         </div>
-                        <div
-                          className="absolute bottom-0 left-0 font-bold text-[12px] p-1"
-                          style={{ fontFamily: "JPFont" }}
-                        >
+                        <div className="absolute bottom-0 left-0  text-[12px] p-1 Hiragino">
                           {minuteEnd !== "00" && minuteEnd !== "30"
                             ? minuteEnd
                             : ""}
                         </div>
-                        <div className="flex justify-center items-center h-full text-center text-[10px] custom-text font-extrabold">
+                        <div className="flex justify-center items-center h-full text-center text-[10px] ">
                           {event.event}
                         </div>
                       </div>

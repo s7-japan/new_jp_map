@@ -46,12 +46,12 @@ const EventMapHeader = ({ scrollRef }) => {
         style={{ height: "65px" }}
       >
         <div className="flex flex-col justify-between items-center h-full MyCustomFont">
-          <strong className="font-normal text-[1.6rem]">
+          <strong className="font-normal text-[1.6rem] formula1">
             <span className="text-[#ff0000]">E</span>VENT CAL
             <span className="text-[#ff0000]">E</span>NDAR
           </strong>
-          <p className="font-bold text-[12px] font-[JPFonts] mb-5">
-            サーキットジャーニー
+          <p className="text-[12px] HiraginoBold mb-5 font-bold">
+            イベントカレンダー
           </p>
         </div>
       </div>
