@@ -532,7 +532,8 @@ const Map = () => {
                 {pinPopup.Title.split("").map((char, index) => (
                   <span
                     key={index}
-                    className={isEnglish(char) ? "formula1" : "Hiragino"}
+                    // className={isEnglish(char) ? "formula1" : "Hiragino"}
+                    className="Hiragino"
                   >
                     {char}
                   </span>
