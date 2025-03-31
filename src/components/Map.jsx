@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import type React from "react";
-import { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -61,26 +60,6 @@ const ICONS = {
   "Official Goods Shop": Official_Goods_Shop,
 };
 
-interface MapItem {
-  "Icon Category": string;
-  "Article Format": string;
-  "Zoom Level": "Low" | "Medium";
-  Title: string;
-  "Sub Title": string;
-  "Article Content": string;
-  "Line Button Text (If Area Introduction format)": string;
-  "Line Button URL": string;
-  "Top Image": string;
-  Locations: string;
-  "Is Location Check Done?": string;
-  Remarks: string;
-}
-
-interface PopupPosition {
-  x: number;
-  y: number;
-}
-
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -94,10 +73,7 @@ const Marker = dynamic(
   { ssr: false }
 );
 
-const Toast: React.FC<{ message: string; onClose: () => void }> = ({
-  message,
-  onClose,
-}) => {
+const Toast = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => onClose(), 5000);
     return () => clearTimeout(timer);
@@ -117,8 +93,8 @@ const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   );
 };
 
-const LoadJSONAndProcess = (): MapItem[] => {
-  const data = jpData as MapItem[];
+const LoadJSONAndProcess = () => {
+  const data = jpData;
   return data;
 };
 
@@ -152,13 +128,7 @@ const ZoomControl = () => {
   );
 };
 
-const CurrentLocationButton = ({
-  userPosition,
-  onOutOfRange,
-}: {
-  userPosition: [number, number] | null;
-  onOutOfRange: () => void;
-}) => {
+const CurrentLocationButton = ({ userPosition, onOutOfRange }) => {
   const map = useMap();
 
   const centerOnUser = () => {
@@ -202,9 +172,7 @@ const CurrentLocationButton = ({
   );
 };
 
-// Add this helper function to check for English characters
-const isEnglish = (char: string) => {
-  // Check if character is in basic English alphabet range (A-Z, a-z)
+const isEnglish = (char) => {
   const code = char.charCodeAt(0);
   return (
     (code >= 0x0041 && code <= 0x005a) || // A-Z
@@ -212,21 +180,18 @@ const isEnglish = (char: string) => {
   );
 };
 
-const Map: React.FC = () => {
+const Map = () => {
   const [isClient, setIsClient] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(15);
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(
-    null
-  );
-  const [selectedMarker, setSelectedMarker] = useState<MapItem | null>(null);
+  const [userPosition, setUserPosition] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
   const [showToast, setShowToast] = useState(false);
-  const [pinPopup, setPinPopup] = useState<MapItem | null>(null);
-  const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(
-    null
-  );
-  const mapRef = useRef<L.Map | null>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
-  const processedData: MapItem[] = LoadJSONAndProcess();
+  const [pinPopup, setPinPopup] = useState(null);
+  const [popupPosition, setPopupPosition] = useState(null);
+  const [swipeCount, setSwipeCount] = useState(0);
+  const mapRef = useRef(null);
+  const popupRef = useRef(null);
+  const processedData = LoadJSONAndProcess();
 
   const BOUNDING_BOX = {
     minLat: 34.83,
@@ -274,8 +239,22 @@ const Map: React.FC = () => {
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
 
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
+    const handleClickOutside = (event) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        pinPopup
+      ) {
+        closePinPopup();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [pinPopup]);
 
   useEffect(() => {
     Object.values(ICONS).forEach((icon) => {
@@ -284,11 +263,61 @@ const Map: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
+
+    const handleTouchStart = (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = true;
+    };
+
+    const handleTouchMove = (e) => {
+      if (!pinPopup || !isSwiping) return;
+
+      const touchEndX = e.touches[0].clientX;
+      const touchEndY = e.touches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      if (Math.abs(deltaX) > 50 || Math.abs(deltaY) > 50) {
+        setSwipeCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 2) {
+            closePinPopup();
+            return 0;
+          }
+          return newCount;
+        });
+        isSwiping = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isSwiping = false;
+    };
+
+    if (pinPopup) {
+      document.addEventListener("touchstart", handleTouchStart);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+      setSwipeCount(0);
+    };
+  }, [pinPopup]);
+
   const getMarkerIcon = useMemo(() => {
-    const iconCache: { [key: string]: L.Icon } = {};
-    return (category: string) => {
+    const iconCache = {};
+    return (category) => {
       if (!iconCache[category]) {
-        const iconSrc = ICONS[category as keyof typeof ICONS] || MapIcon;
+        const iconSrc = ICONS[category] || MapIcon;
         iconCache[category] = new L.Icon({
           iconUrl: iconSrc.src,
           iconSize: [25, 40],
@@ -300,10 +329,13 @@ const Map: React.FC = () => {
     };
   }, []);
 
-  const handleMarkerClick = (item: MapItem) => {
+  const handleMarkerClick = (item) => {
+    if (pinPopup) {
+      closePinPopup();
+    }
+
     if (item["Article Format"] !== "Pin" && item["Article Content"] !== "-") {
       setSelectedMarker(item);
-      setPinPopup(null);
     } else {
       const [lat, lng] = item.Locations.replace(/[()]/g, "")
         .split(",")
@@ -312,9 +344,10 @@ const Map: React.FC = () => {
         const point = mapRef.current.latLngToContainerPoint([lat, lng]);
         setPopupPosition({
           x: point.x,
-          y: point.y - 40, // Offset for marker height
+          y: point.y - 40,
         });
         setPinPopup(item);
+        setSwipeCount(0);
       }
     }
   };
@@ -377,6 +410,7 @@ const Map: React.FC = () => {
   const closePinPopup = () => {
     setPinPopup(null);
     setPopupPosition(null);
+    setSwipeCount(0);
   };
 
   if (!isClient) return <div>Loading map...</div>;
@@ -423,7 +457,7 @@ const Map: React.FC = () => {
             bounds={mapBounds}
           />
 
-          {processedData.map((item: MapItem, index: number) => {
+          {processedData.map((item, index) => {
             if (!item.Locations || typeof item.Locations !== "string") {
               console.warn(
                 `${item.Title} has missing or invalid coordinates: ${item.Locations}`
@@ -492,7 +526,7 @@ const Map: React.FC = () => {
       {pinPopup && popupPosition && (
         <div
           ref={popupRef}
-          className="fixed z-[1500] bg-white rounded-lg shadow-lg p-4 inline-block whitespace-nowrap animate-fade-in"
+          className="fixed z-[100] bg-white rounded-lg shadow-lg p-4 inline-block whitespace-nowrap animate-fade-in"
           style={{
             left: `${popupPosition.x}px`,
             top: `${popupPosition.y}px`,
@@ -520,11 +554,12 @@ const Map: React.FC = () => {
                   </span>
                 ))}
               </h3>
-              <div className="absolute left-1/2 bottom-0 top-9 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white "></div>
+              <div className="absolute left-1/2 bottom-0 top-9 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-white"></div>
             </div>
           </div>
         </div>
       )}
+
       {showToast && (
         <Toast
           message="You are outside the map range"

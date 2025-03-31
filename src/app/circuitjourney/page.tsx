@@ -7,9 +7,13 @@ const Map = dynamic(() => import("../../components/Map"), {
 });
 import EventCalendar from "../../components/EventCalendar";
 import BottomFooter from "@/components/BottomFooter";
+import Head from "next/head";
 const MapPage = () => {
   return (
     <div className="bg-white w-full h-full">
+      <Head>
+        <title>F1日本GP Map / Game</title>
+      </Head>
       <Header />
       <Map />
       <EventCalendar />
