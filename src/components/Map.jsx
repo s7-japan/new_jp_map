@@ -527,7 +527,7 @@ const Map = () => {
           }}
         >
           <div className="relative">
-            <h3 className="font-medium text-lg text-center">
+            <h3 className="font-medium text-[16px] text-center">
               {pinPopup.Title.split("\r\n").map((line, index) => (
                 <span key={index} className="Hiragino block">
                   {line}
