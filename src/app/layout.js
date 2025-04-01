@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
           src="https://d2ibu2ug0mt5qp.cloudfront.net/js/loader-d4dedd1ee5d8f18c6304b1bf0a9ee57a6a56ec00.min.js"
           strategy="afterInteractive"
         />
+        <title>F1日本GP Map/Game</title>
       </head>
       <body className="h-[100dvh] w-[100dvw] overflow-hidden">
         <ErrorBoundary>

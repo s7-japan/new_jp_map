@@ -90,27 +90,28 @@ const MarkerInfo = ({ item, onBack }) => {
     setTouchEnd(null);
   };
 
-  // Function to check if a character is an English letter (a-z or A-Z)
-  const isEnglishLetter = (char) => {
+  // Function to check if a character is an English letter (a-z or A-Z) or number (0-9)
+  const isEnglishLetterOrNumber = (char) => {
     const code = char.charCodeAt(0);
     return (
       (code >= 0x41 && code <= 0x5a) || // A-Z
-      (code >= 0x61 && code <= 0x7a) // a-z
+      (code >= 0x61 && code <= 0x7a) || // a-z
+      (code >= 0x30 && code <= 0x39) // 0-9
     );
   };
 
-  // Updated renderTextWithFonts to use formula1 only for a-z/A-Z, Hiragino for everything else
+  // Updated renderTextWithFonts to use formula1 for a-z/A-Z/0-9, Hiragino for everything else
   const renderTextWithFonts = (text, weight = "normal") => {
     if (!text || text === "-") return "No content available.";
 
     return text.split("").map((char, index) => {
-      const isEngLetter = isEnglishLetter(char);
+      const isEngLetterOrNum = isEnglishLetterOrNumber(char);
       const fontClass =
         weight === "bold" || weight === "semibold"
-          ? isEngLetter
+          ? isEngLetterOrNum
             ? "formula1Bold"
             : "HiraginoBold"
-          : isEngLetter
+          : isEngLetterOrNum
           ? "formula1"
           : "Hiragino";
       return (
@@ -133,8 +134,8 @@ const MarkerInfo = ({ item, onBack }) => {
       }
       if (paragraph.trim() !== "") {
         return (
-          <p key={index} className="paragraph">
-            {renderTextWithFonts(paragraph)} {/* Default weight is normal */}
+          <p key={index} className="paragraph Hiragino">
+            {paragraph} {/* Default weight is normal */}
           </p>
         );
       }
