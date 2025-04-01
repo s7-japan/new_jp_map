@@ -74,7 +74,7 @@ const BottomFooter = () => {
           className="footer-btn__item"
         >
           <Link
-            href="https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney"
+            href={process.env.NEXT_PUBLIC_PRODUCTION === '1' ? "https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney" : "https://miniapp.line.me/2007078876-DPN8Vrqw/circuitjourney"}
             onClick={handleNavigation}
           >
             <img src="/FooterIcons/footer_btn_03.svg" alt="CIRCUIT" />
