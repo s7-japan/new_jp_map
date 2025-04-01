@@ -62,7 +62,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             >
               <a
                 className="font-bold"
-                href={process.env.NEXT_PUBLIC_PRODUCTION === '1' ? "https://miniapp.line.me/2007078799-0oWyrXee/eventcalender" : "https://miniapp.line.me/2007078876-DPN8Vrqw/eventcalender"}
+                href="https://miniapp.line.me/2007078799-0oWyrXee/eventcalender"
               >
                 イベント情報
               </a>
