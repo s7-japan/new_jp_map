@@ -6,7 +6,7 @@ const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
 });
 import EventCalendar from "@/components/EventCalendar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BottomFooter from "@/components/BottomFooter";
@@ -14,7 +14,7 @@ import BottomFooter from "@/components/BottomFooter";
 // Create a separate component that uses useSearchParams
 const RedirectHandler = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  // const router = useRouter();
   const redirectPath = searchParams.get("liff.state");
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const MapPage = () => {
       <Header />
       <Map />
       <EventCalendar />
-      <RedirectHandler />
-      {/* <Suspense fallback={null}> */}
-        {/* <RedirectHandler /> */}
-      {/* </Suspense> */}
+      {/* <RedirectHandler /> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <RedirectHandler />
+      </Suspense>
       <BottomFooter />
     </div>
   );
