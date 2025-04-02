@@ -21,8 +21,8 @@ const EventCalendar = () => {
           onClick={handleNavigation}
         >
           <strong className="font-normal">
-            CI<span className="text-[#E00400]">R</span>CUIT JOURN
-            <span className="text-[#E00400]">E</span>Y
+            CI<span className="text-[#E00400]">R</span>CUIT JOU
+            <span className="text-[#E00400]">R</span>NEY
           </strong>
         </button>
       </div>
