@@ -20,20 +20,10 @@
     "gradient": "yes"
   },
   {
-    "Type": "GPスクエア オフィシャルステージ",
-    "start time": "9:00",
-    "end time": "10:00",
-    "event": "ホームストレート\n ストレートウォーク",
-    "Date": "03/04/2025",
-    "Event No": "",
-    "event_id": "event",
-    "gradient": "yes"
-  },
-  {
     "Type": "レーシングコース",
-    "start time": "10:00",
+    "start time": "9:00",
     "end time": "12:00",
-    "event": "TEST",
+    "event": "ストレートウォーク",
     "Date": "03/04/2025",
     "Event No": "",
     "event_id": "event",
@@ -71,7 +61,7 @@
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
-    "start time": "15:19",
+    "start time": "15:20",
     "end time": "16:30",
     "event": "F1 TOKYO FAN FESTIVAL\n 2025 Talk Show（録画）",
     "Date": "03/04/2025",
@@ -227,7 +217,7 @@
     "Date": "04/04/2025",
     "Event No": "",
     "event_id": "event_f1",
-    "gradient": "yes"
+    "gradient": ""
   },
   {
     "Type": "GPスクエア オフィシャルステージ",
@@ -523,7 +513,7 @@
     "Type": "GPスクエア オフィシャルステージ",
     "start time": "13:20",
     "end time": "13:40",
-    "event": "Session Review\npowered by フジテレビNEXT",
+    "event": "Session Review powered by フジテレビNEXT",
     "Date": "05/04/2025",
     "Event No": "",
     "event_id": "event_f1",
