@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
               DialogOne = {
-                'COOKIE_DOMAIN' : '.weseegpt.com'
+                'COOKIE_DOMAIN' : '.f1.weseegpt.com'
               };
             `,
           }}
