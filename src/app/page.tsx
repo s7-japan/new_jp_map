@@ -17,14 +17,14 @@ const RedirectHandler = () => {
   const router = useRouter();
   const redirectPath = searchParams.get("liff.state");
   let isPushed = false
-
+  
   useEffect(() => {
     
     if (redirectPath && !isPushed) {
       isPushed = true
       // console.log(redirectPath)
       if (redirectPath.includes("reactiontimetest")) {
-        window.location.href = "https://redlighttimetest.vercel.app/";
+        window.location.href = "https://redlight-one.vercel.app/";
       } else {
         router.push(`${redirectPath}`);
       }
