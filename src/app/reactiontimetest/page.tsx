@@ -1,12 +1,9 @@
 "use client";
 
-const Page = () => {
-  // useEffect(() => {
-  //   // Redirect to the specified URL when the page loads
-  //   // window.location.href = "https://redlight-one.vercel.app/";
-  // }, []);
+import ErrorScreen from "@/components/ErrorScreen";
 
-  return null; // No need to render anything since the user is redirected
+const Page = () => {
+  return <ErrorScreen />;
 };
 
 export default Page;

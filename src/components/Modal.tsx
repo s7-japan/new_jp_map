@@ -1,664 +1,990 @@
-"use client";
+// // pages/index.js (or wherever you want this component to live)
+// "use client"; // This is still valid in Next.js for client-side components
 
-import type React from "react";
-import { useState, useRef, useCallback, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  Modal as MuiModal,
-  useMediaQuery,
-  useTheme,
-  IconButton,
-  CircularProgress,
-} from "@mui/material";
-import { toPng } from "html-to-image";
-import { Share2, Download } from "lucide-react";
-import CloseIcon from "@mui/icons-material/Close";
-import backgroundImage from "../images/7.svg"; // Import SVG directly
-import snsBgImage from "../images/SNS-bg.png"; // Replace with actual path to your SNS-bg image
-import Image from "next/image";
-// Define a consistent font styling to apply throughout the component
-const fontStyle = {
-  fontFamily: "'MyCustomFont', sans-serif",
-};
+// import { useState, useRef, useCallback, useEffect } from "react";
+// import {
+//   Box,
+//   Button,
+//   Typography,
+//   Modal as MuiModal,
+//   useMediaQuery,
+//   useTheme,
+//   IconButton,
+//   CircularProgress,
+// } from "@mui/material";
+// import { Share2 } from "lucide-react";
+// import CloseIcon from "@mui/icons-material/Close";
+// import html2canvas from "html2canvas";
+// import liff from "@line/liff";
+// import "./App.css";
 
-interface ModalProps {
-  open: boolean;
-  reactionTime: number | null;
-  onClose: () => void;
-  onRetry: () => void;
-  onMap: () => void;
-}
+// // Import images from the public directory (no need for file imports)
+// const backgroundImage = "/images/7.svg"; // Path relative to /public
+// const snsBgImage = "/images/SNS-bg.png"; // Path relative to /public
 
-const Modal: React.FC<ModalProps> = ({
-  open,
-  reactionTime,
-  onClose,
-  onRetry,
-  onMap,
-}) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [scoreImageUrl, setScoreImageUrl] = useState<string | null>(null);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  // Add a state to control when to render the SNS background element
-  const [shouldRenderScoreElement, setShouldRenderScoreElement] =
-    useState(false);
-  const scoreRef = useRef<HTMLDivElement>(null);
+// const fontStyle = {
+//   fontFamily: "'MyCustomFont', sans-serif",
+// };
 
-  // Don't automatically generate score card when modal opens
-  // Only prepare it when user is about to share
-  useEffect(() => {
-    // Clear the image URL when modal closes to prevent stale images
-    if (!open) {
-      setScoreImageUrl(null);
-      setShouldRenderScoreElement(false);
-    }
-  }, [open]);
+// const japaneseFontStyle = {
+//   fontFamily: "'JapaneseFont', sans-serif",
+// };
 
-  const prepareShareImage = useCallback(() => {
-    // Only render the score element when needed
-    setShouldRenderScoreElement(true);
+// interface ModalProps {
+//   open: boolean;
+//   reactionTime: number | null;
+//   onClose: () => void;
+//   onRetry: () => void;
+//   onMap: () => void;
+// }
 
-    // Use a small timeout to let the component render first
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 100);
-    });
-  }, []);
+// const Modal: React.FC<ModalProps> = ({
+//   open,
+//   reactionTime,
+//   onClose,
+//   onRetry,
+// }) => {
+//   const theme = useTheme();
+//   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+//   const isVerySmallScreen = useMediaQuery("(max-height: 600px)");
+//   const [shareModalOpen, setShareModalOpen] = useState(false);
+//   const [scoreImageUrl, setScoreImageUrl] = useState<string | null>(null);
+//   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+//   const [shouldRenderScoreElement, setShouldRenderScoreElement] =
+//     useState(false);
+//   const [isInLiff, setIsInLiff] = useState(false);
+//   const scoreRef = useRef<HTMLDivElement>(null);
 
-  const generateScoreCard = useCallback(async () => {
-    try {
-      if (!scoreRef.current) return null;
+//   // Initialize LIFF and detect environment
+//   useEffect(() => {
+//     const initializeLiff = async () => {
+//       try {
+//         await liff.init({ liffId: "2006841295-jw19DpzR" }); // Replace with your LIFF ID
+//         setIsInLiff(liff.isInClient());
+//       } catch (error) {
+//         console.error("LIFF initialization failed:", error);
+//         setIsInLiff(false);
+//       }
+//     };
+//     initializeLiff();
+//   }, []);
 
-      setIsGeneratingImage(true);
+//   useEffect(() => {
+//     if (!open) {
+//       setScoreImageUrl(null);
+//       setShouldRenderScoreElement(false);
+//     }
+//   }, [open]);
 
-      // Get a reference to the score element
-      const scoreElement = scoreRef.current;
+//   const prepareShareImage = useCallback(() => {
+//     setShouldRenderScoreElement(true);
+//     return new Promise<void>((resolve) => {
+//       setTimeout(() => resolve(), 100);
+//     });
+//   }, []);
 
-      // Before capturing, make sure it's properly visible to html2canvas
-      // but still invisible to user (off-screen)
-      const originalTransform = scoreElement.style.transform;
-      scoreElement.style.opacity = "1"; // Make it fully opaque for capture
-      scoreElement.style.transform = "none"; // Remove any transforms that might affect capture
-      const imageUrl = await toPng(scoreElement, {
-        quality: 1, // Maximum quality
-        width: scoreElement.offsetWidth,
-        height: scoreElement.offsetHeight,
-      });
-      setScoreImageUrl(imageUrl);
+//   const generateScoreCard = useCallback(async () => {
+//     try {
+//       if (!scoreRef.current) return null;
+//       setIsGeneratingImage(true);
 
-      // Restore the original state
-      scoreElement.style.opacity = "0";
-      scoreElement.style.transform = originalTransform;
+//       const scrollX = window.scrollX;
+//       const scrollY = window.scrollY;
 
-      setIsGeneratingImage(false);
-      return imageUrl;
-    } catch (error) {
-      console.error("Failed to generate score card:", error);
-      setIsGeneratingImage(false);
-      return null;
-    }
-  }, []);
+//       document.body.style.overflow = "hidden";
+//       document.documentElement.style.touchAction = "none";
 
-  const handleShareClick = async () => {
-    setIsGeneratingImage(true);
+//       const scoreElement = scoreRef.current;
+//       const originalTransform = scoreElement.style.transform;
+//       const originalPosition = scoreElement.style.position;
+//       const originalVisibility = scoreElement.style.visibility;
 
-    // If image is already generated, open modal right away
-    if (scoreImageUrl) {
-      setShareModalOpen(true);
-      setIsGeneratingImage(false);
-      return;
-    }
+//       scoreElement.style.opacity = "1";
+//       scoreElement.style.transform = "none";
+//       scoreElement.style.position = "absolute";
+//       scoreElement.style.visibility = "visible";
+//       scoreElement.style.left = "-9999px";
+//       scoreElement.style.top = "-9999px";
+//       scoreElement.setAttribute("aria-hidden", "true");
 
-    try {
-      // First prepare the share element
-      await prepareShareImage();
+//       const dpr = Math.min(window.devicePixelRatio * 1.5, 3);
 
-      // Then generate the image
-      const imageUrl = await generateScoreCard();
-      if (imageUrl) {
-        setShareModalOpen(true);
-      }
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
+//       const options = {
+//         scale: dpr,
+//         backgroundColor: null,
+//         logging: false,
+//         useCORS: true,
+//         allowTaint: true,
+//         imageTimeout: 0,
+//         removeContainer: true,
+//         windowWidth: scoreElement.offsetWidth,
+//         windowHeight: scoreElement.offsetHeight,
+//       };
 
-  const shareScore = async () => {
-    if (!scoreImageUrl) return;
+//       const canvas = await html2canvas(scoreElement, options);
+//       const imageUrl = canvas.toDataURL("image/png", 0.9);
 
-    const shareText = `My reaction time is ${
-      reactionTime !== null ? `${(reactionTime / 1000).toFixed(3)}s` : "--"
-    }!`;
+//       scoreElement.style.opacity = "0";
+//       scoreElement.style.transform = originalTransform;
+//       scoreElement.style.position = originalPosition;
+//       scoreElement.style.visibility = originalVisibility;
+//       scoreElement.removeAttribute("aria-hidden");
 
-    try {
-      if (navigator.share) {
-        const res = await fetch(scoreImageUrl);
-        const blob = await res.blob();
-        const file = new File([blob], "reaction-time-score.png", {
-          type: "image/png",
-        });
+//       setTimeout(() => {
+//         window.scrollTo(scrollX, scrollY);
+//         document.body.style.overflow = "";
+//         document.documentElement.style.touchAction = "";
+//       }, 100);
 
-        await navigator.share({
-          title: "My Reaction Time Result",
-          text: shareText,
-          files: [file],
-        });
-        setShareModalOpen(false);
-      } else {
-        // If Web Share API isn't available or fails, fall back to download
-        downloadImage();
-        // Also show the text that would have been shared
-        try {
-          await navigator.clipboard.writeText(shareText);
-        } catch (error) {
-          console.error("Failed to copy share text to clipboard:", error);
-        }
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-      downloadImage();
-      // Try to copy the text to clipboard as a fallback
-      try {
-        await navigator.clipboard.writeText(shareText);
-        alert("Image downloaded. Share text copied to clipboard!");
-      } catch (clipboardError) {
-        console.error(
-          "Failed to copy share text to clipboard:",
-          clipboardError
-        );
-        alert("Image downloaded. Please copy your score manually.");
-      }
-    }
-  };
+//       setScoreImageUrl(imageUrl);
+//       setIsGeneratingImage(false);
+//       return imageUrl;
+//     } catch (error) {
+//       console.error("Failed to generate score card:", error);
+//       document.body.style.overflow = "";
+//       document.documentElement.style.touchAction = "";
+//       if (scoreRef.current) {
+//         scoreRef.current.style.opacity = "0";
+//         scoreRef.current.removeAttribute("aria-hidden");
+//       }
+//       setIsGeneratingImage(false);
+//       return null;
+//     }
+//   }, []);
 
-  const downloadImage = () => {
-    if (!scoreImageUrl) return;
+//   // const handleShareClick = async () => {
+//   //   setIsGeneratingImage(true);
 
-    const downloadLink = document.createElement("a");
-    downloadLink.href = scoreImageUrl;
-    downloadLink.download = "reaction-time-score.png";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  };
+//   //   if (scoreRef.current) {
+//   //     scoreRef.current.style.opacity = "0";
+//   //     scoreRef.current.style.transform = "none";
+//   //     scoreRef.current.style.position = "absolute";
+//   //     scoreRef.current.style.visibility = "hidden";
+//   //     scoreRef.current.style.left = "-9999px";
+//   //     scoreRef.current.style.top = "-9999px";
+//   //     scoreRef.current.style.pointerEvents = "none";
+//   //   }
 
-  return (
-    <>
-      <MuiModal
-        open={open}
-        onClose={onClose}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "100dvh", // Only account for header height, touch the bottom nav
-          top: "60px", // Space for header
-          position: "absolute",
-          backgroundColor: "transparent",
-          zIndex: 1, // Very low z-index to stay behind header/footer
-          ...fontStyle,
-          overflow: "hidden", // Prevent any scrolling
-        }}
-        BackdropProps={{
-          style: {
-            backgroundColor: "transparent",
-            position: "absolute",
-            top: "60px",
-            height: "calc(100% - 60px)", // Match modal height
-          },
-        }}
-        hideBackdrop={true} // Hide default backdrop
-        disableAutoFocus
-        disableEnforceFocus
-        disablePortal // Try rendering in place instead of in a portal
-      >
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            bgcolor: "transparent",
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            overflow: "auto",
-            zIndex: 2, // Keep this still low
-            // Add padding at bottom to account for footer nav overlap
-            pb: "60px",
-            ...fontStyle,
-          }}
-        >
-          <Box
-            sx={{
-              width: isMobile ? "100%" : "90%",
-              maxWidth: "400px",
-              bgcolor: "rgba(0, 0, 0, 0.7)",
-              borderRadius: 0,
-              p: 3,
-              textAlign: "center",
-              height: "100%",
-              color: "white",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              my: 2,
-              zIndex: 3, // Higher than background
-              ...fontStyle,
-            }}
-          >
-            {/* Only render the score card when needed */}
-            {shouldRenderScoreElement && (
-              <Box
-                ref={scoreRef}
-                sx={{
-                  width: 320, // Set fixed width for better capture
-                  height: 100, // Set fixed height for better capture
-                  backgroundImage: `url(${snsBgImage})`,
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 4,
-                  // Keep this element completely offscreen and hidden from user view
-                  position: "fixed",
-                  left: "-9999px",
-                  top: "-9999px",
-                  pointerEvents: "none", // Prevent any interactions
-                  opacity: 0, // Hidden initially but will be set to 1 during capture
-                  zIndex: -999, // Ensure it's behind everything
-                  ...fontStyle,
-                }}
-              >
-                {/* REDLIGHT Game text */}
-                <Typography
-                  variant="h4"
-                  sx={{
-                    color: "black", // Ensure text is visible against background
-                    marginTop: 20, // Significantly increased from 5 to 10 for much more space at the top
-                    textShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    fontSize: { xs: 28, sm: 28, md: 30 },
-                    letterSpacing: 1,
-                    ...fontStyle,
-                  }}
-                >
-                  REDLIGHT START
-                </Typography>
+//   //   if (scoreImageUrl) {
+//   //     setShareModalOpen(true);
+//   //     setIsGeneratingImage(false);
+//   //     return;
+//   //   }
+//   //   try {
+//   //     await prepareShareImage();
+//   //     const imageUrl = await generateScoreCard();
+//   //     if (imageUrl) {
+//   //       setShareModalOpen(true);
+//   //     }
+//   //   } catch (error) {
+//   //     console.error("Error generating score card:", error);
+//   //   } finally {
+//   //     setIsGeneratingImage(false);
+//   //   }
+//   // };
+//   const handleShareClick = async () => {
+//     console.log("handleShareClick triggered");
+//     setIsGeneratingImage(true);
 
-                {/* TIME text */}
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: "#ff6699",
-                    marginTop: 3, // Increased from 2 to 5 for more space
-                    marginBottom: 1,
-                    textAlign: "center",
-                    fontWeight: "500",
-                    fontSize: { xs: 25, sm: 25, md: 28 },
-                    ...fontStyle,
-                  }}
-                >
-                  TIME
-                </Typography>
+//     if (scoreImageUrl) {
+//       console.log("Opening share modal");
+//       setShareModalOpen(true);
+//       setIsGeneratingImage(false);
+//       return;
+//     }
+//   };
+//   const shareScore = async () => {
+//     if (!scoreImageUrl) return;
 
-                {/* Score display */}
-                <Typography
-                  sx={{
-                    fontSize: { xs: 84, sm: 90, md: 100 },
-                    color: "#ff6699",
-                    textShadow: "0 0 10px #ff6699",
-                    textAlign: "center",
-                    lineHeight: 1,
-                    ...fontStyle,
-                  }}
-                >
-                  {reactionTime !== null ? (
-                    <>
-                      {(reactionTime / 1000).toFixed(3)}
-                      <Typography
-                        component="span"
-                        sx={{
-                          fontSize: "60%",
-                          verticalAlign: "baseline",
-                          fontFamily: "'MyCustomFont', sans-serif",
-                        }}
-                      >
-                        s
-                      </Typography>
-                    </>
-                  ) : (
-                    "--"
-                  )}
-                </Typography>
-              </Box>
-            )}
+//     const shareText = `#リアクションタイムテスト に挑戦！
+// 結果はこちら！あなたの反応速度はどれくらい？🏎💨
+// "F1 Japanese GP" LINE公式アカウントを友だち追加して、今すぐチャレンジ！👇
+// https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
+// #F1jp #F1日本グランプリ`;
 
-            {/* Regular visible score display in the modal */}
-            <Box sx={{ width: "100%", ...fontStyle }}>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  color: "white",
-                  fontSize: "16px",
-                  marginTop: "40px",
-                  marginBottom: "70px",
-                  mb: 0.5,
-                  ...fontStyle,
-                }}
-              >
-                ミッションクリア
-              </Typography>
+//     const shortTitle = `私のリアクションタイム: ${
+//       reactionTime !== null ? `${(reactionTime / 1000).toFixed(3)}s` : "--"
+//     }`;
 
-              <Typography
-                variant="h5"
-                sx={{
-                  mb: 2,
-                  letterSpacing: 1,
-                  color: "white",
-                  marginBottom: "20px",
-                  fontSize: "25px", // Larger font size to match image
-                  ...fontStyle,
-                }}
-              >
-                MISSION CLEAR
-              </Typography>
+//     try {
+//       await navigator.clipboard.writeText(shareText);
+//       console.log("Share text copied to clipboard");
 
-              <Typography
-                sx={{
-                  fontSize: 20,
-                  fontWeight: "500",
-                  color: "#ff6699",
-                  marginBottom: "30px",
-                  mb: 0.5,
-                  ...fontStyle,
-                }}
-              >
-                SCORE
-              </Typography>
+//       const isIOS =
+//         /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+//         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+//       const isAndroid = /Android/.test(navigator.userAgent);
 
-              <Typography
-                sx={{
-                  fontSize: isMobile ? 80 : 80, // Larger font size to match image
-                  color: "#ff6699",
-                  marginTop: "25px",
-                  marginBottom: "150px",
-                  textShadow: "0 0 5px #ff6699", // Reduced shadow intensity
-                  mb: 3,
-                  lineHeight: 1,
-                  animation: "subtleGlow 3s infinite", // Using a custom animation name
-                  ...fontStyle,
-                }}
-              >
-                {reactionTime !== null ? (
-                  <>
-                    {(reactionTime / 1000).toFixed(3)}
-                    <Typography
-                      component="span"
-                      sx={{
-                        fontSize: "50%",
-                        verticalAlign: "super",
-                        fontFamily: "'MyCustomFont', sans-serif",
-                        position: "relative",
-                        bottom: "-0.6em",
-                      }}
-                    >
-                      s
-                    </Typography>
-                  </>
-                ) : (
-                  "--"
-                )}
-              </Typography>
-            </Box>
+//       if (isInLiff && liff.isApiAvailable("shareTargetPicker")) {
+//         await liff.shareTargetPicker([
+//           {
+//             type: "image",
+//             originalContentUrl: scoreImageUrl,
+//             previewImageUrl: scoreImageUrl,
+//           },
+//         ]);
+//         console.log("Shared image directly via LIFF shareTargetPicker");
+//         cleanupAfterShare();
+//       } else {
+//         const isWebShareSupported = typeof navigator.share === "function";
 
-            {/* Share on SNS Button - Updated to match image and show loading indicator */}
-            <Button
-              fullWidth
-              sx={{
-                mb: 1,
-                bgcolor: "#3D4658",
-                color: "white",
-                borderRadius: "24px",
-                padding: "12px",
-                marginTop: "50px",
-                marginBottom: "30px",
-                fontSize: "16px",
-                fontWeight: "normal",
-                textTransform: "none",
-                width: "60%",
-                "&:hover": { bgcolor: "rgba(120, 120, 120, 0.7)" },
-                ...fontStyle,
-                position: "relative", // For positioning the loading spinner
-                // Add a smooth transition for button content
-                "& > *": {
-                  transition: "opacity 0.2s ease-in-out",
-                },
-              }}
-              onClick={handleShareClick}
-              disabled={isGeneratingImage}
-            >
-              {isGeneratingImage ? (
-                <>
-                  <CircularProgress
-                    size={16}
-                    sx={{
-                      color: "white",
-                      position: "absolute",
-                      left: "20%",
-                    }}
-                  />
-                  生成中... {/* "Generating..." in Japanese */}
-                </>
-              ) : (
-                "SNSでシェアする"
-              )}
-            </Button>
+//         if (isWebShareSupported) {
+//           try {
+//             const res = await fetch(scoreImageUrl);
+//             const blob = await res.blob();
+//             const file = new File([blob], "reaction-time-score.png", {
+//               type: "image/png",
+//             });
 
-            {/* Play Again Button - Updated to match image */}
-            <Button
-              fullWidth
-              sx={{
-                mb: 1,
-                bgcolor: "rgba(100, 100, 100, 0.7)", // Semi-transparent gray to match image
-                color: "white",
-                borderRadius: "24px",
-                marginBottom: "30px",
-                padding: "12px",
-                fontSize: "16px",
-                fontWeight: "normal",
-                textTransform: "none",
-                width: "60%",
-                "&:hover": { bgcolor: "rgba(120, 120, 120, 0.7)" },
-                ...fontStyle,
-              }}
-              onClick={onRetry}
-            >
-              もう一度遊ぶ
-            </Button>
+//             const shareData: {
+//               title: string;
+//               text: string;
+//               files?: File[];
+//             } = {
+//               title: shortTitle,
+//               text: shareText,
+//             };
 
-            {/* Back to Map Button - Updated to match image */}
-            <Button
-              fullWidth
-              sx={{
-                bgcolor: "white", // White background to match image
-                color: "black", // Black text to match image
-                borderRadius: "24px",
-                padding: "12px",
-                fontSize: "16px",
-                fontWeight: "normal",
-                textTransform: "none",
-                width: "90%",
-                marginBottom: "60px",
-                "&:hover": { bgcolor: "rgba(240, 240, 240, 1)" },
-                ...fontStyle,
-              }}
-              onClick={onMap}
-            >
-              マップに戻る
-            </Button>
-          </Box>
-        </Box>
-      </MuiModal>
+//             if (navigator.canShare && navigator.canShare({ files: [file] })) {
+//               shareData.files = [file];
+//             }
 
-      {/* Share Modal - with loading state */}
-      <MuiModal
-        open={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: isMobile ? 2 : 0,
-          zIndex: 1500, // Highest z-index to be above everything
-          ...fontStyle,
-        }}
-      >
-        <Box
-          sx={{
-            width: isMobile ? "90%" : 350,
-            maxWidth: "90vw",
-            bgcolor: "white",
-            borderRadius: 3,
-            p: 3,
-            textAlign: "center",
-            boxShadow: 24,
-            position: "relative",
-            ...fontStyle,
-          }}
-        >
-          <IconButton
-            onClick={() => setShareModalOpen(false)}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              color: "#666",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+//             await navigator.share(shareData);
+//             console.log("Shared successfully via Web Share API");
+//             cleanupAfterShare();
+//             return;
+//           } catch (webShareError) {
+//             console.error("Web Share API error:", webShareError);
+//           }
+//         }
 
-          <Typography variant="h6" sx={{ mb: 2, ...fontStyle }}>
-            スコアをシェアする
-          </Typography>
+//         if (isAndroid) {
+//           const encodedText = encodeURIComponent(shareText);
+//           const lineUrl = `line://msg/text/${encodedText}`;
+//           window.location.href = lineUrl;
 
-          {!scoreImageUrl && isGeneratingImage ? (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                py: 4,
-              }}
-            >
-              <CircularProgress size={40} sx={{ mb: 2 }} />
-              <Typography variant="body2" sx={{ ...fontStyle }}>
-                画像を生成中...
-              </Typography>
-            </Box>
-          ) : (
-            scoreImageUrl && (
-              <Box sx={{ width: "100%", maxWidth: 300, mb: 2 }}>
-                <Image
-                  src={scoreImageUrl}
-                  alt="Your score"
-                  width={300}
-                  height={100}
-                  style={{
-                    width: "100%",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                  }}
-                />
-              </Box>
-            )
-          )}
+//           setTimeout(() => {
+//             if (document.hasFocus()) {
+//               downloadImage();
+//             }
+//             cleanupAfterShare();
+//           }, 1500);
+//           return;
+//         } else if (isIOS) {
+//           try {
+//             const lineIOSUrl = `line://msg/text/${encodeURIComponent(
+//               shareText
+//             )}`;
+//             window.location.href = lineIOSUrl;
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "100%",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                cursor: "pointer",
-                p: 1,
-              }}
-              onClick={shareScore}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  bgcolor: "#333",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  mb: 0.5,
-                }}
-              >
-                <Share2 size={24} color="white" />
-              </Box>
-              <Typography variant="caption" sx={{ ...fontStyle }}>
-                Share
-              </Typography>
-            </Box>
+//             setTimeout(() => {
+//               if (document.hasFocus()) {
+//                 downloadImage();
+//               }
+//               cleanupAfterShare();
+//             }, 1500);
+//             return;
+//           } catch (iosError) {
+//             console.error("iOS sharing error:", iosError);
+//             downloadImage();
+//             cleanupAfterShare();
+//           }
+//         } else {
+//           downloadImage();
+//           cleanupAfterShare();
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error in sharing process:", error);
+//       downloadImage();
+//       cleanupAfterShare();
+//     }
+//   };
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                cursor: "pointer",
-                p: 1,
-              }}
-              onClick={downloadImage}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  bgcolor: "#333",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  mb: 0.5,
-                }}
-              >
-                <Download size={24} color="white" />
-              </Box>
-              <Typography variant="caption" sx={{ ...fontStyle }}>
-                Save
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      </MuiModal>
-    </>
-  );
-};
+//   const cleanupAfterShare = () => {
+//     setShareModalOpen(false);
+//     setShouldRenderScoreElement(false);
+//     setScoreImageUrl(null);
 
-export default Modal;
+//     document.body.style.overflow = "";
+//     document.documentElement.style.touchAction = "";
+
+//     if (scoreRef.current) {
+//       scoreRef.current.style.opacity = "0";
+//       scoreRef.current.style.transform = "none";
+//       scoreRef.current.style.position = "absolute";
+//       scoreRef.current.style.pointerEvents = "none";
+//       scoreRef.current.style.visibility = "hidden";
+//       scoreRef.current.style.left = "-9999px";
+//       scoreRef.current.style.top = "-9999px";
+//       scoreRef.current.style.width = "320px";
+//       scoreRef.current.style.height = "320px";
+//       scoreRef.current.setAttribute("aria-hidden", "true");
+//     }
+
+//     const isIOS =
+//       /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+//       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+//     if (isIOS) {
+//       const viewport = document.querySelector('meta[name="viewport"]');
+//       if (viewport) {
+//         const originalContent = viewport.getAttribute("content");
+//         if (originalContent) {
+//           viewport.setAttribute(
+//             "content",
+//             originalContent + ",maximum-scale=1"
+//           );
+//           setTimeout(() => {
+//             viewport.setAttribute("content", originalContent);
+//           }, 300);
+//         }
+//       }
+//       setTimeout(() => {
+//         window.scrollTo(0, 0);
+//       }, 100);
+//     } else {
+//       setTimeout(() => {
+//         window.scrollTo(0, 0);
+//       }, 100);
+//     }
+//   };
+
+//   const downloadImage = async () => {
+//     if (!scoreImageUrl) return;
+
+//     try {
+//       setShareModalOpen(false);
+//       await new Promise((resolve) => setTimeout(resolve, 50));
+
+//       const response = await fetch(scoreImageUrl);
+//       const blob = await response.blob();
+//       const blobUrl = window.URL.createObjectURL(blob);
+
+//       if (isInLiff && liff.isInClient()) {
+//         const downloadLink = document.createElement("a");
+//         downloadLink.href = blobUrl;
+//         downloadLink.download = "reaction-time-score.png";
+//         document.body.appendChild(downloadLink);
+
+//         downloadLink.click();
+
+//         setTimeout(() => {
+//           document.body.removeChild(downloadLink);
+//           window.URL.revokeObjectURL(blobUrl);
+
+//           if (document.hasFocus()) {
+//             if (liff.isApiAvailable("shareTargetPicker")) {
+//               liff.shareTargetPicker([
+//                 {
+//                   type: "image",
+//                   originalContentUrl: scoreImageUrl,
+//                   previewImageUrl: scoreImageUrl,
+//                 },
+//               ]);
+//             }
+//           }
+//           cleanupAfterShare();
+//         }, 1000);
+//       } else {
+//         const downloadLink = document.createElement("a");
+//         downloadLink.href = blobUrl;
+//         downloadLink.download = "reaction-time-score.png";
+//         document.body.appendChild(downloadLink);
+
+//         setTimeout(() => {
+//           downloadLink.click();
+//           document.body.removeChild(downloadLink);
+//           window.URL.revokeObjectURL(blobUrl);
+//           cleanupAfterShare();
+//         }, 100);
+//       }
+//     } catch (downloadError) {
+//       console.error("Download failed:", downloadError);
+//       if (isInLiff && liff.isApiAvailable("shareTargetPicker")) {
+//         liff.shareTargetPicker([
+//           {
+//             type: "image",
+//             originalContentUrl: scoreImageUrl,
+//             previewImageUrl: scoreImageUrl,
+//           },
+//         ]);
+//       }
+//       cleanupAfterShare();
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (!open) {
+//       setShouldRenderScoreElement(false);
+//       setShareModalOpen(false);
+//       setScoreImageUrl(null);
+
+//       if (scoreRef.current) {
+//         scoreRef.current.style.opacity = "0";
+//         scoreRef.current.style.transform = "none";
+//       }
+//     }
+//   }, [open]);
+
+//   const handleCircuitJourneyClick = () => {
+//     const stopAudioEvent = new CustomEvent("stopGameAudio");
+//     document.dispatchEvent(stopAudioEvent);
+//     window.location.href =
+//       "https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney";
+//   };
+
+//   return (
+//     <>
+//       <MuiModal
+//         open={open}
+//         onClose={onClose}
+//         sx={{
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "flex-start",
+//           width: "100vw",
+//           height: "100vh",
+//           top: 0,
+//           left: 0,
+//           right: 0,
+//           bottom: 0,
+//           position: "fixed",
+//           backgroundColor: "transparent",
+//           zIndex: 1,
+//           ...fontStyle,
+//           touchAction: "pan-y",
+//           userSelect: "none",
+//           overflow: "auto",
+//           pointerEvents: "auto",
+//           margin: 0,
+//           padding: 0,
+//           boxSizing: "border-box",
+//           "&::-webkit-scrollbar": {
+//             display: "none",
+//           },
+//           scrollbarWidth: "none",
+//           msOverflowStyle: "none",
+//           "@media (max-width: 375px) and (max-height: 667px)": {
+//             "&::-webkit-scrollbar": {
+//               display: "block",
+//               width: "8px",
+//               background: "rgba(0, 0, 0, 0.1)",
+//             },
+//             "&::-webkit-scrollbar-thumb": {
+//               background: "rgba(255, 255, 255, 0.4)",
+//               borderRadius: "4px",
+//             },
+//             scrollbarWidth: "thin",
+//             scrollbarColor: "rgba(255, 255, 255, 0.4) rgba(0, 0, 0, 0.1)",
+//             msOverflowStyle: "auto",
+//           },
+//         }}
+//         BackdropProps={{
+//           style: {
+//             backgroundColor: "transparent",
+//             position: "fixed",
+//             top: 0,
+//             left: 0,
+//             right: 0,
+//             bottom: 0,
+//             height: "100vh",
+//             width: "100vw",
+//             margin: 0,
+//             padding: 0,
+//             touchAction: "none",
+//             pointerEvents: "none",
+//             boxSizing: "border-box",
+//           },
+//         }}
+//         disableScrollLock={false}
+//         hideBackdrop={true}
+//         disableAutoFocus
+//         disableEnforceFocus
+//         disablePortal
+//         disableRestoreFocus
+//       >
+//         <Box
+//           sx={{
+//             width: "100vw",
+//             height: "100vh",
+//             display: "flex",
+//             flexDirection: "column",
+//             alignItems: "center",
+//             justifyContent: isVerySmallScreen ? "flex-start" : "center",
+//             position: "absolute",
+//             top: 0,
+//             left: 0,
+//             right: 0,
+//             bottom: 0,
+//             bgcolor: "transparent",
+//             backgroundImage: `url(${backgroundImage})`,
+//             backgroundPosition: "center",
+//             backgroundRepeat: "no-repeat",
+//             backgroundSize: "cover",
+//             backgroundAttachment: "fixed",
+//             overflow: "auto",
+//             overflowX: "hidden",
+//             zIndex: 2,
+//             margin: 0,
+//             padding: 0,
+//             paddingTop: "60px",
+//             touchAction: "pan-y",
+//             userSelect: "none",
+//             pointerEvents: "auto",
+//             boxSizing: "border-box",
+//             ...fontStyle,
+//             "&::-webkit-scrollbar": {
+//               display: "none",
+//             },
+//             scrollbarWidth: "none",
+//             msOverflowStyle: "none",
+//             "@media (max-width: 375px) and (max-height: 667px)": {
+//               "&::-webkit-scrollbar": {
+//                 display: "block",
+//                 width: "8px",
+//                 background: "rgba(0, 0, 0, 0.2)",
+//               },
+//               "&::-webkit-scrollbar-thumb": {
+//                 background: "rgba(255, 255, 255, 0.5)",
+//                 borderRadius: "6px",
+//                 border: "2px solid rgba(0, 0, 0, 0.2)",
+//               },
+//               scrollbarWidth: "thin",
+//               scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.2)",
+//             },
+//           }}
+//           onTouchMove={(e) => {
+//             e.stopPropagation();
+//           }}
+//           onMouseDown={(e) => {
+//             e.stopPropagation();
+//           }}
+//         >
+//           <Box
+//             sx={{
+//               width: "100%",
+//               maxWidth: "100%",
+//               bgcolor: "rgba(0, 0, 0, 0.7)",
+//               borderRadius: 0,
+//               p: isVerySmallScreen ? 2 : 3,
+//               textAlign: "center",
+//               height: "auto",
+//               minHeight: "100vh",
+//               color: "white",
+//               display: "flex",
+//               flexDirection: "column",
+//               alignItems: "center",
+//               justifyContent: "flex-start",
+//               my: 0,
+//               mb: 0,
+//               zIndex: 3,
+//               overflow: "visible",
+//               overflowY: "visible",
+//               overflowX: "hidden",
+//               touchAction: "pan-y",
+//               ...fontStyle,
+//               position: "relative",
+//               padding: { xs: 2, sm: 3, md: 4 },
+//               boxSizing: "border-box",
+//               "&::-webkit-scrollbar": {
+//                 display: "none",
+//               },
+//               scrollbarWidth: "none",
+//               msOverflowStyle: "none",
+//               "@media (max-width: 375px) and (max-height: 667px)": {
+//                 "&::-webkit-scrollbar": {
+//                   display: "block",
+//                   width: "8px",
+//                   background: "rgba(0, 0, 0, 0.2)",
+//                 },
+//                 "&::-webkit-scrollbar-thumb": {
+//                   background: "rgba(255, 255, 255, 0.5)",
+//                   borderRadius: "6px",
+//                   border: "2px solid rgba(0, 0, 0, 0.2)",
+//                 },
+//                 scrollbarWidth: "auto",
+//                 scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.2)",
+//               },
+//             }}
+//             onTouchMove={(e) => {
+//               e.stopPropagation();
+//             }}
+//           >
+//             {shouldRenderScoreElement && (
+//               <Box
+//                 ref={scoreRef}
+//                 sx={{
+//                   width: 320,
+//                   height: 320,
+//                   backgroundImage: `url(${snsBgImage})`,
+//                   backgroundPosition: "center",
+//                   backgroundRepeat: "no-repeat",
+//                   backgroundSize: "cover",
+//                   display: "flex",
+//                   flexDirection: "column",
+//                   alignItems: "center",
+//                   justifyContent: "center",
+//                   padding: 4,
+//                   position: "absolute",
+//                   left: "-9999px",
+//                   top: "-9999px",
+//                   pointerEvents: "none",
+//                   userSelect: "none",
+//                   touchAction: "none",
+//                   opacity: 0,
+//                   zIndex: -999,
+//                   visibility: "hidden",
+//                   color: "black", // Ensure text color is supported
+//                   backgroundColor: "#ffffff", // Replace any unsupported background colors
+//                   ...fontStyle,
+//                 }}
+//                 aria-hidden="true"
+//                 tabIndex={-1}
+//               >
+//                 <Typography
+//                   variant="h4"
+//                   sx={{
+//                     color: "black",
+//                     marginTop: 20,
+//                     textShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+//                     textAlign: "center",
+//                     fontWeight: "bold",
+//                     fontSize: { xs: 24, sm: 24, md: 36 },
+//                     letterSpacing: 1,
+//                     ...fontStyle,
+//                   }}
+//                 >
+//                   REACTION TIME TEST
+//                 </Typography>
+//                 <Typography
+//                   variant="h6"
+//                   sx={{
+//                     color: "#ff6699",
+//                     marginTop: 3,
+//                     marginBottom: 1,
+//                     textAlign: "center",
+//                     fontWeight: "500",
+//                     fontSize: { xs: 25, sm: 25, md: 28 },
+//                     ...fontStyle,
+//                   }}
+//                 >
+//                   TIME
+//                 </Typography>
+//                 <Typography
+//                   sx={{
+//                     fontSize: { xs: 84, sm: 90, md: 100 },
+//                     color: "#ff6699",
+//                     textShadow: "0 0 10px #ff6699",
+//                     textAlign: "center",
+//                     lineHeight: 1,
+//                     ...fontStyle,
+//                   }}
+//                 >
+//                   {reactionTime !== null ? (
+//                     <>
+//                       {(reactionTime / 1000).toFixed(3)}
+//                       <Typography
+//                         component="span"
+//                         sx={{
+//                           fontSize: "60%",
+//                           verticalAlign: "baseline",
+//                           fontFamily: "'MyCustomFont', sans-serif",
+//                         }}
+//                       >
+//                         s
+//                       </Typography>
+//                     </>
+//                   ) : (
+//                     "--"
+//                   )}
+//                 </Typography>
+//               </Box>
+//             )}
+
+//             <Box sx={{ width: "100%", ...fontStyle }}>
+//               <Typography
+//                 variant="subtitle1"
+//                 sx={{
+//                   color: "white",
+//                   fontSize: isVerySmallScreen ? "14px" : "16px",
+//                   marginTop: isVerySmallScreen ? "10px" : "100px",
+//                   marginBottom: isVerySmallScreen ? "20px" : "70px",
+//                   mb: 0.5,
+//                   ...japaneseFontStyle,
+//                 }}
+//               >
+//                 ミッションクリア
+//               </Typography>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   mb: 2,
+//                   letterSpacing: 1,
+//                   color: "white",
+//                   marginBottom: isVerySmallScreen ? "20px" : "60px",
+//                   fontSize: isVerySmallScreen ? "26px" : "33px",
+//                   ...fontStyle,
+//                 }}
+//               >
+//                 MISSION CLEAR
+//               </Typography>
+//               <Typography
+//                 sx={{
+//                   fontSize: isVerySmallScreen ? 18 : 20,
+//                   fontWeight: "500",
+//                   color: "#ff6699",
+//                   marginBottom: isVerySmallScreen ? "15px" : "50px",
+//                   mb: 0.5,
+//                   ...fontStyle,
+//                 }}
+//               >
+//                 SCORE
+//               </Typography>
+//               <Typography
+//                 sx={{
+//                   fontSize: isVerySmallScreen ? 60 : 80,
+//                   color: "#ff6699",
+//                   marginTop: isVerySmallScreen ? "10px" : "25px",
+//                   marginBottom: isVerySmallScreen ? "40px" : "70px",
+//                   textShadow: "0 0 5px #ff6699",
+//                   mb: isVerySmallScreen ? 1 : 3,
+//                   lineHeight: 1,
+//                   animation: "subtleGlow 3s infinite",
+//                   ...fontStyle,
+//                 }}
+//               >
+//                 {reactionTime !== null ? (
+//                   <>
+//                     {(reactionTime / 1000).toFixed(3)}
+//                     <Typography
+//                       component="span"
+//                       sx={{
+//                         fontSize: "50%",
+//                         verticalAlign: "super",
+//                         fontFamily: "'MyCustomFont', sans-serif",
+//                         position: "relative",
+//                         bottom: "-0.6em",
+//                       }}
+//                     >
+//                       s
+//                     </Typography>
+//                   </>
+//                 ) : (
+//                   "--"
+//                 )}
+//               </Typography>
+//             </Box>
+
+//             <Box
+//               sx={{
+//                 width: "100%",
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 alignItems: "center",
+//                 mt: isVerySmallScreen ? 1 : 3,
+//                 paddingTop: 2,
+//                 paddingBottom: isVerySmallScreen ? "50px" : "100px",
+//               }}
+//             >
+//               <Button
+//                 fullWidth
+//                 sx={{
+//                   mb: 1.5,
+//                   bgcolor: "#3D4658",
+//                   color: "white",
+//                   borderRadius: "24px",
+//                   padding: isVerySmallScreen ? "8px" : "12px",
+//                   marginTop: isVerySmallScreen ? "10px" : "30px",
+//                   marginBottom: isVerySmallScreen ? "10px" : "30px",
+//                   fontSize: isVerySmallScreen ? "14px" : "16px",
+//                   fontWeight: "normal",
+//                   textTransform: "none",
+//                   width: isVerySmallScreen ? "80%" : "60%",
+//                   "&:hover": { bgcolor: "rgba(120, 120, 120, 0.7)" },
+//                   ...japaneseFontStyle,
+//                   position: "relative",
+//                   "& > *": {
+//                     transition: "opacity 0.2s ease-in-out",
+//                   },
+//                 }}
+//                 onClick={handleShareClick}
+//                 disabled={isGeneratingImage}
+//               >
+//                 {isGeneratingImage ? (
+//                   <>
+//                     <CircularProgress
+//                       size={16}
+//                       sx={{
+//                         color: "white",
+//                         position: "absolute",
+//                         left: "20%",
+//                       }}
+//                     />
+//                     生成中...
+//                   </>
+//                 ) : (
+//                   "SNSでシェアする"
+//                 )}
+//               </Button>
+
+//               <Button
+//                 fullWidth
+//                 sx={{
+//                   mb: 1.5,
+//                   bgcolor: "rgba(100, 100, 100, 0.7)",
+//                   color: "white",
+//                   borderRadius: "24px",
+//                   marginBottom: isVerySmallScreen ? "20px" : "30px",
+//                   padding: isVerySmallScreen ? "10px" : "12px",
+//                   fontSize: isVerySmallScreen ? "14px" : "16px",
+//                   fontWeight: "normal",
+//                   textTransform: "none",
+//                   width: isVerySmallScreen ? "80%" : "60%",
+//                   "&:hover": { bgcolor: "rgba(120, 120, 120, 0.7)" },
+//                   ...japaneseFontStyle,
+//                 }}
+//                 onClick={onRetry}
+//               >
+//                 もう一度遊ぶ
+//               </Button>
+
+//               <button
+//                 onClick={handleCircuitJourneyClick}
+//                 style={{
+//                   marginBottom: isVerySmallScreen ? "40px" : "60px",
+//                   padding: isVerySmallScreen ? "10px" : "12px",
+//                   width: isVerySmallScreen ? "80%" : "90%",
+//                   borderRadius: "24px",
+//                   backgroundColor: "white",
+//                   color: "black",
+//                   fontSize: isVerySmallScreen ? "14px" : "16px",
+//                   textAlign: "center",
+//                   ...fontStyle,
+//                 }}
+//               >
+//                 <strong className="font-normal">
+//                   CI<span style={{ color: "#E00400" }}>R</span>CUIT JOURN
+//                   <span style={{ color: "#E00400" }}>E</span>Y
+//                 </strong>
+//               </button>
+//             </Box>
+//           </Box>
+//         </Box>
+//       </MuiModal>
+
+//       <MuiModal
+//         open={shareModalOpen}
+//         onClose={() => setShareModalOpen(false)}
+//         sx={{
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "center",
+//           padding: isMobile ? 2 : 0,
+//           zIndex: 1500,
+//           ...fontStyle,
+//           touchAction: "none",
+//           userSelect: "none",
+//           pointerEvents: "auto",
+//         }}
+//         disableScrollLock={false}
+//         BackdropProps={{
+//           style: {
+//             touchAction: "none",
+//             pointerEvents: "auto",
+//           },
+//         }}
+//         disableRestoreFocus
+//       >
+//         <Box
+//           sx={{
+//             width: 350,
+//             maxWidth: "90vw",
+//             bgcolor: "white",
+//             borderRadius: 3,
+//             p: 3,
+//             textAlign: "center",
+//             boxShadow: 24,
+//             position: "relative",
+//             touchAction: "none",
+//             userSelect: "none",
+//             ...fontStyle,
+//           }}
+//           onClick={(e) => e.stopPropagation()}
+//         >
+//           <IconButton
+//             onClick={() => {
+//               cleanupAfterShare();
+//             }}
+//             sx={{
+//               position: "absolute",
+//               top: 8,
+//               right: 8,
+//               color: "#666",
+//             }}
+//           >
+//             <CloseIcon />
+//           </IconButton>
+
+//           <Typography variant="h6" sx={{ mb: 2, color: "black", ...fontStyle }}>
+//             Share Your Score !!! <br />
+//           </Typography>
+
+//           {scoreImageUrl && (
+//             <Box
+//               component="img"
+//               src={scoreImageUrl}
+//               alt="Your score"
+//               sx={{
+//                 width: "100%",
+//                 maxWidth: 300,
+//                 borderRadius: 2,
+//                 mb: 2,
+//                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+//               }}
+//             />
+//           )}
+
+//           <Box
+//             sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+//           >
+//             <Box
+//               sx={{
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 alignItems: "center",
+//                 cursor: "pointer",
+//                 p: 1,
+//               }}
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 shareScore();
+//               }}
+//             >
+//               <Box
+//                 sx={{
+//                   width: 60,
+//                   height: 60,
+//                   borderRadius: "50%",
+//                   bgcolor: "primary.main",
+//                   display: "flex",
+//                   justifyContent: "center",
+//                   alignItems: "center",
+//                   mb: 0.5,
+//                   filter: "drop-shadow(0 0 4px rgba(25, 118, 210, 0.5))",
+//                 }}
+//               >
+//                 <Share2 size={24} color="white" />
+//               </Box>
+//               <Typography variant="caption" sx={{ ...fontStyle }}>
+//                 Share
+//               </Typography>
+//             </Box>
+//           </Box>
+//         </Box>
+//       </MuiModal>
+//     </>
+//   );
+// };
+
+// export default Modal;
