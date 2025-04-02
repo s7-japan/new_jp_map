@@ -36,8 +36,8 @@ const EventCalendar = () => {
           className="bg-white py-2 w-[80dvw] rounded-full shadow-2xl mx-auto MyCustomFont"
           onClick={handleNavigation}
         >
-          <strong className="text-[#DD1C1C] font-normal">E</strong>VENT{" "}
-          <strong className="text-[#DD1C1C] font-normal">C</strong>ALENDAR
+          <strong className="text-[#E00400] font-normal">E</strong>VENT{" "}
+          <strong className="text-[#E00400] font-normal">C</strong>ALENDAR
         </button>
       </div>
     </div>

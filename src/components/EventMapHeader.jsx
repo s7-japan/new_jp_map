@@ -50,8 +50,8 @@ const EventMapHeader = ({ scrollRef }) => {
       >
         <div className="flex flex-col justify-between items-center h-full MyCustomFont">
           <strong className="font-normal text-[1.6rem] formula1">
-            <span className="text-[#ff0000]">E</span>VENT CAL
-            <span className="text-[#ff0000]">E</span>NDAR
+            <span className="text-[#E00400]">E</span>VENT CAL
+            <span className="text-[#E00400]">E</span>NDAR
           </strong>
           <p className="text-[12px] HiraginoBold mb-5 font-bold">
             イベントカレンダー

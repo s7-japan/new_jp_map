@@ -176,8 +176,8 @@
 @font-face {
   font-family: "formula1Bold";
   src: url("/fonts/Formula1-Display-Bold.ttf");
-  unicode-range: U+0041-005A, U+0061-007A;
 }
+/* isme koi change mat karo jo bhi kar raha hian  */
 
 .formula1 {
   font-family: "formula1";
