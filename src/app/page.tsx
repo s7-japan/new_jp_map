@@ -19,8 +19,10 @@ const RedirectHandler = () => {
 
   useEffect(() => {
     if (redirectPath) {
+      // alert(redirectPath)
       // console.log(redirectPath)
-      router.push(`${redirectPath}`);
+      window.location.replace("https://redlight-one.vercel.app/")
+      // router.push(`${redirectPath}`);
     }
   }, [redirectPath]);
 
@@ -34,9 +36,10 @@ const MapPage = () => {
       <Header />
       <Map />
       <EventCalendar />
-      <Suspense fallback={null}>
-        <RedirectHandler />
-      </Suspense>
+      <RedirectHandler />
+      {/* <Suspense fallback={null}> */}
+        {/* <RedirectHandler /> */}
+      {/* </Suspense> */}
       <BottomFooter />
     </div>
   );
