@@ -15,14 +15,19 @@ import BottomFooter from "@/components/BottomFooter";
 const RedirectHandler = () => {
   const searchParams = useSearchParams();
   // const router = useRouter();
-  const redirectPath = searchParams.get("liff.state");
+  let redirectPath = searchParams.get("liff.state");
 
   useEffect(() => {
     if (redirectPath) {
-      // alert(redirectPath)
-      // console.log(redirectPath)
-      window.location.replace("https://redlight-one.vercel.app/")
-      // router.push(`${redirectPath}`);
+      switch(redirectPath) {
+        case "reactiontimetest":
+          redirectPath = "https://redlight-one.vercel.app/"
+          break;
+        default:
+          console.log("No matching redirect path found.");
+          break;
+      }
+      window.location.replace(redirectPath);
     }
   }, [redirectPath]);
 
@@ -36,7 +41,6 @@ const MapPage = () => {
       <Header />
       <Map />
       <EventCalendar />
-      {/* <RedirectHandler /> */}
       <Suspense fallback={<div>Loading...</div>}>
         <RedirectHandler />
       </Suspense>
