@@ -6,7 +6,7 @@ const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
 });
 import EventCalendar from "@/components/EventCalendar";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BottomFooter from "@/components/BottomFooter";
@@ -14,20 +14,13 @@ import BottomFooter from "@/components/BottomFooter";
 // Create a separate component that uses useSearchParams
 const RedirectHandler = () => {
   const searchParams = useSearchParams();
-  // const router = useRouter();
-  let redirectPath = searchParams.get("liff.state");
+  const router = useRouter();
+  const redirectPath = searchParams.get("liff.state");
 
   useEffect(() => {
     if (redirectPath) {
-      switch(redirectPath) {
-        case "reactiontimetest":
-          redirectPath = "https://redlight-one.vercel.app/"
-          break;
-        default:
-          console.log("No matching redirect path found.");
-          break;
-      }
-      window.location.replace(redirectPath);
+      // console.log(redirectPath)
+      router.push(`${redirectPath}`);
     }
   }, [redirectPath]);
 
@@ -41,7 +34,7 @@ const MapPage = () => {
       <Header />
       <Map />
       <EventCalendar />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={null}>
         <RedirectHandler />
       </Suspense>
       <BottomFooter />
