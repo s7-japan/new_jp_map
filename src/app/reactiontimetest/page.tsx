@@ -1,35 +1,17 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
 import React, { useEffect } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
-  // const router = useRouter();
+  const router = useRouter();
 
   // Solution 1: Resize handler with iframe scaling
-  useEffect(() => {
-    const handleResize = () => {
-      const iframe = document.querySelector("iframe");
-      if (iframe) {
-        if (iframe.contentWindow) {
-          iframe.contentWindow.document.documentElement.style.transform =
-            "scale(1)";
-        }
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   // Solution 2: Redirect approach (uncomment to use instead)
-  // useEffect(() => {
-  //   router.push('/');
-  // }, []);
+  useEffect(() => {
+    router.push("/");
+  }, []);
 
   return (
     <div
