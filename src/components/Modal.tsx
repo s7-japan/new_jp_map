@@ -747,7 +747,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                     transition: "opacity 0.2s ease-in-out",
                   },
                 }}
-                onClick={handleShareClick}
+                // onClick={handleShareClick}
                 disabled={isGeneratingImage}
               >
                 {isGeneratingImage ? (
