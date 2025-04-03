@@ -27,7 +27,6 @@ const EventMapHeader = ({ scrollRef }) => {
       if (shouldShow && !isVisible) setIsVisible(true);
       else if (shouldHide && isVisible) setIsVisible(false);
 
-
       setPrevScrollPos(currentScrollPos);
     };
 
@@ -51,9 +50,7 @@ const EventMapHeader = ({ scrollRef }) => {
             <span className="text-[#E00400]">E</span>VENT CAL
             <span className="text-[#E00400]">E</span>NDAR
           </strong>
-          <p className="text-[12px] HiraginoBold mb-5 ">
-            イベントカレンダー
-          </p>
+          <p className="text-[12px] HiraginoBold mb-5 ">サーキットジャーニー</p>
         </div>
       </div>
       <div style={{ height: "65px" }} className="w-full" />
