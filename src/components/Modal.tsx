@@ -19,7 +19,7 @@ import html2canvas from "html2canvas";
 import liff from "@line/liff"; // Import LIFF SDK
 import backgroundImage from "../images/7.svg";
 import snsBgImage from "../images/SNS-bg.png";
-
+import Image from "next/image";
 const fontStyle = {
   fontFamily: "'MyCustomFont', sans-serif",
 };
@@ -48,6 +48,17 @@ const Modal: React.FC<ModalProps> = ({
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [scoreImageUrl, setScoreImageUrl] = useState<string | null>(null);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!snsBgImage) return;
+
+    const img = new window.Image();
+    img.src = snsBgImage.src;
+    img.crossOrigin = "anonymous"; // Ensure CORS is handled
+    img.onload = () => setImageLoaded(true);
+  }, [snsBgImage]);
+
   const [shouldRenderScoreElement, setShouldRenderScoreElement] =
     useState(false);
   const [isInLiff, setIsInLiff] = useState(false);
@@ -123,8 +134,8 @@ const Modal: React.FC<ModalProps> = ({
         allowTaint: true,
         imageTimeout: 0,
         removeContainer: true,
-        windowWidth: scoreElement.offsetWidth,
-        windowHeight: scoreElement.offsetHeight,
+        // windowWidth: scoreElement.offsetWidth,
+        // windowHeight: scoreElement.offsetHeight,
       };
 
       // Generate the image
@@ -668,18 +679,9 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
               <Box
                 ref={scoreRef}
                 sx={{
-                  width: 320,
-                  height: 320,
-                  backgroundImage: `url(${snsBgImage})`,
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 4,
-                  position: "absolute", // Changed from fixed to absolute
+                  width: "100dvw",
+                  height: 360,
+                  position: "absolute",
                   left: "-9999px",
                   top: "-9999px",
                   pointerEvents: "none",
@@ -687,12 +689,27 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   touchAction: "none",
                   opacity: 0,
                   zIndex: -999,
-                  visibility: "hidden", // Add explicit visibility control
+                  visibility: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 4,
                   ...fontStyle,
                 }}
-                aria-hidden="true" // Ensure screen readers ignore this
-                tabIndex={-1} // Prevent focus
+                aria-hidden="true"
+                tabIndex={-1}
               >
+                {imageLoaded && (
+                  <Image
+                    src={snsBgImage}
+                    alt="Background"
+                    layout="fill"
+                    objectFit="cover"
+                    style={{ position: "absolute", zIndex: -1 }}
+                  />
+                )}
+
                 <Typography
                   variant="h4"
                   sx={{
@@ -704,10 +721,12 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                     fontSize: { xs: 24, sm: 24, md: 36 },
                     letterSpacing: 1,
                     ...fontStyle,
+                    fontFamily: "formula1",
                   }}
                 >
                   REACTION TIME TEST
                 </Typography>
+
                 <Typography
                   variant="h6"
                   sx={{
@@ -718,10 +737,12 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                     fontWeight: "500",
                     fontSize: { xs: 25, sm: 25, md: 28 },
                     ...fontStyle,
+                    fontFamily: "formula1",
                   }}
                 >
                   TIME
                 </Typography>
+
                 <Typography
                   sx={{
                     fontSize: { xs: 84, sm: 90, md: 100 },
@@ -977,7 +998,10 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             <CloseIcon />
           </IconButton>
 
-          <Typography variant="h6" sx={{ mb: 2, color: "black", ...fontStyle }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, color: "black", fontFamily: "formula1" }}
+          >
             Share Your Score !!! <br />
           </Typography>
 
