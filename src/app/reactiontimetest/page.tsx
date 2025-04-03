@@ -1,25 +1,34 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
-import React from "react";
+import React, { useEffect } from "react";
+// import { useRouter } from "next/navigation";
 
 const Page = () => {
-  // const triggerURL = (url: string) => {
-  //   const iframe = document.createElement("iframe");
-  //   iframe.style.display = "none";
-  //   iframe.src = url;
+  // const router = useRouter();
 
-  //   document.body.appendChild(iframe);
+  // Solution 1: Resize handler with iframe scaling
+  useEffect(() => {
+    const handleResize = () => {
+      const iframe = document.querySelector("iframe");
+      if (iframe) {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.document.documentElement.style.transform =
+            "scale(1)";
+        }
+      }
+    };
 
-  //   console.log("working");
-  //   setTimeout(() => {
-  //     document.body.removeChild(iframe);
-  //   }, 1000);
-  // };
+    window.addEventListener("resize", handleResize);
 
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Solution 2: Redirect approach (uncomment to use instead)
   // useEffect(() => {
-  //   triggerURL(
-  //     "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appRTTcircuit"
-  //   );
+  //   router.push('/');
   // }, []);
 
   return (
@@ -32,19 +41,21 @@ const Page = () => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden", // Prevent scrolling issues
+        overflow: "hidden",
       }}
     >
       <iframe
-        src="https://redlight-one.vercel.app/"
+        // src="https://redlight-one.vercel.app/"
+        src="https://redlight-black.vercel.app/"
         style={{
           border: "none",
-          height: "100%", // Keep full height
-          width: "100%",
+          height: "100%",
+          width: "100vw",
           position: "absolute",
-          // top: "-56px", // Shift iframe up by the height of its nav (adjust as needed)
           left: 0,
-          zIndex: 1, // Lower z-index than BottomNav
+          zIndex: 1,
+          transform: "scale(1)",
+          transformOrigin: "top left",
         }}
         title="Redlight One Map"
         allowFullScreen
