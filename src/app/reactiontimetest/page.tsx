@@ -1,31 +1,34 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
-import React, { useEffect } from "react";
+import React from "react";
 
 const Page = () => {
-  const handleModalClose = () => {
-    document.body.focus(); // Restore focus to body
-    window.scrollTo(0, 0); // Reset scroll position
-  };
+  // const triggerURL = (url: string) => {
+  //   const iframe = document.createElement("iframe");
+  //   iframe.style.display = "none";
+  //   iframe.src = url;
 
-  useEffect(() => {
-    // Simulate modal close event (replace with actual event from your modal)
-    window.addEventListener("modalClosed", handleModalClose);
-    return () => window.removeEventListener("modalClosed", handleModalClose);
-  }, []);
+  //   document.body.appendChild(iframe);
+
+  //   console.log("working");
+  //   setTimeout(() => {
+  //     document.body.removeChild(iframe);
+  //   }, 1000);
+  // };
+
+  // useEffect(() => {
+  //   triggerURL(
+  //     "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appRTTcircuit"
+  //   );
+  // }, []);
 
   return (
     <div
       style={{
         height: "100vh",
         width: "100vw",
-        margin: 0,
-        padding: 0,
-        position: "relative",
         display: "flex",
         flexDirection: "column",
-        // Remove or adjust overflow if needed
-        // overflow: "hidden",
       }}
     >
       <iframe
@@ -34,6 +37,8 @@ const Page = () => {
           border: "none",
           height: "100%",
           width: "100%",
+          margin: 0,
+          padding: 0,
           position: "absolute",
           left: 0,
           zIndex: 1,
@@ -41,7 +46,6 @@ const Page = () => {
         title="Redlight One Map"
         allowFullScreen
         allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
-        tabIndex={-1} // Prevent iframe from being focusable
       />
       <BottomFooter />
     </div>
