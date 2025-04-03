@@ -1,7 +1,7 @@
 // pages/index.js (or wherever you want this component to live)
 "use client"; // This is still valid in Next.js for client-side components
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Box,
   Button,
@@ -14,13 +14,10 @@ import {
 } from "@mui/material";
 import { Share2 } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
-// import html2canvas from "html2canvas";
 import liff from "@line/liff";
-import backgroundImage  from "../images/7.svg";
-import snsBgImage from "../images/SNS-bg.png"
-
-
-
+import backgroundImage from "../images/7.svg";
+import snsBgImage from "../images/SNS-bg.png";
+import domtoimage from "dom-to-image";
 const fontStyle = {
   fontFamily: "'MyCustomFont', sans-serif",
 };
@@ -75,123 +72,65 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [open]);
 
-  // const prepareShareImage = useCallback(() => {
-  //   setShouldRenderScoreElement(true);
-  //   return new Promise<void>((resolve) => {
-  //     setTimeout(() => resolve(), 100);
-  //   });
-  // }, []);
+  const prepareShareImage = useCallback(() => {
+    setShouldRenderScoreElement(true);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), 100);
+    });
+  }, []);
 
-  // const generateScoreCard = useCallback(async () => {
-  //   try {
-  //     if (!scoreRef.current) return null;
-  //     setIsGeneratingImage(true);
+  const generateScoreCard = useCallback(async () => {
+    try {
+      if (!scoreRef.current) return null;
+      setIsGeneratingImage(true);
 
-  //     const scrollX = window.scrollX;
-  //     const scrollY = window.scrollY;
+      const scoreElement = scoreRef.current;
+      const imageUrl = await domtoimage.toPng(scoreElement, {
+        width: scoreElement.offsetWidth,
+        height: scoreElement.offsetHeight,
+      });
 
-  //     document.body.style.overflow = "hidden";
-  //     document.documentElement.style.touchAction = "none";
+      setScoreImageUrl(imageUrl);
+      setIsGeneratingImage(false);
+      return imageUrl;
+    } catch (error) {
+      console.error("Failed to generate score card:", error);
+      setIsGeneratingImage(false);
+      return null;
+    }
+  }, []);
 
-  //     const scoreElement = scoreRef.current;
-  //     const originalTransform = scoreElement.style.transform;
-  //     const originalPosition = scoreElement.style.position;
-  //     const originalVisibility = scoreElement.style.visibility;
-
-  //     scoreElement.style.opacity = "1";
-  //     scoreElement.style.transform = "none";
-  //     scoreElement.style.position = "absolute";
-  //     scoreElement.style.visibility = "visible";
-  //     scoreElement.style.left = "-9999px";
-  //     scoreElement.style.top = "-9999px";
-  //     scoreElement.setAttribute("aria-hidden", "true");
-
-  //     const dpr = Math.min(window.devicePixelRatio * 1.5, 3);
-
-  //     const options = {
-  //       scale: dpr,
-  //       backgroundColor: null,
-  //       logging: false,
-  //       useCORS: true,
-  //       allowTaint: true,
-  //       imageTimeout: 0,
-  //       removeContainer: true,
-  //       windowWidth: scoreElement.offsetWidth,
-  //       windowHeight: scoreElement.offsetHeight,
-  //     };
-
-  //     const canvas = await html2canvas(scoreElement, options);
-  //     const imageUrl = canvas.toDataURL("image/png", 0.9);
-
-  //     scoreElement.style.opacity = "0";
-  //     scoreElement.style.transform = originalTransform;
-  //     scoreElement.style.position = originalPosition;
-  //     scoreElement.style.visibility = originalVisibility;
-  //     scoreElement.removeAttribute("aria-hidden");
-
-  //     setTimeout(() => {
-  //       window.scrollTo(scrollX, scrollY);
-  //       document.body.style.overflow = "";
-  //       document.documentElement.style.touchAction = "";
-  //     }, 100);
-
-  //     setScoreImageUrl(imageUrl);
-  //     setIsGeneratingImage(false);
-  //     return imageUrl;
-  //   } catch (error) {
-  //     console.error("Failed to generate score card:", error);
-  //     document.body.style.overflow = "";
-  //     document.documentElement.style.touchAction = "";
-  //     if (scoreRef.current) {
-  //       scoreRef.current.style.opacity = "0";
-  //       scoreRef.current.removeAttribute("aria-hidden");
-  //     }
-  //     setIsGeneratingImage(false);
-  //     return null;
-  //   }
-  // }, []);
-
-  // const handleShareClick = async () => {
-  //   setIsGeneratingImage(true);
-
-  //   if (scoreRef.current) {
-  //     scoreRef.current.style.opacity = "0";
-  //     scoreRef.current.style.transform = "none";
-  //     scoreRef.current.style.position = "absolute";
-  //     scoreRef.current.style.visibility = "hidden";
-  //     scoreRef.current.style.left = "-9999px";
-  //     scoreRef.current.style.top = "-9999px";
-  //     scoreRef.current.style.pointerEvents = "none";
-  //   }
-
-  //   if (scoreImageUrl) {
-  //     setShareModalOpen(true);
-  //     setIsGeneratingImage(false);
-  //     return;
-  //   }
-  //   try {
-  //     await prepareShareImage();
-  //     const imageUrl = await generateScoreCard();
-  //     if (imageUrl) {
-  //       setShareModalOpen(true);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error generating score card:", error);
-  //   } finally {
-  //     setIsGeneratingImage(false);
-  //   }
-  // };
   const handleShareClick = async () => {
-    console.log("handleShareClick triggered");
     setIsGeneratingImage(true);
 
+    if (scoreRef.current) {
+      scoreRef.current.style.opacity = "0";
+      scoreRef.current.style.transform = "none";
+      scoreRef.current.style.position = "absolute";
+      scoreRef.current.style.visibility = "hidden";
+      scoreRef.current.style.left = "-9999px";
+      scoreRef.current.style.top = "-9999px";
+      scoreRef.current.style.pointerEvents = "none";
+    }
+
     if (scoreImageUrl) {
-      console.log("Opening share modal");
       setShareModalOpen(true);
       setIsGeneratingImage(false);
       return;
     }
+    try {
+      await prepareShareImage();
+      const imageUrl = await generateScoreCard();
+      if (imageUrl) {
+        setShareModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error generating score card:", error);
+    } finally {
+      setIsGeneratingImage(false);
+    }
   };
+
   const shareScore = async () => {
     if (!scoreImageUrl) return;
 
