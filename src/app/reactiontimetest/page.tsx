@@ -1,26 +1,18 @@
 "use client";
 import BottomFooter from "@/components/BottomFooter";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Page = () => {
-  // const triggerURL = (url: string) => {
-  //   const iframe = document.createElement("iframe");
-  //   iframe.style.display = "none";
-  //   iframe.src = url;
+  const handleModalClose = () => {
+    document.body.focus(); // Restore focus to body
+    window.scrollTo(0, 0); // Reset scroll position
+  };
 
-  //   document.body.appendChild(iframe);
-
-  //   console.log("working");
-  //   setTimeout(() => {
-  //     document.body.removeChild(iframe);
-  //   }, 1000);
-  // };
-
-  // useEffect(() => {
-  //   triggerURL(
-  //     "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appRTTcircuit"
-  //   );
-  // }, []);
+  useEffect(() => {
+    // Simulate modal close event (replace with actual event from your modal)
+    window.addEventListener("modalClosed", handleModalClose);
+    return () => window.removeEventListener("modalClosed", handleModalClose);
+  }, []);
 
   return (
     <div
@@ -32,23 +24,24 @@ const Page = () => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden", // Prevent scrolling issues
+        // Remove or adjust overflow if needed
+        // overflow: "hidden",
       }}
     >
       <iframe
         src="https://redlight-one.vercel.app/"
         style={{
           border: "none",
-          height: "100%", // Keep full height
+          height: "100%",
           width: "100%",
           position: "absolute",
-          // top: "-56px", // Shift iframe up by the height of its nav (adjust as needed)
           left: 0,
-          zIndex: 1, // Lower z-index than BottomNav
+          zIndex: 1,
         }}
         title="Redlight One Map"
         allowFullScreen
         allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
+        tabIndex={-1} // Prevent iframe from being focusable
       />
       <BottomFooter />
     </div>
