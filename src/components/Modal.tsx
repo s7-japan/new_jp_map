@@ -1,7 +1,8 @@
-// pages/index.js (or wherever you want this component to live)
-"use client"; // This is still valid in Next.js for client-side components
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type React from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,19 +13,19 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import domtoimage from "dom-to-image";
 import { Share2 } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
-import liff from "@line/liff";
+import html2canvas from "html2canvas";
+import liff from "@line/liff"; // Import LIFF SDK
 import backgroundImage from "../images/7.svg";
 import snsBgImage from "../images/SNS-bg.png";
 
 const fontStyle = {
-  fontFamily: "formula1,formula1Bold",
+  fontFamily: "'MyCustomFont', sans-serif",
 };
 
 const japaneseFontStyle = {
-  fontFamily: "Hiragino,HiraginoBold",
+  fontFamily: "'JapaneseFont', sans-serif",
 };
 
 interface ModalProps {
@@ -80,22 +81,87 @@ const Modal: React.FC<ModalProps> = ({
     });
   }, []);
 
+  // Enhanced generateScoreCard with better cross-platform compatibility
   const generateScoreCard = useCallback(async () => {
     try {
       if (!scoreRef.current) return null;
       setIsGeneratingImage(true);
 
+      // Save current scroll position
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+
+      // Prevent any scrolling or zooming during image generation
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.touchAction = "none"; // Disable touch actions on html element
+
+      // Get references to the score element
       const scoreElement = scoreRef.current;
-      const imageUrl = await domtoimage.toPng(scoreElement, {
-        width: scoreElement.offsetWidth,
-        height: scoreElement.offsetHeight,
-      });
+      const originalTransform = scoreElement.style.transform;
+      const originalPosition = scoreElement.style.position;
+      const originalVisibility = scoreElement.style.visibility;
+
+      // Set up the element for capture
+      scoreElement.style.opacity = "1";
+      scoreElement.style.transform = "none";
+      scoreElement.style.position = "absolute";
+      scoreElement.style.visibility = "visible";
+      scoreElement.style.left = "-9999px"; // Keep it off-screen
+      scoreElement.style.top = "-9999px";
+
+      // Ensure iOS doesn't try to focus on the off-screen element
+      scoreElement.setAttribute("aria-hidden", "true");
+
+      // Use higher resolution for better image quality on high-DPI devices
+      const dpr = Math.min(window.devicePixelRatio * 1.5, 3); // Cap at 3x to avoid excessive memory use
+
+      const options = {
+        scale: dpr,
+        backgroundColor: null,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 0,
+        removeContainer: true,
+        windowWidth: scoreElement.offsetWidth,
+        windowHeight: scoreElement.offsetHeight,
+      };
+
+      // Generate the image
+      const canvas = await html2canvas(scoreElement, options);
+      const imageUrl = canvas.toDataURL("image/png", 0.9);
+
+      // Restore original element state
+      scoreElement.style.opacity = "0";
+      scoreElement.style.transform = originalTransform;
+      scoreElement.style.position = originalPosition;
+      scoreElement.style.visibility = originalVisibility;
+      scoreElement.removeAttribute("aria-hidden");
+
+      // Restore scroll position with a delay to ensure rendering is complete
+      setTimeout(() => {
+        window.scrollTo(scrollX, scrollY);
+
+        // Re-enable scrolling and interactions
+        document.body.style.overflow = "";
+        document.documentElement.style.touchAction = "";
+      }, 100);
 
       setScoreImageUrl(imageUrl);
       setIsGeneratingImage(false);
       return imageUrl;
     } catch (error) {
       console.error("Failed to generate score card:", error);
+
+      // Clean up even if there's an error
+      document.body.style.overflow = "";
+      document.documentElement.style.touchAction = "";
+
+      if (scoreRef.current) {
+        scoreRef.current.style.opacity = "0";
+        scoreRef.current.removeAttribute("aria-hidden");
+      }
+
       setIsGeneratingImage(false);
       return null;
     }
@@ -104,6 +170,7 @@ const Modal: React.FC<ModalProps> = ({
   const handleShareClick = async () => {
     setIsGeneratingImage(true);
 
+    // First, ensure any previous score element is properly reset
     if (scoreRef.current) {
       scoreRef.current.style.opacity = "0";
       scoreRef.current.style.transform = "none";
@@ -132,6 +199,7 @@ const Modal: React.FC<ModalProps> = ({
     }
   };
 
+  // Update the shareScore function with better platform detection
   const shareScore = async () => {
     if (!scoreImageUrl) return;
 
@@ -146,15 +214,18 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
     }`;
 
     try {
+      // Copy text to clipboard as a universal fallback
       await navigator.clipboard.writeText(shareText);
       console.log("Share text copied to clipboard");
 
+      // Detect platforms
       const isIOS =
         /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
       const isAndroid = /Android/.test(navigator.userAgent);
 
       if (isInLiff && liff.isApiAvailable("shareTargetPicker")) {
+        // LIFF environment: Share image directly
         await liff.shareTargetPicker([
           {
             type: "image",
@@ -165,6 +236,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
         console.log("Shared image directly via LIFF shareTargetPicker");
         cleanupAfterShare();
       } else {
+        // Non-LIFF environment: Try Web Share API for modern browsers
         const isWebShareSupported = typeof navigator.share === "function";
 
         if (isWebShareSupported) {
@@ -184,6 +256,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
               text: shareText,
             };
 
+            // Check if sharing files is supported (important for iOS)
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
               shareData.files = [file];
             }
@@ -194,14 +267,18 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             return;
           } catch (webShareError) {
             console.error("Web Share API error:", webShareError);
+            // Fall through to platform-specific fallbacks
           }
         }
 
+        // Platform-specific fallbacks
         if (isAndroid) {
+          // Android LINE deep link
           const encodedText = encodeURIComponent(shareText);
           const lineUrl = `line://msg/text/${encodedText}`;
           window.location.href = lineUrl;
 
+          // If we're still here after a delay, the LINE app might not be installed
           setTimeout(() => {
             if (document.hasFocus()) {
               downloadImage();
@@ -210,6 +287,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
           }, 1500);
           return;
         } else if (isIOS) {
+          // iOS might need special handling for LINE
           try {
             const lineIOSUrl = `line://msg/text/${encodeURIComponent(
               shareText
@@ -229,6 +307,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             cleanupAfterShare();
           }
         } else {
+          // Desktop or other platforms
           downloadImage();
           cleanupAfterShare();
         }
@@ -240,14 +319,17 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
     }
   };
 
+  // Improved cleanup function with iOS/Android specific handling
   const cleanupAfterShare = () => {
     setShareModalOpen(false);
     setShouldRenderScoreElement(false);
-    setScoreImageUrl(null);
+    setScoreImageUrl(null); // Reset the score image URL to ensure a fresh generation next time
 
+    // Restore normal page behavior
     document.body.style.overflow = "";
     document.documentElement.style.touchAction = "";
 
+    // Complete reset of the score element
     if (scoreRef.current) {
       scoreRef.current.style.opacity = "0";
       scoreRef.current.style.transform = "none";
@@ -261,11 +343,14 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
       scoreRef.current.setAttribute("aria-hidden", "true");
     }
 
+    // Detect iOS
     const isIOS =
       /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
+    // On iOS, we need a more aggressive approach to prevent zooming
     if (isIOS) {
+      // Force viewport reset to prevent iOS zoom
       const viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) {
         const originalContent = viewport.getAttribute("content");
@@ -279,40 +364,53 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
           }, 300);
         }
       }
+
+      // Reset scroll position after a delay
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 100);
     } else {
+      // For Android and other platforms
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 100);
     }
   };
 
+  // Improved downloadImage function to ensure modal closes properly on all devices
+  // Improved downloadImage function with LIFF-specific download attempt
   const downloadImage = async () => {
     if (!scoreImageUrl) return;
 
     try {
-      setShareModalOpen(false);
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      setShareModalOpen(false); // Close the modal first
+      await new Promise((resolve) => setTimeout(resolve, 50)); // Allow modal animation to complete
 
+      // Fetch the image as a Blob
       const response = await fetch(scoreImageUrl);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
       if (isInLiff && liff.isInClient()) {
+        // Attempt to trigger download in LIFF
         const downloadLink = document.createElement("a");
         downloadLink.href = blobUrl;
         downloadLink.download = "reaction-time-score.png";
         document.body.appendChild(downloadLink);
 
+        // Try to programmatically trigger the download
         downloadLink.click();
 
+        // Delay to check if the download worked (LINE might block this)
         setTimeout(() => {
           document.body.removeChild(downloadLink);
           window.URL.revokeObjectURL(blobUrl);
 
+          // Fallback: If the download doesn't start, prompt the user
           if (document.hasFocus()) {
+            // Assume download failed if the page still has focus
+            alert();
+            // Optionally trigger share as a backup
             if (liff.isApiAvailable("shareTargetPicker")) {
               liff.shareTargetPicker([
                 {
@@ -324,8 +422,9 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             }
           }
           cleanupAfterShare();
-        }, 1000);
+        }, 1000); // Wait 1 second to detect if download succeeded
       } else {
+        // Non-LIFF environment (e.g., Vercel): Standard download
         const downloadLink = document.createElement("a");
         downloadLink.href = blobUrl;
         downloadLink.download = "reaction-time-score.png";
@@ -340,6 +439,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
       }
     } catch (downloadError) {
       console.error("Download failed:", downloadError);
+      alert();
       if (isInLiff && liff.isApiAvailable("shareTargetPicker")) {
         liff.shareTargetPicker([
           {
@@ -353,12 +453,14 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
     }
   };
 
+  // Add a listener to reset the score element when modal closes
   useEffect(() => {
     if (!open) {
       setShouldRenderScoreElement(false);
-      setShareModalOpen(false);
       setScoreImageUrl(null);
+      setShareModalOpen(false);
 
+      // Ensure any lingering score elements are cleaned up
       if (scoreRef.current) {
         scoreRef.current.style.opacity = "0";
         scoreRef.current.style.transform = "none";
@@ -366,13 +468,18 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
     }
   }, [open]);
 
+  // Add a new function to handle navigation away from result screen
   const handleCircuitJourneyClick = () => {
+    // Custom event to signal audio should be stopped
     const stopAudioEvent = new CustomEvent("stopGameAudio");
     document.dispatchEvent(stopAudioEvent);
+
+    // Navigate to the circuit journey page
     window.location.href =
       "https://miniapp.line.me/2007078799-0oWyrXee/circuitjourney";
   };
 
+  // Rest of the component (UI) remains unchanged
   return (
     <>
       <MuiModal
@@ -394,19 +501,21 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
           ...fontStyle,
           touchAction: "pan-y",
           userSelect: "none",
-          overflow: "auto",
+          overflow: "auto", // Keep overflow auto to enable scrolling
           pointerEvents: "auto",
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
+          // Hide scrollbar for all devices by default
           "&::-webkit-scrollbar": {
-            display: "none",
+            display: "none", // Hide scrollbar for Chrome/Safari/Edge
           },
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
+          scrollbarWidth: "none", // Hide scrollbar for Firefox
+          msOverflowStyle: "none", // Hide scrollbar for IE
+          // Only show scrollbar on very small devices (iPhone SE/Mini size)
           "@media (max-width: 375px) and (max-height: 667px)": {
             "&::-webkit-scrollbar": {
-              display: "block",
+              display: "block", // Show scrollbar
               width: "8px",
               background: "rgba(0, 0, 0, 0.1)",
             },
@@ -433,7 +542,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             padding: 0,
             touchAction: "none",
             pointerEvents: "none",
-            boxSizing: "border-box",
+            boxSizing: "border-box", // Ensure padding doesn't add to dimensions
           },
         }}
         disableScrollLock={false}
@@ -462,7 +571,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundAttachment: "fixed",
-            overflow: "auto",
+            overflow: "auto", // Keep overflow auto to enable scrolling
             overflowX: "hidden",
             zIndex: 2,
             margin: 0,
@@ -473,14 +582,16 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
             pointerEvents: "auto",
             boxSizing: "border-box",
             ...fontStyle,
+            // Hide scrollbar for all devices by default
             "&::-webkit-scrollbar": {
-              display: "none",
+              display: "none", // Hide scrollbar for Chrome/Safari/Edge
             },
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+            scrollbarWidth: "none", // Hide scrollbar for Firefox
+            msOverflowStyle: "none", // Hide scrollbar for IE
+            // Only show scrollbar on very small devices (iPhone SE/Mini size)
             "@media (max-width: 375px) and (max-height: 667px)": {
               "&::-webkit-scrollbar": {
-                display: "block",
+                display: "block", // Show scrollbar
                 width: "8px",
                 background: "rgba(0, 0, 0, 0.2)",
               },
@@ -508,29 +619,31 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
               borderRadius: 0,
               p: isVerySmallScreen ? 2 : 3,
               textAlign: "center",
-              height: "auto",
+              height: "auto", // Changed from 100% to auto to ensure content fits
               minHeight: "100vh",
               color: "white",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "flex-start", // Changed from center to flex-start
               my: 0,
               mb: 0,
               zIndex: 3,
-              overflow: "visible",
-              overflowY: "visible",
+              overflow: "visible", // Changed from auto to visible
+              overflowY: "visible", // Explicitly set overflow-y to visible
               overflowX: "hidden",
               touchAction: "pan-y",
               ...fontStyle,
-              position: "relative",
+              position: "relative", // Changed from absolute to relative
               padding: { xs: 2, sm: 3, md: 4 },
               boxSizing: "border-box",
+              // Hide scrollbar on all devices
               "&::-webkit-scrollbar": {
                 display: "none",
               },
               scrollbarWidth: "none",
               msOverflowStyle: "none",
+              // Only show scrollbar for very small devices
               "@media (max-width: 375px) and (max-height: 667px)": {
                 "&::-webkit-scrollbar": {
                   display: "block",
@@ -544,6 +657,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                 },
                 scrollbarWidth: "auto",
                 scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.2)",
+                msOverflowStyle: "auto",
               },
             }}
             onTouchMove={(e) => {
@@ -565,7 +679,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   alignItems: "center",
                   justifyContent: "center",
                   padding: 4,
-                  position: "absolute",
+                  position: "absolute", // Changed from fixed to absolute
                   left: "-9999px",
                   top: "-9999px",
                   pointerEvents: "none",
@@ -573,13 +687,11 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   touchAction: "none",
                   opacity: 0,
                   zIndex: -999,
-                  visibility: "hidden",
-                  color: "black", // Ensure text color is supported
-                  backgroundColor: "#ffffff", // Replace any unsupported background colors
+                  visibility: "hidden", // Add explicit visibility control
                   ...fontStyle,
                 }}
-                aria-hidden="true"
-                tabIndex={-1}
+                aria-hidden="true" // Ensure screen readers ignore this
+                tabIndex={-1} // Prevent focus
               >
                 <Typography
                   variant="h4"
@@ -663,7 +775,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   color: "white",
                   marginBottom: isVerySmallScreen ? "20px" : "60px",
                   fontSize: isVerySmallScreen ? "26px" : "33px",
-                  fontFamily: "formula1",
+                  ...fontStyle,
                 }}
               >
                 MISSION CLEAR
@@ -723,7 +835,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                 alignItems: "center",
                 mt: isVerySmallScreen ? 1 : 3,
                 paddingTop: 2,
-                paddingBottom: isVerySmallScreen ? "50px" : "100px",
+                paddingBottom: isVerySmallScreen ? "50px" : "100px", // Increased bottom padding for more space
               }}
             >
               <Button
@@ -774,8 +886,8 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   bgcolor: "rgba(100, 100, 100, 0.7)",
                   color: "white",
                   borderRadius: "24px",
-                  marginBottom: isVerySmallScreen ? "20px" : "30px",
-                  padding: isVerySmallScreen ? "10px" : "12px",
+                  marginBottom: isVerySmallScreen ? "20px" : "30px", // Slightly increased margin
+                  padding: isVerySmallScreen ? "10px" : "12px", // Slightly increased padding
                   fontSize: isVerySmallScreen ? "14px" : "16px",
                   fontWeight: "normal",
                   textTransform: "none",
@@ -791,7 +903,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
               <button
                 onClick={handleCircuitJourneyClick}
                 style={{
-                  marginBottom: isVerySmallScreen ? "40px" : "60px",
+                  marginBottom: isVerySmallScreen ? "40px" : "60px", // Reduced from 150px to ensure it's visible
                   padding: isVerySmallScreen ? "10px" : "12px",
                   width: isVerySmallScreen ? "80%" : "90%",
                   borderRadius: "24px",
@@ -824,13 +936,13 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
           ...fontStyle,
           touchAction: "none",
           userSelect: "none",
-          pointerEvents: "auto",
+          pointerEvents: "auto", // Enable pointer events for this modal
         }}
         disableScrollLock={false}
         BackdropProps={{
           style: {
             touchAction: "none",
-            pointerEvents: "auto",
+            pointerEvents: "auto", // Ensure backdrop pointer events are properly set
           },
         }}
         disableRestoreFocus
@@ -853,7 +965,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
         >
           <IconButton
             onClick={() => {
-              cleanupAfterShare();
+              cleanupAfterShare(); // Use the comprehensive cleanup function
             }}
             sx={{
               position: "absolute",
@@ -896,7 +1008,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                 p: 1,
               }}
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // Prevent event bubbling
                 shareScore();
               }}
             >
