@@ -16,17 +16,15 @@ import { Share2 } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
 // import html2canvas from "html2canvas";
 import liff from "@line/liff";
-import backgroundImage  from "../images/7.svg";
-import snsBgImage from "../images/SNS-bg.png"
-
-
+import backgroundImage from "../images/7.svg";
+import snsBgImage from "../images/SNS-bg.png";
 
 const fontStyle = {
-  fontFamily: "'MyCustomFont', sans-serif",
+  fontFamily: "formula1,formula1Bold",
 };
 
 const japaneseFontStyle = {
-  fontFamily: "'JapaneseFont', sans-serif",
+  fontFamily: "Hiragino,HiraginoBold",
 };
 
 interface ModalProps {
@@ -723,7 +721,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                   color: "white",
                   marginBottom: isVerySmallScreen ? "20px" : "60px",
                   fontSize: isVerySmallScreen ? "26px" : "33px",
-                  ...fontStyle,
+                  fontFamily: "formula1",
                 }}
               >
                 MISSION CLEAR
