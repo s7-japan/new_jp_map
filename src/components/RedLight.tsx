@@ -7,15 +7,6 @@ import Modal from "./Modal";
 import BottomFooter from "./BottomFooter";
 
 // Import font using CSS @font-face
-const fontStyles = `
-  @font-face {
-    font-family: 'HiraginoBold';
-    src: url('/fonts/Hiragino-Kakugo-Pro-W6.otf') format('opentype');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-  }
-`;
 
 const TapButton = ({
   onClick,
@@ -87,7 +78,7 @@ const TapButton = ({
           transform="translate(320.266 695)"
           fill="#fff"
           fontSize="20"
-          fontFamily="MyCustomFont"
+          fontFamily="formula1"
           letterSpacing="0.014em"
         >
           <tspan x="-20.419" y="8">
@@ -172,8 +163,7 @@ const MissionBanner = ({
           color: "black",
           fontSize: "18px",
           margin: 0,
-          fontWeight: "bold",
-          fontFamily: "'MyCustomFont', sans-serif",
+          fontFamily: "formula1",
           textAlign: "center",
           "@media screen and (max-height: 500px)": {
             fontSize: "16px",
@@ -189,7 +179,7 @@ const MissionBanner = ({
           fontSize: "12px",
           margin: "8px 0 0",
           ...japaneseFontStyle,
-          fontFamily: "JapaneseFont",
+          fontFamily: "Hiragino",
           textAlign: "center",
           maxWidth: "90%",
           "@media screen and (max-height: 500px)": {
@@ -538,17 +528,19 @@ const RedLight = () => {
 
   useEffect(() => {
     // Preload all videos at the start
-    [section1VideoRef, section2VideoRef, section3VideoRef].forEach((ref, index) => {
-      if (ref.current) {
-        ref.current.preload = "auto";
-        ref.current.src = [
-          "/reaction/F1_RTT_movie1.mp4",
-          "/reaction/F1_RTT_movie_when_button_appear.mp4",
-          "/reaction/F1_RTT_movie_after_user_tap_movOnly.mp4",
-        ][index];
-        ref.current.load();
+    [section1VideoRef, section2VideoRef, section3VideoRef].forEach(
+      (ref, index) => {
+        if (ref.current) {
+          ref.current.preload = "auto";
+          ref.current.src = [
+            "/reaction/F1_RTT_movie1.mp4",
+            "/reaction/F1_RTT_movie_when_button_appear.mp4",
+            "/reaction/F1_RTT_movie_after_user_tap_movOnly.mp4",
+          ][index];
+          ref.current.load();
+        }
       }
-    });
+    );
   }, []);
 
   const startGame = () => {
@@ -772,13 +764,13 @@ const RedLight = () => {
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#242424",
-        fontFamily: "'MyCustomFont', sans-serif",
+        fontFamily: "Formula1",
         touchAction: "none",
       }}
       onTouchMove={(e) => e.preventDefault()}
     >
       {/* Add style tag to inject the font-face declaration */}
-      <style dangerouslySetInnerHTML={{ __html: fontStyles }} />
+      {/* <style dangerouslySetInnerHTML={{ __html: fontStyles }} /> */}
 
       <Box
         sx={{
@@ -792,7 +784,7 @@ const RedLight = () => {
           alignItems: "center",
           justifyContent: "space-between",
           flex: 1,
-          fontFamily: "'MyCustomFont', sans-serif",
+          fontFamily: "Formula1",
           zIndex: 1,
         }}
       >
@@ -813,7 +805,7 @@ const RedLight = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              fontFamily: "'MyCustomFont', sans-serif",
+              fontFamily: "Formula1",
               key: `background-${cacheBustTimestamp.current}`,
             }}
           >
@@ -824,7 +816,7 @@ const RedLight = () => {
               sx={{
                 height: "100%",
                 width: "100%",
-                objectFit: "cover",
+                objectFit: "contain",
                 objectPosition: "center 40%",
                 position: "absolute",
                 top: 0,
@@ -847,7 +839,7 @@ const RedLight = () => {
                 alignItems: "center",
                 zIndex: 4,
                 opacity: 1,
-                fontFamily: "'MyCustomFont', sans-serif",
+                fontFamily: "Formula1",
                 paddingBottom: { xs: "10px", sm: "10px", md: "10px" },
                 marginTop: { xs: "0px", sm: "100px", md: "120px" },
               }}
@@ -869,7 +861,7 @@ const RedLight = () => {
                       color: "white",
                       fontSize: "16px",
                       mt: 1,
-                      fontFamily: "'MyCustomFont', sans-serif",
+                      fontFamily: "Formula1",
                     }}
                   >
                     {isVideoLoading ? "Loading Game..." : "Loading..."}
@@ -893,11 +885,11 @@ const RedLight = () => {
                       color: "#2f3640",
                       border: "none",
                       fontSize: "20px",
-                      fontWeight: "bold",
+                      //   fontWeight: "bold",
                       cursor: gameState === "init" ? "pointer" : "default",
                       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                       transition: "all 0.3s ease",
-                      fontFamily: "'MyCustomFont', sans-serif",
+                      fontFamily: "Formula1",
                       "@media screen and (max-width: 768px)": {
                         maxWidth: "280px",
                         fontSize: "20px",
@@ -995,7 +987,7 @@ const RedLight = () => {
                     borderRadius: "4px",
                     marginTop: "10px",
                     fontSize: "14px",
-                    fontFamily: "'MyCustomFont', sans-serif",
+                    fontFamily: "Formula1",
                   }}
                 >
                   {videoError}
@@ -1135,7 +1127,7 @@ const RedLight = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "65px",
-          fontFamily: "'MyCustomFont', sans-serif",
+          fontFamily: "Formula1",
           transition: "all 1000ms ease-in-out",
         }}
       >
@@ -1147,9 +1139,8 @@ const RedLight = () => {
             margin: 0,
             marginBottom: "6px",
             letterSpacing: "1px",
-            fontWeight: "bold",
-            fontFamily: "'MyCustomFont', sans-serif",
-            "& .highlight-red": { color: "#E00400", fontWeight: 900 },
+            fontFamily: "Formula1",
+            "& .highlight-red": { color: "#E00400" },
           }}
         >
           <span className="highlight-red">R</span>EACTION TIME{" "}
@@ -1163,7 +1154,7 @@ const RedLight = () => {
             margin: 0,
             marginBottom: "5px",
             fontWeight: "bold",
-            fontFamily: "'HiraginoBold'", // Using HiraginoBold font
+            fontFamily: "HiraginoBold", // Using HiraginoBold font
           }}
         >
           リアクションタイムテスト
