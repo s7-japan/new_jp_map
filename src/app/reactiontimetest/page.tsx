@@ -1,5 +1,5 @@
 "use client";
-import RedLight from "@/components/RedLight";
+import BottomFooter from "@/components/BottomFooter";
 import React from "react";
 
 const Page = () => {
@@ -35,8 +35,22 @@ const Page = () => {
         overflow: "hidden", // Prevent scrolling issues
       }}
     >
-      <RedLight />
-      {/* <BottomFooter /> */}
+      <iframe
+        src="https://redlight-one.vercel.app/"
+        style={{
+          border: "none",
+          height: "100%", // Keep full height
+          width: "100%",
+          position: "absolute",
+          // top: "-56px", // Shift iframe up by the height of its nav (adjust as needed)
+          left: 0,
+          zIndex: 1, // Lower z-index than BottomNav
+        }}
+        title="Redlight One Map"
+        allowFullScreen
+        allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
+      />
+      <BottomFooter />
     </div>
   );
 };
