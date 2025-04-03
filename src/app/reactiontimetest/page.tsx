@@ -1,5 +1,4 @@
 "use client";
-import BottomFooter from "@/components/BottomFooter";
 import RedLight from "@/components/RedLight";
 import React from "react";
 
