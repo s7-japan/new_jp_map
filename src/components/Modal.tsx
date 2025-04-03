@@ -12,7 +12,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import domtoimage from "dom-to-image";
+import html2canvas from "html2canvas";
 import { Share2 } from "lucide-react";
 import CloseIcon from "@mui/icons-material/Close";
 import liff from "@line/liff";
@@ -85,17 +85,81 @@ const Modal: React.FC<ModalProps> = ({
       if (!scoreRef.current) return null;
       setIsGeneratingImage(true);
 
+      // Save current scroll position
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+
+      // Prevent any scrolling or zooming during image generation
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.touchAction = "none"; // Disable touch actions on html element
+
+      // Get references to the score element
       const scoreElement = scoreRef.current;
-      const imageUrl = await domtoimage.toPng(scoreElement, {
-        width: scoreElement.offsetWidth,
-        height: scoreElement.offsetHeight,
-      });
+      const originalTransform = scoreElement.style.transform;
+      const originalPosition = scoreElement.style.position;
+      const originalVisibility = scoreElement.style.visibility;
+
+      // Set up the element for capture
+      scoreElement.style.opacity = "1";
+      scoreElement.style.transform = "none";
+      scoreElement.style.position = "absolute";
+      scoreElement.style.visibility = "visible";
+      scoreElement.style.left = "-9999px"; // Keep it off-screen
+      scoreElement.style.top = "-9999px";
+
+      // Ensure iOS doesn't try to focus on the off-screen element
+      scoreElement.setAttribute("aria-hidden", "true");
+
+      // Use higher resolution for better image quality on high-DPI devices
+      const dpr = Math.min(window.devicePixelRatio * 1.5, 3); // Cap at 3x to avoid excessive memory use
+
+      const options = {
+        scale: dpr,
+        backgroundColor: null,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 0,
+        removeContainer: true,
+        windowWidth: scoreElement.offsetWidth,
+        windowHeight: scoreElement.offsetHeight,
+      };
+
+      // Generate the image
+      const canvas = await html2canvas(scoreElement, options);
+      const imageUrl = canvas.toDataURL("image/png", 0.9);
+
+      // Restore original element state
+      scoreElement.style.opacity = "0";
+      scoreElement.style.transform = originalTransform;
+      scoreElement.style.position = originalPosition;
+      scoreElement.style.visibility = originalVisibility;
+      scoreElement.removeAttribute("aria-hidden");
+
+      // Restore scroll position with a delay to ensure rendering is complete
+      setTimeout(() => {
+        window.scrollTo(scrollX, scrollY);
+
+        // Re-enable scrolling and interactions
+        document.body.style.overflow = "";
+        document.documentElement.style.touchAction = "";
+      }, 100);
 
       setScoreImageUrl(imageUrl);
       setIsGeneratingImage(false);
       return imageUrl;
     } catch (error) {
       console.error("Failed to generate score card:", error);
+
+      // Clean up even if there's an error
+      document.body.style.overflow = "";
+      document.documentElement.style.touchAction = "";
+
+      if (scoreRef.current) {
+        scoreRef.current.style.opacity = "0";
+        scoreRef.current.removeAttribute("aria-hidden");
+      }
+
       setIsGeneratingImage(false);
       return null;
     }
@@ -747,7 +811,7 @@ https://liff.line.me/2006572406-D3OkWx32?tcode=rCXml0000013431
                     transition: "opacity 0.2s ease-in-out",
                   },
                 }}
-                // onClick={handleShareClick}
+                onClick={handleShareClick}
                 disabled={isGeneratingImage}
               >
                 {isGeneratingImage ? (
