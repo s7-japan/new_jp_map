@@ -816,7 +816,7 @@ const RedLight = () => {
               sx={{
                 height: "100%",
                 width: "100%",
-                objectFit: "cover",
+                objectFit: "contain",
                 objectPosition: "center 40%",
                 position: "absolute",
                 top: 0,
