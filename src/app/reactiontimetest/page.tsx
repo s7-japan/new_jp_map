@@ -1,24 +1,59 @@
-import RedLight from "@/components/RedLight";
+"use client";
+import BottomFooter from "@/components/BottomFooter";
 import React from "react";
 
-const page = () => {
+const Page = () => {
+  // const triggerURL = (url: string) => {
+  //   const iframe = document.createElement("iframe");
+  //   iframe.style.display = "none";
+  //   iframe.src = url;
+
+  //   document.body.appendChild(iframe);
+
+  //   console.log("working");
+  //   setTimeout(() => {
+  //     document.body.removeChild(iframe);
+  //   }, 1000);
+  // };
+
+  // useEffect(() => {
+  //   triggerURL(
+  //     "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appRTTcircuit"
+  //   );
+  // }, []);
+
   return (
     <div
       style={{
-        width: "100%",
         height: "100vh",
-        padding: 0,
+        width: "100vw",
         margin: 0,
-        overflow: "hidden",
-        position: "fixed", // Use fixed instead of relative
-        top: 0,
-        left: 0,
-        touchAction: "none", // Disable browser handling of all touch gestures
+        padding: 0,
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden", // Prevent scrolling issues
       }}
     >
-      <RedLight />
+      <iframe
+        src="https://redlight-one.vercel.app/"
+        style={{
+          border: "none",
+          height: "100%",
+          width: "100%",
+          margin: 0,
+          padding: 0,
+          position: "absolute",
+          left: 0,
+          zIndex: 1,
+        }}
+        title="Redlight One Map"
+        allowFullScreen
+        allow="clipboard-write; clipboard-read; fullscreen; geolocation; web-share"
+      />
+      <BottomFooter />
     </div>
   );
 };
 
-export default page;
+export default Page;
