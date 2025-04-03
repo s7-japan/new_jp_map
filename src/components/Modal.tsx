@@ -167,37 +167,37 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, []);
 
-  const handleShareClick = async () => {
-    setIsGeneratingImage(true);
+  // const handleShareClick = async () => {
+  //   setIsGeneratingImage(true);
 
-    // First, ensure any previous score element is properly reset
-    if (scoreRef.current) {
-      scoreRef.current.style.opacity = "0";
-      scoreRef.current.style.transform = "none";
-      scoreRef.current.style.position = "absolute";
-      scoreRef.current.style.visibility = "hidden";
-      scoreRef.current.style.left = "-9999px";
-      scoreRef.current.style.top = "-9999px";
-      scoreRef.current.style.pointerEvents = "none";
-    }
+  // First, ensure any previous score element is properly reset
+  if (scoreRef.current) {
+    scoreRef.current.style.opacity = "0";
+    scoreRef.current.style.transform = "none";
+    scoreRef.current.style.position = "absolute";
+    scoreRef.current.style.visibility = "hidden";
+    scoreRef.current.style.left = "-9999px";
+    scoreRef.current.style.top = "-9999px";
+    scoreRef.current.style.pointerEvents = "none";
+  }
 
-    if (scoreImageUrl) {
-      setShareModalOpen(true);
-      setIsGeneratingImage(false);
-      return;
-    }
-    try {
-      await prepareShareImage();
-      const imageUrl = await generateScoreCard();
-      if (imageUrl) {
-        setShareModalOpen(true);
-      }
-    } catch (error) {
-      console.error("Error generating score card:", error);
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
+  //   if (scoreImageUrl) {
+  //     setShareModalOpen(true);
+  //     setIsGeneratingImage(false);
+  //     return;
+  //   }
+  //   try {
+  //     await prepareShareImage();
+  //     const imageUrl = await generateScoreCard();
+  //     if (imageUrl) {
+  //       setShareModalOpen(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error generating score card:", error);
+  //   } finally {
+  //     setIsGeneratingImage(false);
+  //   }
+  // };
 
   // Update the shareScore function with better platform detection
   const shareScore = async () => {
