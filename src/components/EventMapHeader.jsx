@@ -21,14 +21,11 @@ const EventMapHeader = ({ scrollRef }) => {
         isVisible
       );
 
-      // Show header when scrolling up, hide when scrolling down
-      if (currentScrollPos < prevScrollPos) {
-        // Scrolling up - show header
-        if (!isVisible) setIsVisible(true);
-      } else if (currentScrollPos > prevScrollPos) {
-        // Scrolling down - hide header
-        if (isVisible) setIsVisible(false);
-      }
+      const shouldShow = currentScrollPos < 15; // Show only when less than 10px from top
+      const shouldHide = currentScrollPos > prevScrollPos; // Hide as soon as you scroll down even a little
+
+      if (shouldShow && !isVisible) setIsVisible(true);
+      else if (shouldHide && isVisible) setIsVisible(false);
 
       setPrevScrollPos(currentScrollPos);
     };
@@ -41,7 +38,7 @@ const EventMapHeader = ({ scrollRef }) => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-full bg-white rounded-b-3xl text-center shadow-xl z-[1000] transition-all duration-500 ease-in-out ${
+        className={`fixed top-0 left-0 w-full bg-white rounded-b-3xl text-center shadow-xl z-[1000] transition-all duration-1000 ease-in-out ${
           isVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full"
@@ -49,12 +46,12 @@ const EventMapHeader = ({ scrollRef }) => {
         style={{ height: "65px" }}
       >
         <div className="flex flex-col justify-between items-center h-full MyCustomFont">
-          <strong className="font-normal text-[1.6rem] formula1">
-            <span className="text-[#E00400]">E</span>VENT CAL
-            <span className="text-[#E00400]">E</span>NDAR
+          <strong className="font-normal text-[1.6rem]">
+            <span className="text-[#ff0000]">E</span>VENT CAL
+            <span className="text-[#ff0000]">E</span>NDAR
           </strong>
-          <p className="text-[12px] HiraginoBold mb-5 font-bold">
-            イベントカレンダー
+          <p className="font-bold text-[12px] font-[JPFonts] mb-5">
+            サーキットジャーニー
           </p>
         </div>
       </div>
