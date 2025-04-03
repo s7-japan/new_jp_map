@@ -101,36 +101,36 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, []);
 
-  const handleShareClick = async () => {
-    setIsGeneratingImage(true);
+  // const handleShareClick = async () => {
+  //   setIsGeneratingImage(true);
 
-    if (scoreRef.current) {
-      scoreRef.current.style.opacity = "0";
-      scoreRef.current.style.transform = "none";
-      scoreRef.current.style.position = "absolute";
-      scoreRef.current.style.visibility = "hidden";
-      scoreRef.current.style.left = "-9999px";
-      scoreRef.current.style.top = "-9999px";
-      scoreRef.current.style.pointerEvents = "none";
-    }
+  //   if (scoreRef.current) {
+  //     scoreRef.current.style.opacity = "0";
+  //     scoreRef.current.style.transform = "none";
+  //     scoreRef.current.style.position = "absolute";
+  //     scoreRef.current.style.visibility = "hidden";
+  //     scoreRef.current.style.left = "-9999px";
+  //     scoreRef.current.style.top = "-9999px";
+  //     scoreRef.current.style.pointerEvents = "none";
+  //   }
 
-    if (scoreImageUrl) {
-      setShareModalOpen(true);
-      setIsGeneratingImage(false);
-      return;
-    }
-    try {
-      await prepareShareImage();
-      const imageUrl = await generateScoreCard();
-      if (imageUrl) {
-        setShareModalOpen(true);
-      }
-    } catch (error) {
-      console.error("Error generating score card:", error);
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
+  //   if (scoreImageUrl) {
+  //     setShareModalOpen(true);
+  //     setIsGeneratingImage(false);
+  //     return;
+  //   }
+  //   try {
+  //     await prepareShareImage();
+  //     const imageUrl = await generateScoreCard();
+  //     if (imageUrl) {
+  //       setShareModalOpen(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error generating score card:", error);
+  //   } finally {
+  //     setIsGeneratingImage(false);
+  //   }
+  // };
 
   const shareScore = async () => {
     if (!scoreImageUrl) return;

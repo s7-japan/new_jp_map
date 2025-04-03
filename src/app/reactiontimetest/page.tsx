@@ -2,11 +2,7 @@ import RedLight from "@/components/RedLight";
 import React from "react";
 
 const page = () => {
-  return (
-    <div>
-      <RedLight />
-    </div>
-  );
+  return <RedLight />;
 };
 
 export default page;
