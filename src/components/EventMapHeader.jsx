@@ -23,9 +23,9 @@ const EventMapHeader = ({ scrollRef }) => {
 
       // More nuanced show/hide logic
       const isScrollingDown = currentScrollPos > prevScrollPos;
-      const shouldShow = currentScrollPos < 15;
+      const shouldShow = currentScrollPos < 30;
       // Only hide when scrolling down past a threshold
-      const shouldHide = isScrollingDown && currentScrollPos > 50 && isVisible;
+      const shouldHide = isScrollingDown && currentScrollPos > 10 && isVisible;
 
       if (shouldShow && !isVisible) {
         setIsVisible(true);
@@ -37,7 +37,7 @@ const EventMapHeader = ({ scrollRef }) => {
     };
 
     // Debounce scroll handler for better performance
-    const debouncedHandleScroll = debounce(handleScroll, 50);
+    const debouncedHandleScroll = debounce(handleScroll, 10);
     const scrollElement = scrollRef.current;
 
     // Use passive listener for better scroll performance
