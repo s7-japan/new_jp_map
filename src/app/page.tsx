@@ -19,11 +19,7 @@ const RedirectHandler = () => {
 
   useEffect(() => {
     if (redirectPath) {
-      if (redirectPath.includes("reactiontimetest")) {
-        window.location.href = "https://redlight-black.vercel.app/"
-      } else {
-        router.push(`${redirectPath}`);
-      }
+      router.push(`${redirectPath}`);
     }
   }, [redirectPath]);
 
