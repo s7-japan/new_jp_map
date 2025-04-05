@@ -19,8 +19,11 @@ const RedirectHandler = () => {
 
   useEffect(() => {
     if (redirectPath) {
-      // console.log(redirectPath)
-      router.push(`${redirectPath}`);
+      if (redirectPath.includes("reactiontimetest")) {
+        window.location.href = "https://redlight-black.vercel.app/"
+      } else {
+        router.push(`${redirectPath}`);
+      }
     }
   }, [redirectPath]);
 
@@ -28,7 +31,7 @@ const RedirectHandler = () => {
 };
 
 const MapPage = () => {
-  useEffect(() => {});
+  useEffect(() => { });
   return (
     <div className="bg-white w-full h-full">
       <Header />
