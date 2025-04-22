@@ -1,6 +1,7 @@
 // HamburgerMenu.js
 import React from "react";
 import "./Footer.css"; // Reusing same CSS file
+import { event } from "@/lib/gtag";
 
 const HamburgerMenu = ({ isOpen, onClose }) => {
   const triggerURL = (url) => {
@@ -16,6 +17,28 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
     }, 1000);
   };
 
+  const handleMenuItemClick = (itemName, url) => {
+    // Track menu item click
+    event({
+      action: 'menu_item_click',
+      category: 'navigation',
+      label: itemName
+    });
+    
+    triggerURL(url);
+  };
+  
+  const handleSocialClick = (platform, url) => {
+    // Track social media click
+    event({
+      action: 'social_click',
+      category: 'engagement',
+      label: platform
+    });
+    
+    triggerURL(url);
+  };
+
   return (
     <div className={`footer-menu ${isOpen ? "is-show" : ""}`}>
       <div className="footer-menu__overlay" onClick={onClose}></div>
@@ -24,9 +47,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
           <ul className="footer-link">
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuticket"
-                );
+                handleMenuItemClick("tickets", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuticket");
               }}
               className="footer-link__item"
             >
@@ -39,9 +60,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuaccess"
-                );
+                handleMenuItemClick("access", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuaccess");
               }}
               className="footer-link__item"
             >
@@ -54,9 +73,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuevent"
-                );
+                handleMenuItemClick("events", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuevent");
               }}
               className="footer-link__item"
             >
@@ -69,9 +86,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenushop"
-                );
+                handleMenuItemClick("shop", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenushop");
               }}
               className="footer-link__item"
             >
@@ -81,9 +96,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenumembers"
-                );
+                handleMenuItemClick("members", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenumembers");
               }}
               className="footer-link__item"
             >
@@ -96,9 +109,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenudazn"
-                );
+                handleMenuItemClick("dazn", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenudazn");
               }}
               className="footer-link__item"
             >
@@ -111,9 +122,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenucontact"
-                );
+                handleMenuItemClick("contact", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenucontact");
               }}
               className="footer-link__item"
             >
@@ -128,9 +137,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
           <ul className="footer-sub">
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuterms"
-                );
+                handleMenuItemClick("terms", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuterms");
               }}
               className="footer-sub__item"
             >
@@ -143,9 +150,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuprivacy"
-                );
+                handleMenuItemClick("privacy", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuprivacy");
               }}
               className="footer-sub__item"
             >
@@ -158,9 +163,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenucredit"
-                );
+                handleMenuItemClick("credit", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenucredit");
               }}
               className="footer-sub__item"
             >
@@ -175,9 +178,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
           <ul className="footer-sns">
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuinstagram"
-                );
+                handleSocialClick("instagram", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuinstagram");
               }}
               className="footer-sns__item"
             >
@@ -190,9 +191,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenufacebook"
-                );
+                handleSocialClick("facebook", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenufacebook");
               }}
               className="footer-sns__item"
             >
@@ -205,9 +204,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenux"
-                );
+                handleSocialClick("x_twitter", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenux");
               }}
               className="footer-sns__item"
             >
@@ -217,9 +214,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuyoutube"
-                );
+                handleSocialClick("youtube", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenuyoutube");
               }}
               className="footer-sns__item"
             >
@@ -232,9 +227,7 @@ const HamburgerMenu = ({ isOpen, onClose }) => {
             </li>
             <li
               onClick={() => {
-                triggerURL(
-                  "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenutiktok"
-                );
+                handleSocialClick("tiktok", "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appmenutiktok");
               }}
               className="footer-sns__item"
             >

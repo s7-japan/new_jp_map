@@ -1,9 +1,10 @@
-"use client"; // Add this since it’s a client component
+"use client"; // Add this since it's a client component
 import React from "react";
 import Link from "next/link";
 import HamburgerMenu from "./HamburgerMenu";
 import "./Footer.css";
 import { useStore } from "@/store/menuStore"; // Adjust path based on your structure
+import { event } from "@/lib/gtag";
 
 const BottomFooter = () => {
   const { isOpen, toggleMenu, showLoader, hideLoader } = useStore();
@@ -15,6 +16,13 @@ const BottomFooter = () => {
   };
 
   const handleMenuToggle = () => {
+    // Track hamburger menu toggle event
+    event({
+      action: isOpen ? 'menu_close' : 'menu_open',
+      category: 'navigation',
+      label: 'hamburger_menu'
+    });
+    
     toggleMenu(); // Toggle menu state from store
     setTimeout(() => hideLoader(), 500); // Hide loader after menu transition
   };
@@ -37,6 +45,13 @@ const BottomFooter = () => {
       <ul className="footer-btn">
         <li
           onClick={() => {
+            // Track footer home button click
+            event({
+              action: 'link_click',
+              category: 'navigation',
+              label: 'footer_home'
+            });
+            
             triggerURL(
               "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfooterhome"
             );
@@ -52,6 +67,13 @@ const BottomFooter = () => {
         </li>
         <li
           onClick={() => {
+            // Track footer driver button click
+            event({
+              action: 'link_click',
+              category: 'navigation',
+              label: 'footer_driver'
+            });
+            
             triggerURL(
               "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfooterdriver"
             );
@@ -67,6 +89,13 @@ const BottomFooter = () => {
         </li>
         <li
           onClick={() => {
+            // Track footer circuit button click
+            event({
+              action: 'link_click',
+              category: 'navigation',
+              label: 'footer_circuit'
+            });
+            
             triggerURL(
               "https://app.dialogone.jp/v1/linelogin/auth/414a525aca27bd66?index=20250329appfootercircuit"
             );
