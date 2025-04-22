@@ -4,11 +4,13 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 import Loader from "@/components/Loader";
 import Script from "next/script";
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { pageview, GA_MEASUREMENT_ID } from '@/lib/gtag';
 
-export default function RootLayout({ children }) {
+// Create a separate client component for analytics tracking
+function AnalyticsTracking() {
+  // Import these hooks inside the client component
+  const { usePathname, useSearchParams } = require('next/navigation');
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -20,6 +22,10 @@ export default function RootLayout({ children }) {
     }
   }, [pathname, searchParams]);
 
+  return null; // This component doesn't render anything
+}
+
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
@@ -65,6 +71,9 @@ export default function RootLayout({ children }) {
         <ErrorBoundary>
           <Loader />
           {children}
+          <Suspense fallback={null}>
+            <AnalyticsTracking />
+          </Suspense>
         </ErrorBoundary>
       </body>
     </html>
