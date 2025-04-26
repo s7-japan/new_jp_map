@@ -5,14 +5,13 @@ import "./globals.css";
 import Loader from "@/components/Loader";
 import Script from "next/script";
 import { Suspense, useEffect } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { pageview, GA_MEASUREMENT_ID } from '@/lib/gtag';
 import GoogleTagManager from '@/components/GoogleTagManager';
 import GoogleTagManagerNoScript from '@/components/GoogleTagManagerNoScript';
 
 // Create a separate client component for analytics tracking
 function AnalyticsTracking() {
-  // Import these hooks inside the client component
-  const { usePathname, useSearchParams } = require('next/navigation');
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
