@@ -6,6 +6,8 @@ import Loader from "@/components/Loader";
 import Script from "next/script";
 import { Suspense, useEffect } from 'react';
 import { pageview, GA_MEASUREMENT_ID } from '@/lib/gtag';
+import GoogleTagManager from '@/components/GoogleTagManager';
+import GoogleTagManagerNoScript from '@/components/GoogleTagManagerNoScript';
 
 // Create a separate client component for analytics tracking
 function AnalyticsTracking() {
@@ -29,6 +31,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Google Tag Manager */}
+        <GoogleTagManager />
+        
         {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
@@ -68,6 +73,9 @@ export default function RootLayout({ children }) {
         <title>F1日本GP Map/Game</title>
       </head>
       <body className="h-[100dvh] w-[100dvw] overflow-hidden">
+        {/* Google Tag Manager (noscript) */}
+        <GoogleTagManagerNoScript />
+        
         <ErrorBoundary>
           <Loader />
           {children}
