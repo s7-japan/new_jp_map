@@ -9,6 +9,8 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { pageview, GA_MEASUREMENT_ID } from '@/lib/gtag';
 import GoogleTagManager from '@/components/GoogleTagManager';
 import GoogleTagManagerNoScript from '@/components/GoogleTagManagerNoScript';
+import LineTagManager from '@/components/LineTagManager';
+import { trackLinePageView } from '@/lib/line-tag';
 
 // Create a separate client component for analytics tracking
 function AnalyticsTracking() {
@@ -19,7 +21,10 @@ function AnalyticsTracking() {
   useEffect(() => {
     if (pathname) {
       const url = pathname + searchParams.toString();
+      // Track Google Analytics pageview
       pageview(url);
+      // Track LINE tag pageview
+      trackLinePageView(url);
     }
   }, [pathname, searchParams]);
 
@@ -32,6 +37,9 @@ export default function RootLayout({ children }) {
       <head>
         {/* Google Tag Manager */}
         <GoogleTagManager />
+        
+        {/* LINE Tag Manager */}
+        <LineTagManager />
         
         {/* Google Analytics */}
         <Script
